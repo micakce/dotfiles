@@ -6,7 +6,7 @@ fi
 
 echo ""
 echo "*************************************"
-echo "* Setting up ideal Unix environment *"
+echo "* Setting up ideal Dev environment *"
 echo "*************************************"
 echo ""
 
@@ -14,26 +14,25 @@ BASEDIR=$(cd "$(dirname "$0")"; pwd)
 
 cd `dirname $0`
 
-if [ "$(ls -A $BASEDIR/shell/oh-my-zsh)" ]; then
-  echo "---> Git submodule found. Moving on"
-else
-  echo "---> ERROR: please do a git clone --recursive to grab the oh-my-zsh submodule"
-  exit
-fi
+# if [ "$(ls -A $BASEDIR/shell/oh-my-zsh)" ]; then
+#   echo "---> Git submodule found. Moving on"
+# else
+#   echo "---> ERROR: please do a git clone --recursive to grab the oh-my-zsh submodule"
+#   exit
+# fi
 
-# Installing fonts
-echo ""
-echo "===>  Installing fonts  <==="
-if [ -d "$HOME/Library/Fonts" ]; then
-  sudo cp $BASEDIR/fonts/* $HOME/Library/Fonts
-fi
+# # Installing fonts
+# echo ""
+# echo "===>  Installing fonts  <==="
+# if [ -d "$HOME/Library/Fonts" ]; then
+#   sudo cp $BASEDIR/fonts/* $HOME/Library/Fonts
+# fi
 
-if [ -d "/usr/local/share/fonts" ]; then
-  sudo cp $BASEDIR/fonts/* /usr/share/fonts
-fi
+# if [ -d "/usr/local/share/fonts" ]; then
+#   sudo cp $BASEDIR/fonts/* /usr/share/fonts
+# fi
 
 # Installing vim
-# Ensuring required homebrew items installed
 sudo apt-get install vim > /dev/null # we need the non-system vim
 sudo apt-get install curl > /dev/null # we need the non-system vim
 # brew install the_silver_searcher # to search faster and respect .gitignore
@@ -46,9 +45,9 @@ echo "--->  Backing up any previous .vimrc"
 cp $HOME/.vimrc $HOME/.vimrc.bak
 cp $HOME/.gvimrc $HOME/.gvimrc.bak
 echo "--->  Linking .vimrc"
-ln -sf $BASEDIR/vim/vimrc $HOME/.vimrc
+ln -sf $BASEDIR/vim/.vimrc $HOME/.vimrc
 echo "--->  Linking .gvimrc"
-ln -sf $BASEDIR/vim/gvimrc $HOME/.gvimrc
+ln -sf $BASEDIR/vim/.gvimrc $HOME/.gvimrc
 echo "--->  Linking .vim folder"
 ln -sf $BASEDIR/vim/vim $HOME/.vim
 echo "--->  Installing latest vim-plug"
@@ -73,32 +72,32 @@ ln -sf $BASEDIR/tmux/.tmux $HOME/.tmux
 echo ""
 sudo apt-get install zsh > /dev/null # we need the non-system vim
 # touch $HOME/.zshrc
-echo "===>  Installing zsh  <==="
-zshpath=$(which zsh)
-if [ $? -eq 1 ]; then
-  echo "XXX>  Please install zsh <XXX"
-  echo "---> http://www.zsh.org/"
-else
-  echo "--->  Making backup of zshrc"
-  cp $HOME/.zshrc $HOME/.zshrc.bak
+# echo "===>  Installing zsh  <==="
+# zshpath=$(which zsh)
+# if [ $? -eq 1 ]; then
+#   echo "XXX>  Please install zsh <XXX"
+#   echo "---> http://www.zsh.org/"
+# else
+#   echo "--->  Making backup of zshrc"
+#   cp $HOME/.zshrc $HOME/.zshrc.bak
 
-  # Clear home of any conflicting zsh files
-  rm -f $HOME/.zshrc
-  rm -rf $HOME/.oh-my-zsh
+#   # Clear home of any conflicting zsh files
+#   rm -f $HOME/.zshrc
+#   rm -rf $HOME/.oh-my-zsh
 
-  echo "--->  Linking zshrc"
-  ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
-  ln -sf $BASEDIR/shell/local.zsh $HOME/.local.zsh
-  ln -sf $BASEDIR/shell/oh-my-zsh $HOME/.oh-my-zsh
+#   echo "--->  Linking zshrc"
+#   ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
+#   ln -sf $BASEDIR/shell/local.zsh $HOME/.local.zsh
+#   ln -sf $BASEDIR/shell/oh-my-zsh $HOME/.oh-my-zsh
 
-  echo "--->  Installing weather plugin"
-  ln -sf $BASEDIR/shell/weather $HOME/.weather
-  if [[ -d $HOME/Library/LaunchAgents ]]; then
-    cp $BASEDIR/shell/weather/e0m.weather.plist $HOME/Library/LaunchAgents
-  fi
+#   echo "--->  Installing weather plugin"
+#   ln -sf $BASEDIR/shell/weather $HOME/.weather
+#   if [[ -d $HOME/Library/LaunchAgents ]]; then
+#     cp $BASEDIR/shell/weather/e0m.weather.plist $HOME/Library/LaunchAgents
+#   fi
 
-  echo "--->  Installing customized theme"
-  cp $BASEDIR/shell/evan.zsh-theme $BASEDIR/shell/oh-my-zsh/themes
+#   echo "--->  Installing customized theme"
+#   cp $BASEDIR/shell/evan.zsh-theme $BASEDIR/shell/oh-my-zsh/themes
 
   # echo "--->  Changing default shell to zsh"
   # IAM=`whoami`
@@ -106,7 +105,7 @@ else
   # sudo chsh -s `which zsh` $IAM
   # /usr/bin/env zsh
   # source ~/.zshrc
-fi
+# fi
 
 echo ""
 echo "====  Successfully installed Evan's environment  ===="
