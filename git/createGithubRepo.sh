@@ -11,4 +11,4 @@ if $readme; then
     echo $readme > README.md
 fi
 
-# git remote add origin https://github.com/micakce/$repo_name.git
+git remote add origin https://github.com/micakce/$repo_name.git
