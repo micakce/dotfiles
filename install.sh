@@ -83,8 +83,8 @@ rm -f $HOME/.zshrc
 
 echo "--->  Linking zshrc"
 ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
+ln -sf $BASEDIR/shell/custom $HOME/.oh-my-zsh/custom
   # ln -sf $BASEDIR/shell/local.zsh $HOME/.local.zsh
-  # ln -sf $BASEDIR/shell/oh-my-zsh $HOME/.oh-my-zsh
 
 
 # echo "--->  Changing default shell to zsh"
