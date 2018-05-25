@@ -71,41 +71,29 @@ ln -sf $BASEDIR/tmux/.tmux $HOME/.tmux
 # Installing zsh
 echo ""
 sudo apt-get install zsh > /dev/null # we need the non-system vim
-# touch $HOME/.zshrc
-# echo "===>  Installing zsh  <==="
-# zshpath=$(which zsh)
-# if [ $? -eq 1 ]; then
-#   echo "XXX>  Please install zsh <XXX"
-#   echo "---> http://www.zsh.org/"
-# else
-#   echo "--->  Making backup of zshrc"
-#   cp $HOME/.zshrc $HOME/.zshrc.bak
+echo "===>  Installing zsh  <==="
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-#   # Clear home of any conflicting zsh files
-#   rm -f $HOME/.zshrc
-#   rm -rf $HOME/.oh-my-zsh
+echo "--->  Making backup of zshrc"
+cp $HOME/.zshrc $HOME/.zshrc.bak
 
-#   echo "--->  Linking zshrc"
-#   ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
-#   ln -sf $BASEDIR/shell/local.zsh $HOME/.local.zsh
-#   ln -sf $BASEDIR/shell/oh-my-zsh $HOME/.oh-my-zsh
+# Clear home of any conflicting zsh files
+rm -f $HOME/.zshrc
+# rm -rf $HOME/.oh-my-zsh
 
-#   echo "--->  Installing weather plugin"
-#   ln -sf $BASEDIR/shell/weather $HOME/.weather
-#   if [[ -d $HOME/Library/LaunchAgents ]]; then
-#     cp $BASEDIR/shell/weather/e0m.weather.plist $HOME/Library/LaunchAgents
-#   fi
+echo "--->  Linking zshrc"
+  ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
+  # ln -sf $BASEDIR/shell/local.zsh $HOME/.local.zsh
+  # ln -sf $BASEDIR/shell/oh-my-zsh $HOME/.oh-my-zsh
 
-#   echo "--->  Installing customized theme"
-#   cp $BASEDIR/shell/evan.zsh-theme $BASEDIR/shell/oh-my-zsh/themes
 
-  # echo "--->  Changing default shell to zsh"
-  # IAM=`whoami`
-  # sudo chsh -s `which zsh`
-  # sudo chsh -s `which zsh` $IAM
-  # /usr/bin/env zsh
-  # source ~/.zshrc
+# echo "--->  Changing default shell to zsh"
+# IAM=`whoami`
+# sudo chsh -s `which zsh`
+# sudo chsh -s `which zsh` $IAM
+# /usr/bin/env zsh
+# source ~/.zshrc
 # fi
 
 echo ""
-echo "====  Successfully installed Evan's environment  ===="
+echo "====  Successfully installed environment  ===="
