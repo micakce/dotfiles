@@ -13,12 +13,15 @@ url="https://github.com/micakce/$repo_name.git"
 test -z $repo_name && echo "Repo name required." 1>&2 && exit 1
 
 # curl -u 'micakce' https://api.github.com/user/repos -d "{\"name\":\"$repo_name\"}"
-response=`curl -s -u 'micakce' https://api.github.com/user/repos -d "{\"name\":\"$1\"}" | jsonValue message`
+response=`curl -s -u 'micakce' https://api.github.com/user/repos -d "{\"name\":\"$1\"}"`
+message=`echo $response | jsonValue message`
 
-if [ ${#response} -gt 0 ]; then
-    echo $response
+if [ ${#message} -gt 0 ]; then
+    echo $message
     exit
 fi
+
+echo $response > git.json
 
 echo "El repositorio se ha creado exitosamente"
 
