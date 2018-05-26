@@ -79,6 +79,7 @@ cp $HOME/.zshrc $HOME/.zshrc.bak
 
 # Clear home of any conflicting zsh files
 rm -f $HOME/.zshrc
+rm -rf $HOME/.oh-my-zsh/custom
 # rm -rf $HOME/.oh-my-zsh
 
 echo "--->  Linking zshrc"
