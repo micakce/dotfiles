@@ -402,4 +402,4 @@ map <Leader>( :LISPCloseParens<CR>
 
 set background=dark
 colorscheme palenight
-set clipboard=unnamedplus
+set clipboard=unnamed
