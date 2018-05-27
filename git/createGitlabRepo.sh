@@ -1,8 +1,9 @@
 #!/bin/sh
 
-repo_name=$1
+token=$(cat $1)
+repo_name=$2
 
-curl -H "Content-Type:application/json" https://gitlab.com/api/v3/projects?private_token=<toke_here> -d "{ \"name\": \"$repo_name\" }"
+curl -H "Content-Type:application/json" https://gitlab.com/api/v3/projects?private_token=$token -d "{ \"name\": \"$repo_name\" }"
 
 git remote add origin https://gitlab.com/micakce/$repo_name.git
 
