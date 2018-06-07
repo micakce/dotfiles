@@ -95,6 +95,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias zconf="vim ~/.zshrc"
 alias szsh="source ~/.zshrc"
+alias tmux="tmux -2"
 
 mkcd ()
 {

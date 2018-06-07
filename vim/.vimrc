@@ -96,7 +96,7 @@ Plug 'ervandew/supertab' "{{{
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
 
 
-source $HOME/dotfiles/vim/autocomplition.vimrc
+source $HOME/dotfiles/vim/autocompletion.vimrc
 
 
 Plug 'wellle/targets.vim' "Argument-Text-Object
@@ -109,6 +109,11 @@ call plug#end()            " required
 filetype plugin indent on    " required
 
 "" Misc
+"" File Navegation Netrw
+nnoremap <Leader>E :Ex<CR>
+runtime macros/matchit.vim
+
+
 nnoremap <Leader># *N
 nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
 inoremap jj <esc>

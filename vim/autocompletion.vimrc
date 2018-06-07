@@ -28,7 +28,14 @@
 " let g:deoplete#sources.vim = ['vim'] "}}}
 
 Plug 'Shougo/neocomplete.vim' "{{{
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#disable_auto_complete = 1
+inoremap <expr><TAB>  pumvisible() ? "\<Down>" : neocomplete#start_manual_complete()
 set completeopt=longest,menuone,preview
 " function! OmniPopup(action) "{{{
 "     if pumvisible()
