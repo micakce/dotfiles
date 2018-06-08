@@ -5,7 +5,7 @@ let mapleader = " "
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
-" Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'JamshedVesuna/vim-markdown-preview'
 
 Plug 'drewtempelmeyer/palenight.vim'
 
@@ -117,6 +117,7 @@ runtime macros/matchit.vim
 nnoremap <Leader># *N
 nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
 inoremap jj <esc>
+inoremap jk <esc>
 noremap <Leader>= mmgg=G'mz.
 noremap <Leader>scl _iconsole.log(<c-c>A)<c-c>F;xA;<c-c>
 inoremap ,cl console.log();<c-c>hi
@@ -131,7 +132,6 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o "
 nnoremap <Leader><CR> i<CR><c-c>
 nnoremap <Leader>o Go
 " noremap <Leader>gu<CR> :! gulp && clear && node public/dist/%:t<CR>
-" packadd! matchit "add matchit-plugin, match tags with %
 inoremap <C-f> <C-c>A
 set showcmd
 " Command Mode
@@ -258,6 +258,18 @@ augroup XML
     autocmd FileType xml setlocal tabstop=2 softtabstop=2  shiftwidth=2
     autocmd FileType xml :%foldopen!
 augroup END
+
+function! EnterOrIndentTag()
+    let line = getline(".")
+    let col = getpos(".")[2]
+    let before = line[col-2]
+    let after = line[col-1]
+    if before == ">" && after == "<"
+        return "\<Enter>\<C-o>==\<C-o>O"
+    endif
+    return "\<Enter>"
+endfunction
+inoremap <expr> <Enter> EnterOrIndentTag()
 
 
 "" FoldText
