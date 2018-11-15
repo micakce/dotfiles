@@ -3,6 +3,11 @@ let mapleader = " "
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -43,7 +48,7 @@ nmap ga <Plug>(EasyAlign)
 "}}}
 
 Plug 'christoomey/vim-tmux-navigator'
-nmap <Leader>a <c-a>
+" nmap <Leader>a <c-a>
 
 Plug 'Yggdroot/indentLine'
 let g:indentLine_color_term = 8
@@ -220,12 +225,13 @@ set noswapfile
 " See http://stackoverflow.com/questions/2170023/how-to-map-keys-for-popup-menu-in-vim
 
 ""Move Lines
-nnoremap mj :normal! ddp==<CR>
-nnoremap mk :<c-u> execute "normal! dd" . v:count . "kP=="<CR>
-vnoremap mj :m'>+<CR>gv=gv
-vnoremap mk :m-2<CR>gv=gv
+vnoremap j :m'>+<CR>gv=gv
+vnoremap k :m-2<CR>gv=gv
+nnoremap j :normal! ddp==<CR>
+nnoremap k  :<c-u> execute "normal! dd" . v:count . "kP=="<CR>
 
 " Better copy/paste
+set clipboard=unnamedplus
 set pastetoggle=<F10>
 nnoremap <Leader>y "+y
 vnoremap <Leader>y "+y
@@ -233,7 +239,7 @@ nnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
 noremap <Leader>dd dd
 noremap <Leader>d d
-noremap <LeaderD> D
+noremap <Leader>D D
 noremap c "_c
 noremap cc "_cc
 noremap dd "_dd
@@ -373,4 +379,3 @@ map <Leader>( :LISPCloseParens<CR>
 
 set background=dark
 colorscheme palenight
-set clipboard=unnamed
