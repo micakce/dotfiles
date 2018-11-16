@@ -96,7 +96,7 @@ source $ZSH/oh-my-zsh.sh
 alias zconf="vim ~/.zshrc"
 alias szsh="source ~/.zshrc"
 alias tmux="tmux -2"
-
+alias octave="flatpak run org.octave.Octave"
 mkcd ()
 {
     mkdir -p -- "$1" &&

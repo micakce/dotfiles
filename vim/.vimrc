@@ -29,7 +29,7 @@ set t_Co=256
 if !exists('g:airline_symbols') "{{{
     let g:airline_symbols = {}
 endif
-let g:airline_symbols.maxlinenr ='' "}}}
+let g:airline_symbols.maxlinenr ='|' "}}}
 " let g:airline_powerline_fonts = 1
 " let g:airline#extensions#tabline#left_alt_sep = ''
 " let g:airline#extensions#tabline#enabled = 1
@@ -71,11 +71,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-vinegar'
 
-" Plug 'scrooloose/nerdtree'
-" Plug 'jistr/vim-nerdtree-tabs'
-" nmap <Leader>nt <plug>NERDTreeTabsToggle<CR>
-" let g:NERDTreeWinPos = "right"
-
 Plug 'ctrlpvim/ctrlp.vim' "{{{
 let g:ctrlp_max_height = 20
 let g:ctrlp_show_hidden = 1
@@ -102,6 +97,8 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
 
 
 source $HOME/dotfiles/vim/autocompletion.vimrc
+source $HOME/dotfiles/vim/LISPCloseParens.vimrc 
+source $HOME/dotfiles/vim/foldSetting.vimrc
 
 
 Plug 'wellle/targets.vim' "Argument-Text-Object
@@ -115,11 +112,9 @@ filetype plugin indent on    " required
 
 "" Misc
 "" File Navegation Netrw
+nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
-
-
-nnoremap <Leader># *N
 nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
 inoremap jj <esc>
 inoremap jk <esc>
@@ -140,12 +135,11 @@ nnoremap <Leader>o Go
 inoremap <C-f> <C-c>A
 set showcmd
 " Command Mode
-noremap! <C-K> <up>
 noremap! <C-J> <down>
+noremap! <C-K> <up>
 
 " automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
-
 " Mouse and backspace
 set mouse=a " on OSX press ALT and click
 set bs=2 " make backspace behave like normal again
@@ -176,10 +170,10 @@ vnoremap > >gv
 " Show whitespace MUST be inserted BEFORE the colorscheme command
 " autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 " au InsertLeave * match ExtraWhitespace /\s\+$/
+" setlocal spell spelllang=en_us
 
 " Color scheme mkdir -p ~/.vim/colors && cd ~/.vim/colors wget -O
 " color my_html
-" setlocal spell spelllang=en_us
 hi SpellBad ctermbg=yellow ctermfg=black
 hi SpellCap ctermbg=yellow ctermfg=black
 set cursorline
@@ -249,7 +243,15 @@ noremap x "_x
 noremap ml xp
 
 " Better search
-noremap <F3> :vimgrep //j **/*<left><left><left><left><left><left><left>
+" noremap <F3> :vimgrep //j **/*<left><left><left><left><left><left><left>
+function! Vimgrep()
+    call inputsave()
+    let name = input('Enter search: ')
+    call inputrestore()
+    execute "vimgrep/" . search . "/j **/*"
+endfunction
+noremap <F3> :call Vimgrep()<CR>
+
 augroup myvimrc
     autocmd!
     autocmd QuickFixCmdPost [^l]* cwindow
@@ -277,54 +279,10 @@ function! EnterOrIndentTag()
 endfunction
 inoremap <expr> <Enter> EnterOrIndentTag()
 
-
-"" FoldText
-set foldmethod=marker
-" let g:vimsyn_folding='af'
-" let g:tex_fold_enabled=1
-" let g:xml_syntax_folding = 1
-" let g:clojure_fold = 1
-" let ruby_fold = 1
-" let perl_fold = 1
-" let perl_fold_blocks = 1
-" set foldenable
-" set foldlevel=0
-" set foldlevelstart=0
-" " specifies for which commands a fold will be opened
-" set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
-
-" nnoremap <silent> zr zr:<c-u>setlocal foldlevel?<CR>
-" nnoremap <silent> zm zm:<c-u>setlocal foldlevel?<CR>
-
-" nnoremap <silent> zR zR:<c-u>setlocal foldlevel?<CR>
-" nnoremap <silent> zM zM:<c-u>setlocal foldlevel?<CR>
-
-" " Change Option Folds
-nnoremap zi  :<c-u>call <SID>ToggleFoldcolumn(1)<CR>
-nnoremap coz :<c-u>call <SID>ToggleFoldcolumn(0)<CR>
-nmap     cof coz
-
-function! s:ToggleFoldcolumn(fold)
-    if &foldcolumn
-        let w:foldcolumn = &foldcolumn
-        silent setlocal foldcolumn=0
-        if a:fold | silent setlocal nofoldenable | endif
-    else
-        if exists('w:foldcolumn') && (w:foldcolumn!=0)
-            silent let &l:foldcolumn=w:foldcolumn
-        else
-            silent setlocal foldcolumn=4
-        endif
-        if a:fold | silent setlocal foldenable | endif
-    endif
-    setlocal foldcolumn?
-endfunction
-
-
 function! Compile() "{{{
     if  &filetype=="html"
         silent !clear
-        execute "!chromium-browser " . bufname("%")
+        execute "!google-chrome " . bufname("%")
     elseif &filetype=="javascript"
         silent !clear
         execute "!nodejs " . bufname("%")
@@ -332,50 +290,6 @@ function! Compile() "{{{
 endfunction
 nnoremap ¢ :call Compile()<CR> "}}}
 
-function! s:rtrim(line) "{{{
-    return substitute(a:line, '\s*$', '', '')
-endfunction "}}}
-
-function! s:find_rside_commentpos(lnum) "{{{
-    let line = getline(a:lnum)
-    let col = stridx(line, ';')
-    while col != -1 &&
-                \ synIDattr(synID(a:lnum, col, 1), "name") =~ "String"
-        let col = stridx(line, ';', col + 1)
-    endwhile
-    return col
-endfunction "}}}
-
-function! s:LISP_close_parens(lnum) "{{{
-    let save_cursor = getpos(".")
-
-    call cursor(a:lnum, col('$'))
-    let unbalanced = searchpair('(', '', ')', 'rmbcW',
-                \ "synIDattr(synID(line('.'), col('.'), 0), 'name') =~? ".
-                \ "'\\(Comment\\|String\\)'")
-    if unbalanced > 0
-        let line = getline(a:lnum)
-        let unbalanced_str = repeat(')', unbalanced)
-        let col = s:find_rside_commentpos(a:lnum)
-        if col != -1
-            let before_comment = strpart(line, 0, col)
-            let wsp_cnt = strlen(before_comment) - strlen(s:rtrim(before_comment))
-            let wsp_str = repeat(' ', wsp_cnt)
-            let comment = strpart(line, col)
-            call setline(a:lnum,
-                        \ s:rtrim(before_comment).unbalanced_str.wsp_str.comment)
-        else
-            let line = s:rtrim(line).unbalanced_str
-            call setline(a:lnum, line)
-        endif
-    endif
-
-    call setpos(".", save_cursor)
-endfunction "}}}
-
-command! LISPCloseParens call <SID>LISP_close_parens(line('.'))
-map <Leader>) :LISPCloseParens<CR>
-map <Leader>( :LISPCloseParens<CR>
 
 set background=dark
 colorscheme palenight
