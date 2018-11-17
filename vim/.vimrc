@@ -91,7 +91,7 @@ Plug 'scrooloose/syntastic' "{{{
 " let g:syntastic_check_on_wq = 0 "}}}
 
 Plug 'ervandew/supertab' "{{{
-" autocmd FileType javascript let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 " let g:UltiSnipsExpandTrigger="<C-l>"
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
 
