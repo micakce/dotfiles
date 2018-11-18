@@ -62,6 +62,7 @@ Plug 'jiangmiao/auto-pairs'
 
 
 Plug 'tpope/vim-commentary' "{{{
+autocmd Filetype matlab setlocal commentstring=%\ %s
 " autocmd Filetype python setlocal commentstring=#'\ %s'
 vmap <leader>yc s"}}}<C-c>_PA"{{{
 noremap <leader>ysc {jA "{{{<C-c>}kA "}}}<C-c>
