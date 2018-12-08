@@ -10,7 +10,15 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
+" Plug 'iamcco/markdown-preview.vim'
+
+Plug 'mcchrish/nnn.vim'
+
 Plug 'JamshedVesuna/vim-markdown-preview'
+let vim_markdown_preview_hotkey='<leader>om'
+" let vim_markdown_preview_github=1
+let vim_markdown_preview_pandoc=1
+
 
 Plug 'drewtempelmeyer/palenight.vim'
 
@@ -39,6 +47,7 @@ let g:airline_symbols.maxlinenr ='|' "}}}
 Plug 'easymotion/vim-easymotion'
 map f <Leader><Leader>f
 map F <Leader><Leader>F
+Plug 'godlygeek/tabular'
 
 Plug 'junegunn/vim-easy-align' "{{{
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -169,8 +178,10 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Show whitespace MUST be inserted BEFORE the colorscheme command
-" autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-" au InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+au InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd ColorScheme * highlight fLiteral ctermfg=45
+au InsertLeave * match fLiteral /{.*}/
 " setlocal spell spelllang=en_us
 
 " Color scheme mkdir -p ~/.vim/colors && cd ~/.vim/colors wget -O
@@ -259,6 +270,12 @@ augroup myvimrc
     autocmd QuickFixCmdPost l*    lwindow
 augroup END
 
+
+augroup PYTHON
+    autocmd!
+    autocmd FileType python nnoremap ¢ :w !python3 %<CR>
+augroup END
+
 augroup XML
     autocmd!
     autocmd FileType xml let g:xml_syntax_folding=1
@@ -280,17 +297,21 @@ function! EnterOrIndentTag()
 endfunction
 inoremap <expr> <Enter> EnterOrIndentTag()
 
-function! Compile() "{{{
-    if  &filetype=="html"
-        silent !clear
-        execute "!google-chrome " . bufname("%")
-    elseif &filetype=="javascript"
-        silent !clear
-        execute "!nodejs " . bufname("%")
-    endif
-endfunction
-nnoremap ¢ :call Compile()<CR> "}}}
+" function! Compile() "{{{
+"     if  &filetype=="html"
+"         silent !clear
+"         execute "!google-chrome " . bufname("%")
+"     elseif &filetype=="javascript"
+"         silent !clear
+"         execute "!nodejs " . bufname("%")
+"     elseif &filetype=="python"
+"         silent !clear
+"         execute "!python3 %"
+"     endif
+" endfunction
+" nnoremap ¢ :call Compile()<CR> "}}}
 
 
 set background=dark
 colorscheme palenight
+
