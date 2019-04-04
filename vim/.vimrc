@@ -314,4 +314,3 @@ inoremap <expr> <Enter> EnterOrIndentTag()
 
 set background=dark
 colorscheme palenight
-
