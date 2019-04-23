@@ -122,6 +122,7 @@ filetype plugin indent on    " required
 
 "" Misc
 "" File Navegation Netrw
+com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
