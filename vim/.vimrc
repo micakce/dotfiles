@@ -12,6 +12,9 @@ call plug#begin('~/.vim/plugged')
 
 " Plug 'iamcco/markdown-preview.vim'
 
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+
 Plug 'mcchrish/nnn.vim'
 
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -22,8 +25,7 @@ let vim_markdown_preview_pandoc=1
 
 Plug 'drewtempelmeyer/palenight.vim'
 
-" Make sure you use single quotes "{{{
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline' "{{{
 " set laststatus=2
 " let g:airline_theme='murmur'
 " set t_Co=256
@@ -94,9 +96,7 @@ Plug 'scrooloose/syntastic' "{{{
 " let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute " ,"trimming empty <", "unescaped &" , "lacks \"action", "is not recognized!", "discarding unexpected"]
 " let g:syntastic_python_checkers=['flake8']
 " let g:syntastic_html_checkers=['jshint']
-" let g:syntastic_javascript_checkers=['eslint']
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_javascript_checkers=['eslint'] " let g:syntastic_check_on_open = 1 " let g:syntastic_always_populate_loc_list = 1
 " let g:syntastic_auto_loc_list = 1
 " let g:syntastic_check_on_wq = 0 "}}}
 
@@ -114,6 +114,8 @@ source $HOME/dotfiles/vim/foldSetting.vimrc
 Plug 'wellle/targets.vim' "Argument-Text-Object
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mattn/emmet-vim'
+imap ,<Tab> <C-y>,
+
 
 " All of your Plugs must be added before the following line
 call plug#end()            " required
