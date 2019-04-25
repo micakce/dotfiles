@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#function to parse the json response from curl command 
 function jsonValue() {
 KEY=$1
 num=$2
