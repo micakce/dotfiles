@@ -14,6 +14,12 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'mhartington/oceanic-next'
+" for vim 8
+ " if (has("termguicolors"))
+ "  set termguicolors
+ " endif
+"colorscheme OceanicNext
 
 Plug 'mcchrish/nnn.vim'
 
@@ -117,14 +123,15 @@ Plug 'mattn/emmet-vim'
 imap ,<Tab> <C-y>,
 imap ,j <C-y>j
 
-
 " All of your Plugs must be added before the following line
 call plug#end()            " required
 
 filetype plugin indent on    " required
 
-"" Misc
 "" File Navegation Netrw
+"" Misc
+imap ,<Tab> <C-y>,
+com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
