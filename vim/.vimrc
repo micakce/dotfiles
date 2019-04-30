@@ -118,7 +118,8 @@ source $HOME/dotfiles/vim/foldSetting.vimrc
 Plug 'wellle/targets.vim' "Argument-Text-Object
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mattn/emmet-vim'
-
+imap ,<Tab> <C-y>,
+imap ,j <C-y>j
 
 " All of your Plugs must be added before the following line
 call plug#end()            " required
