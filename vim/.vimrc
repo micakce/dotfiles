@@ -92,9 +92,7 @@ Plug 'tpope/vim-surround'
 Plug 'ctrlpvim/ctrlp.vim' "{{{
 let g:ctrlp_max_height = 20
 let g:ctrlp_show_hidden = 1
-set wildignore+=*.pyc
-set wildignore+=*_build/*
-set wildignore+=*/coverage/*
+set wildignore+=*.pyc,*_build/*,*/coverage/*,**/node_modules/**
 set wildmenu
 set wildmode=list:longest,full "}}}
 
@@ -267,7 +265,7 @@ noremap ml xp
 " noremap <F3> :vimgrep //j **/*<left><left><left><left><left><left><left>
 function! Vimgrep()
     call inputsave()
-    let name = input('Enter search: ')
+    let search = input('Enter search: ')
     call inputrestore()
     execute "vimgrep/" . search . "/j **/*"
 endfunction
