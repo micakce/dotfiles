@@ -13,15 +13,12 @@ call plug#begin('~/.vim/plugged')
 " Plug 'iamcco/markdown-preview.vim'
 
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
-Plug 'mhartington/oceanic-next'
-" for vim 8
- " if (has("termguicolors"))
- "  set termguicolors
- " endif
-"colorscheme OceanicNext
+Plug 'MaxMEllon/vim-jsx-pretty'
+" let g:vim_jsx_pretty_highlight_close_tag=1
+" let g:vim_jsx_pretty_colorful_config=1
+"Plug 'mxw/vim-jsx'
 
-Plug 'mcchrish/nnn.vim'
+"Plug 'mcchrish/nnn.vim'
 
 Plug 'JamshedVesuna/vim-markdown-preview'
 let vim_markdown_preview_hotkey='<leader>om'
@@ -128,7 +125,6 @@ filetype plugin indent on    " required
 
 "" File Navegation Netrw
 "" Misc
-imap ,<Tab> <C-y>,
 com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
@@ -189,7 +185,8 @@ vnoremap > >gv
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 au InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd ColorScheme * highlight fLiteral ctermfg=45
-au InsertLeave * match fLiteral /{.*}/
+" " This is to match brackets, messess up jsx syntax
+" au InsertLeave * match fLiteral /{.*}/
 " setlocal spell spelllang=en_us
 
 " Color scheme mkdir -p ~/.vim/colors && cd ~/.vim/colors wget -O
