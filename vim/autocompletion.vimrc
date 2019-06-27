@@ -15,6 +15,7 @@ if executable('pyls')
     " Use LanguageServer for omnifunc completion
     " autocmd FileType python setlocal omnifunc=LanguageClient#complete
 endif
+let g:LanguageClient_serverCommands.javascript = ['/usr/local/bin/javascript-typescript-stdio']
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }

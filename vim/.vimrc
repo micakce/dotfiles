@@ -21,9 +21,11 @@ Plug 'MaxMEllon/vim-jsx-pretty'
 "Plug 'mcchrish/nnn.vim'
 
 Plug 'JamshedVesuna/vim-markdown-preview'
+let vim_markdown_preview_toggle=0
 let vim_markdown_preview_hotkey='<leader>om'
-" let vim_markdown_preview_github=1
-let vim_markdown_preview_pandoc=1
+let vim_markdown_preview_github=1
+
+" let vim_markdown_preview_pandoc=1
 
 
 Plug 'drewtempelmeyer/palenight.vim'
@@ -116,7 +118,7 @@ Plug 'wellle/targets.vim' "Argument-Text-Object
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mattn/emmet-vim'
 imap ,<Tab> <C-y>,
-imap ,j <C-y>j
+" imap ,j <C-y>j
 
 " All of your Plugs must be added before the following line
 call plug#end()            " required
@@ -187,10 +189,20 @@ au InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd ColorScheme * highlight fLiteral ctermfg=45
 " " This is to match brackets, messess up jsx syntax
 " au InsertLeave * match fLiteral /{.*}/
-" setlocal spell spelllang=en_us
 
 " Color scheme mkdir -p ~/.vim/colors && cd ~/.vim/colors wget -O
 " color my_html
+" Activa and desactivate spelling
+noremap <F8> :call Spelling()<CR>
+function! Spelling()
+    if  &spell
+        execute "setlocal spell!"
+        echomsg "Spelling is off"
+    else
+        execute "setlocal spell spelllang=en_us"
+        echomsg "Spelling is on"
+    endif
+endfunction
 hi SpellBad ctermbg=yellow ctermfg=black
 hi SpellCap ctermbg=yellow ctermfg=black
 set cursorline
