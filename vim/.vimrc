@@ -127,6 +127,7 @@ filetype plugin indent on    " required
 
 "" File Navegation Netrw
 "" Misc
+let g:netrw_liststyle = 3
 com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
