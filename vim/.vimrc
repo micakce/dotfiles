@@ -89,6 +89,7 @@ Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-vinegar'
 
 Plug 'ctrlpvim/ctrlp.vim' "{{{
+let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_height = 20
 let g:ctrlp_show_hidden = 1
 set wildignore+=*.pyc,*_build/*,*/coverage/*,**/node_modules/**
@@ -128,6 +129,7 @@ filetype plugin indent on    " required
 "" File Navegation Netrw
 "" Misc
 let g:netrw_liststyle = 3
+autocmd BufEnter * silent! lcd %:p:h
 com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
