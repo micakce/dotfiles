@@ -1,339 +1,52 @@
-// Place your key bindings in this file to overwrite the defaults
-//[
-//    {
-//        "key": "alt+n",
-//        "command": "workbench.action.files.newUntitledFile"
-//    },
-//    {
-//        "key": "ctrl+n",
-//        "command": "-workbench.action.files.newUntitledFile"
-//    },
-//    {
-//        "key": "shift+alt+n",
-//        "command": "explorer.newFile"
-//    },
-//    {
-//        "key": "alt+-",
-//        "command": "workbench.action.decreaseViewSize"
-//    },
-//    {
-//        "key": "alt+=",
-//        "command": "workbench.action.increaseViewSize"
-//    },
-//    {
-//        "key": "alt+q",
-//        "command": "workbench.action.switchWindow"
-//    },
-//    {
-//        "key": "shift+f2",
-//        "command": "fileutils.renameFile"
-//    },
-//    {
-//        "key": "ctrl+shift+p",
-//        "command": "-workbench.action.showCommands"
-//    },
-//    {
-//        "key": "ctrl+shift+p",
-//        "command": "workbench.actions.view.problems"
-//    },
-//    {
-//        "key": "ctrl+shift+m",
-//        "command": "-workbench.actions.view.problems"
-//    },
-//    {
-//        "key": "ctrl+k a",
-//        "command": "extension.vim_cmd+a",
-//        "when": "editorTextFocus && vim.active && vim.use<D-a> && !inDebugRepl && vim.mode != 'Insert'"
-//    },
-//    {
-//        "key": "win+a",
-//        "command": "-extension.vim_cmd+a",
-//        "when": "editorTextFocus && vim.active && vim.use<D-a> && !inDebugRepl && vim.mode != 'Insert'"
-//    },
-//    {
-//        "key": "ctrl+q",
-//        "command": "-workbench.action.quickOpenView"
-//    },
-//    {
-//        "key": "ctrl+w",
-//        "command": "-workbench.action.closeWindow",
-//        "when": "!editorIsOpen"
-//    },
-//    {
-//        "key": "ctrl+w",
-//        "command": "-workbench.action.closeActiveEditor"
-//    },
-//    {
-//        "key": "ctrl+l",
-//        "command": "extension.vim_navigateRight",
-//        "when": "vim.active && vim.use<C-w> && !editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+w l",
-//        "command": "-extension.vim_navigateRight",
-//        "when": "vim.active && vim.use<C-w> && !editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+l",
-//        "command": "workbench.action.focusNextGroup"
-//    },
-//    {
-//        "key": "ctrl+k ctrl+right",
-//        "command": "-workbench.action.focusNextGroup"
-//    },
-//    {
-//        "key": "ctrl+alt+l",
-//        "command": "workbench.action.moveEditorToNextGroup"
-//    },
-//    {
-//        "key": "ctrl+alt+right",
-//        "command": "-workbench.action.moveEditorToNextGroup"
-//    },
-//    {
-//        "key": "ctrl+h",
-//        "command": "workbench.action.focusPreviousGroup"
-//    },
-//    {
-//        "key": "ctrl+k ctrl+left",
-//        "command": "-workbench.action.focusPreviousGroup"
-//    },
-//    {
-//        "key": "ctrl+alt+h",
-//        "command": "workbench.action.moveEditorToPreviousGroup"
-//    },
-//    {
-//        "key": "ctrl+alt+left",
-//        "command": "-workbench.action.moveEditorToPreviousGroup"
-//    },
-//    {
-//        "key": "ctrl+k 0",
-//        "command": "workbench.action.evenEditorWidths"
-//    },
-//    {
-//        "key": "alt+oem_5",
-//        "command": "workbench.action.toggleEditorGroupLayout"
-//    },
-//    {
-//        "key": "shift+alt+1",
-//        "command": "-workbench.action.toggleEditorGroupLayout"
-//    },
-//    {
-//        "key": "ctrl+k ctrl+q",
-//        "command": "workbench.action.focusQuickOpen"
-//    },
-//    {
-//        "key": "ctrl+alt+k",
-//        "command": "editor.action.insertCursorAbove",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+alt+up",
-//        "command": "-editor.action.insertCursorAbove",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+alt+j",
-//        "command": "editor.action.insertCursorBelow",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+alt+down",
-//        "command": "-editor.action.insertCursorBelow",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+alt+i",
-//        "command": "editor.action.insertCursorAtEndOfEachLineSelected",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "shift+alt+i",
-//        "command": "-editor.action.insertCursorAtEndOfEachLineSelected",
-//        "when": "editorTextFocus"
-//    },
-//    {
-//        "key": "ctrl+k ctrl+d",
-//        "command": "editor.action.addSelectionToNextFindMatch",
-//        "when": "editorFocus"
-//    },
-//    {
-//        "key": "ctrl+d",
-//        "command": "-editor.action.addSelectionToNextFindMatch",
-//        "when": "editorFocus"
-//    },
-//    {
-//        "key": "ctrl+k ctrl+c",
-//        "command": "-editor.action.addCommentLine",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "ctrl+k r",
-//        "command": "revealFileInOS",
-//        "when": "explorerViewletFocus && explorerViewletVisible"
-//    },
-//    {
-//        "key": "shift+alt+r",
-//        "command": "-revealFileInOS",
-//        "when": "explorerViewletFocus && explorerViewletVisible"
-//    },
-//    {
-//        "key": "shift+alt+j",
-//        "command": "editor.action.copyLinesDownAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "shift+alt+down",
-//        "command": "-editor.action.copyLinesDownAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "alt+j",
-//        "command": "editor.action.moveLinesDownAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "alt+down",
-//        "command": "-editor.action.moveLinesDownAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "shift+alt+k",
-//        "command": "editor.action.copyLinesUpAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "shift+alt+up",
-//        "command": "-editor.action.copyLinesUpAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "alt+k",
-//        "command": "editor.action.moveLinesUpAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "alt+up",
-//        "command": "-editor.action.moveLinesUpAction",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "ctrl+shift+k",
-//        "command": "-editor.action.deleteLines",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "ctrl+g",
-//        "command": "-workbench.action.gotoLine"
-//    },
-//    {
-//        "key": "ctrl+oem_6",
-//        "command": "-editor.action.indentLines",
-//        "when": "editorTextFocus && !editorReadonly"
-//    },
-//    {
-//        "key": "ctrl+shift+o",
-//        "command": "workbench.action.output.toggleOutput"
-//    },
-//    {
-//        "key": "ctrl+shift+u",
-//        "command": "-workbench.action.output.toggleOutput"
-//    },
-//    {
-//        "key": "ctrl+shift+d c",
-//        "command": "workbench.debug.action.toggleRepl"
-//    },
-//    {
-//        "key": "ctrl+shift+y",
-//        "command": "-workbench.debug.action.toggleRepl"
-//    },
-//    {
-//        "key": "ctrl+shift+d d",
-//        "command": "workbench.view.debug"
-//    },
-//    {
-//        "key": "ctrl+shift+d",
-//        "command": "-workbench.view.debug"
-//    },
-//    {
-//        "key": "ctrl+shift+oem_3",
-//        "command": "workbench.action.togglePanel"
-//    },
-//    {
-//        "key": "ctrl+j",
-//        "command": "-workbench.action.togglePanel"
-//    },
-//    {
-//        "key": "alt+s",
-//        "command": "workbench.files.action.showActiveFileInExplorer"
-//    },
-//    {
-//        "key": "alt+w",
-//        "command": "workbench.action.closeActiveEditor"
-//    },
-//    {
-//        "key": "ctrl+f4",
-//        "command": "-workbench.action.closeActiveEditor"
-//    }
-//]
-
+// Place your key bindings in this file to override the defaultsauto[]
 [
     {
-        "key": "ctrl+shift+j",
-        "command": "workbench.action.terminal.resizePaneDown"
+        "key": "ctrl+delete",
+        "command": "-workbench.action.terminal.deleteWordRight",
+        "when": "terminalFocus"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "alt+p",
+        "command": "workbench.action.togglePanel"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+k",
+        "command": "workbench.action.focusLastEditorGroup",
+        "when": "terminalFocus"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+j",
+        "command": "workbench.action.focusPanel",
+        // "when": "editorTextFocus"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+j",
+        "command": "-workbench.action.togglePanel"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "alt+b",
+        "command": "workbench.action.toggleSidebarVisibility"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+b",
+        "command": "-workbench.action.toggleSidebarVisibility"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+l",
+        "command": "workbench.action.nextEditor"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+h",
+        "command": "workbench.action.previousEditor"
     },
     {
-        "key": "shift+k",
-        "command": "editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+j",
+        "command": "workbench.action.quickOpenNavigateNext",
+        "when": "inQuickOpen"
     },
     {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
+        "key": "ctrl+k",
+        "command": "workbench.action.quickOpenNavigatePrevious",
+        "when": "inQuickOpen"
     },
-    {
-        "key": "ctrl+shift+k",
-        "command": "-editor.action.deleteLines",
-        "when": "textInputFocus && !editorReadonly"
-    }
 ]

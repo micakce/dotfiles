@@ -10,8 +10,7 @@
             "after": ["<Esc>"]
         }
     ],
-    
-    "vim.normalModeKeyBindingsNonRecursive": [
+    "vim.normalModeKeyBindings": [
         {
             "before": ["<leader>","d"],
             "after": ["\"","_","d"]
@@ -33,15 +32,6 @@
             "after": ["<leader>","<leader>","F"]
         },
         {
-            "before":["<C-n>"],
-            "after":[],
-            "commands": [
-                {
-                    "command": ":nohl"
-                }
-            ]
-        },
-        {
             "before":["<leader>","q"],
             "after":[],
             "commands": [
@@ -58,12 +48,57 @@
                     "command": ":write"
                 }
             ]
-        }
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl"
+                }
+            ]
+        },
+        {
+            "before":["<C-w>","j"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.terminal.resizePaneDown"
+                }
+            ]
+        },
+        {
+            "before":["<C-w>","k"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.terminal.resizePaneUp"
+                }
+            ]
+        },
+        {
+            "before":["<C-w>","="],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.evenEditorWidths"
+                }
+            ]
+        },
+        {
+            "before":["<C-w>","+"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.minimizeOtherEditors"
+                }
+            ]
+        },
     ],
     "vim.leader": "<space>",
     "vim.handleKeys":{
         "<C-k>": false,
-        "<C-w>": false,
+        // "<C-w>": false,
         "<C-f>": false
     },
     "workbench.colorCustomizations": {
@@ -71,7 +106,6 @@
         "statusBar.noFolderBackground": "#268bd2",
         "statusBar.debuggingBackground": "#268bd2"
     },
-    
     "vim.disableAnnoyingNeovimMessage": true,
     "vim.statusBarColorControl": true,
     "vim.statusBarColors" : {
@@ -86,8 +120,7 @@
 "editor.lineNumbers": "relative",
 "editor.renderIndentGuides": true,
 "editor.multiCursorModifier": "ctrlCmd",
-"workbench.editor.showTabs": true,
-"workbench.activityBar.visible": true
+"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
 // "guides.indent.backgrounds": ["rgba(10, 10, 10, .4)","rgba(20, 20, 20, .4)"],
 // "guides.indent.showFirstIndentGuides": true,
 // "guides.stack.enabled": true
