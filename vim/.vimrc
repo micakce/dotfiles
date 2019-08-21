@@ -127,7 +127,14 @@ filetype plugin indent on    " required
 
 "" File Navegation Netrw
 "" Misc
+
+" tree-view
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+
+autocmd BufEnter *.hbs :set ft=html
 com! FormatJSON %!python3 -m json.tool
+noremap mew xwP
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim

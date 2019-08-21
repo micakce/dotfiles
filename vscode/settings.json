@@ -1,0 +1,94 @@
+{
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j","j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<leader>","d"],
+            "after": ["\"","_","d"]
+        },
+        {
+            "before": ["<leader>","x"],
+            "after": ["\"","_","x"]
+        },
+        {
+            "before": ["<leader>","c"],
+            "after": ["\"","_","c"]
+        },
+        {
+            "before": ["<leader>","f"],
+            "after": ["<leader>","<leader>","f"]
+        },
+        {
+            "before": ["<leader>","F"],
+            "after": ["<leader>","<leader>","F"]
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl"
+                }
+            ]
+        },
+        {
+            "before":["<leader>","q"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.closeActiveEditor"
+                }
+            ]
+        },
+        {
+            "before":["<leader>","u"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":write"
+                }
+            ]
+        }
+    ],
+    "vim.leader": "<space>",
+    "vim.handleKeys":{
+        "<C-k>": false,
+        "<C-w>": false,
+        "<C-f>": false
+    },
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#268bd2",
+        "statusBar.noFolderBackground": "#268bd2",
+        "statusBar.debuggingBackground": "#268bd2"
+    },
+    
+    "vim.disableAnnoyingNeovimMessage": true,
+    "vim.statusBarColorControl": true,
+    "vim.statusBarColors" : {
+        "normal": "#268bd2",
+        "insert": "#d33682",
+        "visual": "#268bd2",
+        "visualline": "#2aa198",
+        "visualblock": "#859900",
+        "replace": "#b58900"
+},
+"window.zoomLevel": 0,
+"editor.lineNumbers": "relative",
+"editor.renderIndentGuides": true,
+"editor.multiCursorModifier": "ctrlCmd",
+"workbench.editor.showTabs": true,
+"workbench.activityBar.visible": true
+// "guides.indent.backgrounds": ["rgba(10, 10, 10, .4)","rgba(20, 20, 20, .4)"],
+// "guides.indent.showFirstIndentGuides": true,
+// "guides.stack.enabled": true
+}
