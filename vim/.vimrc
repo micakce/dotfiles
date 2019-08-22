@@ -4,13 +4,17 @@ let mapleader = " "
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/plugged')
 
 " Plug 'iamcco/markdown-preview.vim'
+
+Plug 'frazrepo/vim-rainbow'
+au FileType  javascript,python,txt,md call rainbow#load()
+
 
 Plug 'pangloss/vim-javascript'
 Plug 'MaxMEllon/vim-jsx-pretty'
@@ -128,6 +132,7 @@ filetype plugin indent on    " required
 
 "" File Navegation Netrw
 "" Misc
+au BufEnter *.hbs set ft=html | set shiftwidth=2
 let g:netrw_liststyle = 3
 autocmd BufEnter * silent! lcd %:p:h
 com! FormatJSON %!python3 -m json.tool
