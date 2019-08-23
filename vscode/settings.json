@@ -116,7 +116,7 @@
         "visualblock": "#859900",
         "replace": "#b58900"
 },
-"window.zoomLevel": 0,
+"window.zoomLevel": -1,
 "editor.lineNumbers": "relative",
 "editor.renderIndentGuides": true,
 "editor.multiCursorModifier": "ctrlCmd",
