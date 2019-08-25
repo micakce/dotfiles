@@ -86,5 +86,14 @@
     {
         "key": "ctrl+e",
         "command": "-workbench.action.quickOpen"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "-workbench.action.quit",
+    },
+    {
+        "key": "alt+n",
+        "command": "explorer.newFile",
+        // "when": "editorTextFocus"
     }
 ]

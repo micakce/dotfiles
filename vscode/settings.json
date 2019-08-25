@@ -94,10 +94,29 @@
                 }
             ]
         },
+        {
+            "before":["<leader>","e","s"],
+            "after":[],
+            "commands":[
+                {
+                    "command": "workbench.action.openSettingsJson"
+                }
+            ]
+        },
+        {
+            "before":["<leader>","e","k"],
+            "after":[],
+            "commands":[
+                {
+                    "command": "workbench.action.openGlobalKeybindingsFile"
+                }
+            ]
+        },
     ],
     "vim.leader": "<space>",
     "vim.handleKeys":{
         "<C-k>": false,
+        "<C-d>": false,
         // "<C-w>": false,
         "<C-f>": false
     },
