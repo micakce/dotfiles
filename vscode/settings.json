@@ -112,6 +112,15 @@
                 }
             ]
         },
+        {
+            "before":["<leader>","="],
+            "after":[],
+            "commands":[
+                {
+                    "command": "editor.action.formatDocument"
+                }
+            ]
+        },
     ],
     "vim.leader": "<space>",
     "vim.handleKeys":{
