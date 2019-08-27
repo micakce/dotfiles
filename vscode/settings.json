@@ -7,8 +7,19 @@
     "vim.insertModeKeyBindings": [
         {
             "before": ["j","j"],
-            "after": ["<Esc>"]
-        }
+            "after": ["<Esc>"],
+        },
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": ["<leader>","S"],
+            "after": [],
+            "commands":[
+                {
+                    "command": "editor.emmet.action.wrapWithAbbreviation"
+                }
+            ]
+        },
     ],
     "vim.normalModeKeyBindings": [
         {
