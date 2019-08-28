@@ -159,7 +159,8 @@
 "editor.lineNumbers": "relative",
 "editor.renderIndentGuides": true,
 "editor.multiCursorModifier": "ctrlCmd",
-"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
+"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+"git.autofetch": true
 // "guides.indent.backgrounds": ["rgba(10, 10, 10, .4)","rgba(20, 20, 20, .4)"],
 // "guides.indent.showFirstIndentGuides": true,
 // "guides.stack.enabled": true

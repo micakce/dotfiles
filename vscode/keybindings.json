@@ -144,5 +144,13 @@
     {
         "key": "alt+m",
         "command": "editor.emmet.action.matchTag"
+    },
+    {
+        "key": "ctrl+[Semicolon]",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "ctrl+shift+[Semicolon]",
+        "command": "workbench.action.terminal.new"
     }
 ]
