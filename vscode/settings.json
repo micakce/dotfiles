@@ -61,7 +61,7 @@
             ]
         },
         {
-            "before":["<C-n>"],
+            "before":["<C-c>"],
             "after":[],
             "commands": [
                 {
@@ -160,7 +160,9 @@
 "editor.renderIndentGuides": true,
 "editor.multiCursorModifier": "ctrlCmd",
 "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
-"git.autofetch": true
+"git.autofetch": true,
+"git.confirmSync": false,
+"git.enableSmartCommit": true
 // "guides.indent.backgrounds": ["rgba(10, 10, 10, .4)","rgba(20, 20, 20, .4)"],
 // "guides.indent.showFirstIndentGuides": true,
 // "guides.stack.enabled": true
