@@ -1,33 +1,36 @@
-Plug 'autozimu/LanguageClient-neovim', {
-            \ 'branch': 'next',
-            \ 'do': 'bash install.sh',
-            \ }
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
-" inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_serverCommands = {}
-if executable('pyls')
-    let g:LanguageClient_serverCommands.python = ['pyls']
-    " Use LanguageServer for omnifunc completion
-    " autocmd FileType python setlocal omnifunc=LanguageClient#complete
-endif
-let g:LanguageClient_serverCommands.javascript = ['/usr/local/bin/javascript-typescript-stdio']
+" Plug 'autozimu/LanguageClient-neovim', {
+"             \ 'branch': 'next',
+"             \ 'do': 'bash install.sh',
+"             \ }
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+" " inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+" let g:LanguageClient_autoStart = 1
+" let g:LanguageClient_serverCommands = {}
+" if executable('pyls')
+"     let g:LanguageClient_serverCommands.python = ['pyls']
+"     " Use LanguageServer for omnifunc completion
+"     " autocmd FileType python setlocal omnifunc=LanguageClient#complete
+" endif
+" let g:LanguageClient_serverCommands.javascript = ['/usr/local/bin/javascript-typescript-stdio']
 
-if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc', {'do': 'pip3 install neovim'}
-endif
-noremap <Leader>sd :call LanguageClient#textDocument_definition({'gotoCmd': 'split'})<CR>
-let g:deoplete#enable_at_startup = 1
-set completeopt=longest,menuone
-set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+" if has('nvim')
+"     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"     Plug 'Shougo/deoplete.nvim'
+"     Plug 'roxma/nvim-yarp'
+"     Plug 'roxma/vim-hug-neovim-rpc', {'do': 'pip3 install neovim'}
+" endif
+" noremap <Leader>sd :call LanguageClient#textDocument_definition({'gotoCmd': 'split'})<CR>
+" let g:deoplete#enable_at_startup = 1
+" set completeopt=longest,menuone
+" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+
+
+
 " let g:deoplete#sources = {}
 " let g:deoplete#sources.python = ['LanguageClient']
 " let g:deoplete#sources.python3 = ['LanguageClient']

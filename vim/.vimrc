@@ -4,9 +4,9 @@ let mapleader = " "
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/plugged')
 
@@ -54,8 +54,8 @@ let g:airline_symbols.maxlinenr ='|' "}}}
 Plug 'easymotion/vim-easymotion'
 map f <Leader><Leader>f
 map F <Leader><Leader>F
-Plug 'godlygeek/tabular'
 
+Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-easy-align' "{{{
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -88,34 +88,83 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-vinegar'
 
-Plug 'ctrlpvim/ctrlp.vim' "{{{
-let g:ctrlp_max_height = 20
-let g:ctrlp_show_hidden = 1
-set wildignore+=*.pyc,*_build/*,*/coverage/*,**/node_modules/**
-set wildmenu
-set wildmode=list:longest,full "}}}
+Plug 'tpope/vim-dadbod'
 
-Plug 'scrooloose/syntastic' "{{{
-" let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute " ,"trimming empty <", "unescaped &" , "lacks \"action", "is not recognized!", "discarding unexpected"]
-" let g:syntastic_python_checkers=['flake8']
-" let g:syntastic_html_checkers=['jshint']
-" let g:syntastic_javascript_checkers=['eslint'] " let g:syntastic_check_on_open = 1 " let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_wq = 0 "}}}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+let g:fzf_buffers_jump = 1
+noremap <c-p> :Files<CR>
+noremap <c-f> :Find<CR>
+inoremap <Leader><c-f> <plug>(fzf-complete-path)
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 
-Plug 'ervandew/supertab' "{{{
-autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+command! -bang -nargs=? -complete=dir Files
+            \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+Plug 'jremmen/vim-ripgrep'
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+" --color: Search color options
+command! -bang -nargs=* Find
+            \ call fzf#vim#grep('rg --column --line-number
+            \ --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
+            \ --glob "!{.git,node_modules}" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+
+
+" Plug 'ervandew/supertab' "{{{
+" autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 " let g:UltiSnipsExpandTrigger="<C-l>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
 
 
-source $HOME/dotfiles/vim/autocompletion.vimrc
-source $HOME/dotfiles/vim/LISPCloseParens.vimrc 
+" source $HOME/dotfiles/vim/autocompletion.vimrc
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<Tab>" :
+            \ coc#refresh()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <c-ñ> coc#refresh()
+
+source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
 
+let g:ale_fix_on_save = 1
+Plug 'dense-analysis/ale'
+let g:ale_fixers = {
+            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+            \   'javascript': ['eslint'],
+            \}
 
 Plug 'wellle/targets.vim' "Argument-Text-Object
 Plug 'michaeljsmith/vim-indent-object'
+
+Plug 'alvan/vim-closetag'
+let g:closetag_filetypes = 'html,xhtml,phtml,javascript'
+
 Plug 'mattn/emmet-vim'
 imap ,<Tab> <C-y>,
 " imap ,j <C-y>j
@@ -132,6 +181,9 @@ filetype plugin indent on    " required
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 
+" noremap  i<CR><c-c>
+noremap <silent> <Leader>tws :%s,\s$,,g<CR>
+set switchbuf+=usetab,newtab
 autocmd BufEnter *.hbs :set ft=html
 com! FormatJSON %!python3 -m json.tool
 noremap mew xwP
@@ -152,7 +204,7 @@ noremap <Leader>br mm:s/\S/&\r/g<CR>:nohl<CR>dd'm
 noremap <Leader>h :tabprevious<CR>
 noremap <Leader>l :tabnext<CR>
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o ""autocomment insertion
-" nnoremap <Leader><CR> i<CR><c-c>
+nnoremap  i<CR><c-c>
 nnoremap <Leader>o Go
 " noremap <Leader>gu<CR> :! gulp && clear && node public/dist/%:t<CR>
 inoremap <C-f> <C-c>A
@@ -166,7 +218,7 @@ autocmd! bufwritepost .vimrc source %
 " Mouse and backspace
 set mouse=a " on OSX press ALT and click
 set bs=2 " make backspace behave like normal again
-noremap <C-n> :nohl<CR>
+noremap <silent> <C-n> :nohl<CR>
 " vnoremap <C-n> :nohl<CR>
 
 " Quicksave command
@@ -267,16 +319,12 @@ nnoremap <Leader>y "+y
 vnoremap <Leader>y "+y
 nnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
-noremap <Leader>dd dd
-noremap <Leader>d d
-noremap <Leader>D D
-noremap c "_c
-noremap cc "_cc
-noremap dd "_dd
-noremap d "_d
-noremap D "_D
-noremap x "_x
-noremap ml xp
+noremap <Leader>dd "_dd
+noremap <Leader>d "_d
+noremap <Leader>D "_D
+noremap <Leader>c "_c
+noremap <Leader>cc "_cc
+noremap <Leader>x "_x
 
 " Better search
 " noremap <F3> :vimgrep //j **/*<left><left><left><left><left><left><left>
@@ -307,6 +355,12 @@ augroup XML
     autocmd FileType xml :syntax on
     autocmd FileType xml setlocal tabstop=2 softtabstop=2  shiftwidth=2
     autocmd FileType xml :%foldopen!
+augroup END
+
+augroup javascript
+    autocmd!
+    autocmd FileType javascript setlocal foldmethod=syntax
+                \ tabstop=2 softtabstop=2  shiftwidth=2
 augroup END
 
 function! EnterOrIndentTag()

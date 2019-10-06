@@ -155,14 +155,16 @@
         "visualblock": "#859900",
         "replace": "#b58900"
 },
-"window.zoomLevel": -1,
+"window.zoomLevel": -2,
 "editor.lineNumbers": "relative",
 "editor.renderIndentGuides": true,
 "editor.multiCursorModifier": "ctrlCmd",
 "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
 "git.autofetch": true,
 "git.confirmSync": false,
-"git.enableSmartCommit": true
+"git.enableSmartCommit": true,
+"cosmosDB.showSavePrompt": false,
+"editor.minimap.enabled": false
 // "guides.indent.backgrounds": ["rgba(10, 10, 10, .4)","rgba(20, 20, 20, .4)"],
 // "guides.indent.showFirstIndentGuides": true,
 // "guides.stack.enabled": true
