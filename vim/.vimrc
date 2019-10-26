@@ -92,9 +92,10 @@ Plug 'tpope/vim-dadbod'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-let g:fzf_buffers_jump = 1
+" let g:fzf_buffers_jump = 1
 noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
+noremap <c-b> :Buffers<CR>
 inoremap <Leader><c-f> <plug>(fzf-complete-path)
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 
@@ -108,7 +109,6 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-Plug 'jremmen/vim-ripgrep'
 " --column: Show column number
 " --line-number: Show line number
 " --no-heading: Do not show file headings in results
@@ -122,8 +122,9 @@ Plug 'jremmen/vim-ripgrep'
 command! -bang -nargs=* Find
             \ call fzf#vim#grep('rg --column --line-number
             \ --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-            \ --glob "!{.git,node_modules}" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+            \ --glob "!{.git,node_modules,package-lock.json,build}" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
+Plug 'jremmen/vim-ripgrep'
 
 
 " Plug 'ervandew/supertab' "{{{
