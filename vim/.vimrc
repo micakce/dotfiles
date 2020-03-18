@@ -10,22 +10,27 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
-" Plug 'iamcco/markdown-preview.vim'
-
-Plug 'pangloss/vim-javascript'
-Plug 'MaxMEllon/vim-jsx-pretty'
+" TO DELETE
+" Plug 'mcchrish/nnn.vim'
+" Plug 'mxw/vim-jsx'
 " let g:vim_jsx_pretty_highlight_close_tag=1
 " let g:vim_jsx_pretty_colorful_config=1
-"Plug 'mxw/vim-jsx'
+" Plug 'JamshedVesuna/vim-markdown-preview' "sudo apt install xdotool
+" Plug 'joeyespo/grip'
+" let vim_markdown_preview_hotkey='<leader>om'
+" let vim_markdown_preview_toggle=0
+" let vim_markdown_preview_github=1
+" let vim_markdown_preview_pandoc=0
 
-"Plug 'mcchrish/nnn.vim'
+Plug 'godlygeek/tabular'
+" Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
-Plug 'JamshedVesuna/vim-markdown-preview'
-let vim_markdown_preview_toggle=0
-let vim_markdown_preview_hotkey='<leader>om'
-let vim_markdown_preview_github=1
 
-" let vim_markdown_preview_pandoc=1
+Plug 'pangloss/vim-javascript'
+
+Plug 'MaxMEllon/vim-jsx-pretty'
+
 
 
 Plug 'drewtempelmeyer/palenight.vim'
@@ -54,8 +59,9 @@ let g:airline_symbols.maxlinenr ='|' "}}}
 Plug 'easymotion/vim-easymotion'
 map f <Leader><Leader>f
 map F <Leader><Leader>F
+map t <Leader><Leader>t
+map T <Leader><Leader>T
 
-Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-easy-align' "{{{
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -90,6 +96,9 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-dadbod'
 
+" Plug 'zxqfl/tabnine-vim'
+
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " let g:fzf_buffers_jump = 1
@@ -102,10 +111,34 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 command! -bang -nargs=? -complete=dir Files
             \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-command! -bang -nargs=* Rg
+" command! -bang -nargs=* Rg
+"             \ call fzf#vim#grep(
+"             \   'rg
+"             \   --scolumn
+"             \   --sline-number
+"             \   --sno-heading
+"             \   --scolor=always
+"             \   --ssmart-case '
+"             \   .shellescape(<q-args>), 1,
+"             \   <bang>0 ? fzf#vim#with_preview('up:50%')
+"             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+"             \   <bang>0)
+
+command! -bang -nargs=* Find
             \ call fzf#vim#grep(
-            \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-            \   <bang>0 ? fzf#vim#with_preview('up:60%')
+            \ 'rg
+            \ --column
+            \ --line-number
+            \ --no-heading
+            \ --fixed-strings
+            \ --ignore-case
+            \ --no-ignore
+            \ --hidden
+            \ --follow
+            \ --color "always"
+            \ --glob "!{.git,node_modules,package-lock.json,build}" '
+            \   .shellescape(<q-args>), 1,
+            \   <bang>0 ? fzf#vim#with_preview('up:50%')
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
 
@@ -119,45 +152,80 @@ command! -bang -nargs=* Rg
 " --follow: Follow symlinks
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
-command! -bang -nargs=* Find
-            \ call fzf#vim#grep('rg --column --line-number
-            \ --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-            \ --glob "!{.git,node_modules,package-lock.json,build}" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
 Plug 'jremmen/vim-ripgrep'
 
 
-" Plug 'ervandew/supertab' "{{{
-" autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-" let g:UltiSnipsExpandTrigger="<C-l>"
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>" "}}}
-
-
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 " source $HOME/dotfiles/vim/autocompletion.vimrc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" use <tab> for trigger completion and navigate to the next complete item
+set hidden
+set cmdheight=2
+set updatetime=300
+set signcolumn=yes
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 function! s:check_back_space() abort
     let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap <silent><expr> <Tab>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<Tab>" :
-            \ coc#refresh()
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <silent><expr> <c-ñ> coc#refresh()
+inoremap <silent><expr> ñ coc#refresh()
+
+" ### CocInstall coc-snippets ###
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+" let g:coc_snippet_next = '<c-j>'
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+" let g:coc_snippet_prev = '<c-k>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
 
-let g:ale_fix_on_save = 1
 Plug 'dense-analysis/ale'
+let g:ale_enabled = 0
+let g:ale_fix_on_save = 1
+" let g:airline#extensions#ale#enabled = 1
+" let g:ale_set_highlights = 0
+" highlight clear ALEErrorSign
+" highlight clear ALEWarningSign
+" let g:ale_java_javac_classpath = '~/studying/java_101/authorizeTransactions/lib/org/json/'
+" let g:ale_java_javalsp_executable =
+"             \ {
+"             \   'java': {
+"             \     'externalDependencies': [
+"             \       '~/studying/java_101/authorizeTransactions/lib/json-20190722.jar'
+"             \     ],
+"             \     'classPath': [
+"             \       '~/studying/java_101/authorizeTransactions/lib/json-20190722.jar'
+"             \     ]
+"             \   }
+"             \ }
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_fixers = {
             \   '*': ['remove_trailing_lines', 'trim_whitespace'],
             \   'javascript': ['eslint'],
+            \   'java': ['google_java_format'],
             \}
 
 Plug 'wellle/targets.vim' "Argument-Text-Object
@@ -167,8 +235,21 @@ Plug 'alvan/vim-closetag'
 let g:closetag_filetypes = 'html,xhtml,phtml,javascript'
 
 Plug 'mattn/emmet-vim'
-imap ,<Tab> <C-y>,
+" imap ,<Tab> <C-y>,
 " imap ,j <C-y>j
+
+
+Plug 'aklt/plantuml-syntax'
+Plug 'tyru/open-browser.vim'
+Plug 'weirongxu/plantuml-previewer.vim'
+" Plug 'scrooloose/vim-slumlord'
+
+" Plug 'mustache/vim-mustache-handlebars'
+" " Enable/disable abbreviations {{if => {{#if _}}{{/if}}
+" let g:mustache_abbreviations = 0
+" " Enable/disable object operatos ie, ae (inside/around element), enabled bydefault
+" let g:mustache_operators = 0
+Plug 'tweekmonster/django-plus.vim'
 
 " All of your Plugs must be added before the following line
 call plug#end()            " required
@@ -183,7 +264,7 @@ let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 
 " noremap  i<CR><c-c>
-noremap <silent> <Leader>tws :%s,\s$,,g<CR>
+noremap <silent> <Leader>tw :%s,\s*$,,g<CR>'':nohl<CR>
 set switchbuf+=usetab,newtab
 autocmd BufEnter *.hbs :set ft=html
 com! FormatJSON %!python3 -m json.tool
@@ -205,14 +286,14 @@ noremap <Leader>br mm:s/\S/&\r/g<CR>:nohl<CR>dd'm
 noremap <Leader>h :tabprevious<CR>
 noremap <Leader>l :tabnext<CR>
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o ""autocomment insertion
-nnoremap  i<CR><c-c>
+" nnoremap  i<CR><c-c>
 nnoremap <Leader>o Go
 " noremap <Leader>gu<CR> :! gulp && clear && node public/dist/%:t<CR>
 inoremap <C-f> <C-c>A
 set showcmd
 " Command Mode
-noremap! <C-J> <down>
-noremap! <C-K> <up>
+" noremap! <C-J> <down>
+" noremap! <C-K> <up>
 
 " automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
@@ -364,6 +445,18 @@ augroup javascript
                 \ tabstop=2 softtabstop=2  shiftwidth=2
 augroup END
 
+augroup java
+    autocmd!
+    autocmd FileType java map <F5> :call CompileJava()<CR>
+    " autocmd FileType java nnoremap ¢ :w !javac %<CR>
+    " autocmd FileType java nnoremap <F5> :!java -cp %:p:h %:t:r<CR>
+augroup END
+
+func! CompileJava()
+    exec "!javac %"
+    exec "!time java -cp %:p:h %:t:r"
+endfunc
+
 function! EnterOrIndentTag()
     let line = getline(".")
     let col = getpos(".")[2]
@@ -374,7 +467,6 @@ function! EnterOrIndentTag()
     endif
     return "\<Enter>"
 endfunction
-inoremap <expr> <Enter> EnterOrIndentTag()
 
 " function! Compile() "{{{
 "     if  &filetype=="html"
@@ -393,3 +485,4 @@ inoremap <expr> <Enter> EnterOrIndentTag()
 
 set background=dark
 colorscheme palenight
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
