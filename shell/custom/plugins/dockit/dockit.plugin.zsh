@@ -25,22 +25,25 @@ function dcsa() {
 
 # Select a docker image to remove
 function dirm() {
-    for s in $(docker image ls -a | fzf --header="Remove image(s)" --header-lines=1 -m -q "$1" | awk '{print $3}');
-    do docker rmi $s;
+    for img in $(docker image ls -a | fzf --header="Remove image(s)" --header-lines=1 -m -q "$1" | awk '{print $3}');
+    do docker rmi $img;
     done;
 }
 
-# function dce() {
-#     cid=$(docker ps -a | sed 1d | fzf --header="Start and attacht to container" -1 -q "$1" | awk '{print $1}')
-#     if [[ $cid != '' ]]; then
-#         echo "Docker container:" $container
-#         read 'opt?Options: '
-#         read 'cmd?Command: '
-#     [ -n "$cmd" ] && docker exec "$opt" "$cid" "$cmd"
-#     fi
-# }
+function dce() {
+    local cid cname opts
+    read cid cname <<< $(docker ps -a | fzf --header="Exec command in running container" --header-lines=1 -1 -q "$1" | awk '{print $1" "$2}')
+    opts="-it"
+    if [[ $cid != '' ]]; then
+        echo "Docker container:" $cname
+        vared -p "Options: " opts
+        read 'cmd?Command: '
+    # [ -n "$cmd" ] && docker exec "$opt" "$cid" "$cmd"
+    [ -n "$cmd" ] && print -z docker exec "$opts" "$cid" "$cmd"
+    fi
+}
 
 function dca() {
-    cid=$(docker ps | sed 1d | fzf --header="Attach to container" -1 -q "$1" | awk '{print $1}')
+    cid=$(docker ps | sed 1d | fzf --header="Attach to running container" -1 -q "$1" | awk '{print $1}')
     [ -n "$cid" ] && docker exec -it "$cid" /bin/bash
 }

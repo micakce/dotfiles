@@ -52,7 +52,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$HOME/dotfiles/shell/custom/
+ZSH_CUSTOM=$HOME/dotfiles/shell/custom
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -60,6 +60,7 @@ ZSH_CUSTOM=$HOME/dotfiles/shell/custom/
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
 git
+forgit
 copyfile
 copydir
 dockit
@@ -152,5 +153,5 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.
 # export FZF_CTRL_R_OPTS=' -m '
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
 export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
