@@ -47,3 +47,15 @@ function dca() {
     cid=$(docker ps | sed 1d | fzf --header="Attach to running container" -1 -q "$1" | awk '{print $1}')
     [ -n "$cid" ] && docker exec -it "$cid" /bin/bash
 }
+
+# Custom fuzzy completion for "docker" command
+#   e.g. docker **<TAB>
+_fzf_complete_docker() {
+  _fzf_complete --multi "$@" < <(
+    docker ps -a
+  )
+}
+
+_fzf_complete_docker_post() {
+    awk '{print $1}'
+}

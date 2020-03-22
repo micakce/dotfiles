@@ -105,6 +105,7 @@ alias octave="flatpak run org.octave.Octave"
 alias -s pdf='zathura'
 # Expandable aliases
 alias -g D='& disown'
+alias -g cid='$(docker ps -a | fzf --multi --header-lines=1 --prompt="container> " | awk  '"'"'{print $1}'"'"')'
 mkcd ()
 {
     mkdir -p -- "$1" && cd -P -- "$1"
@@ -151,6 +152,7 @@ export FZF_DEFAULT_OPTS="
 # export FZF_DEFAULT_COMMAND='rg  $FZF_DEFAULT_OPTS --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
 # export FZF_CTRL_R_OPTS=' -m '
+
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
