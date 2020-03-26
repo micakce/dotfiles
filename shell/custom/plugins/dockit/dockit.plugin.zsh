@@ -25,8 +25,9 @@ function dcsa() {
 
 # Select a docker image to remove
 function dirm() {
+    local o=$@
     for img in $(docker image ls -a | fzf --header="Remove image(s)" --header-lines=1 -m -q "$1" | awk '{print $3}');
-    do docker rmi $img;
+    do docker rmi $img $@;
     done;
 }
 
