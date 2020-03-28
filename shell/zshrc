@@ -63,6 +63,7 @@ git
 forgit
 copyfile
 copydir
+docker
 dockit
 )
 
@@ -105,7 +106,6 @@ alias octave="flatpak run org.octave.Octave"
 alias -s pdf='zathura'
 # Expandable aliases
 alias -g D='& disown'
-alias -g cid='$(docker ps -a | fzf --multi --header-lines=1 --prompt="container> " | awk  '"'"'{print $1}'"'"')'
 mkcd ()
 {
     mkdir -p -- "$1" && cd -P -- "$1"
@@ -133,7 +133,7 @@ kp () {
 
 # fzf options
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
+export FZF_COMPLETION_TRIGGER=','
 export FZF_PREVIEW_OPTS="
 --bind='alt-k:preview-up,alt-p:preview-up'
 --bind='alt-j:preview-down,alt-n:preview-down'
@@ -161,3 +161,26 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
 export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
+
+
+c() {
+  local cols sep google_history open
+  cols=$(( COLUMNS / 3 ))
+  sep='{::}'
+
+  if [ "$(uname)" = "Darwin" ]; then
+    google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
+    open=open
+  else
+    google_history="$HOME/.config/google-chrome/Default/History"
+    open=xdg-open
+  fi
+  cp -f "$google_history" /tmp/h
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
+}
+
+autoload -Uz compinit && compinit -i
