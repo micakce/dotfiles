@@ -5,9 +5,25 @@ FZF_DOCKIT_PREVIEW="--preview=docker container inspect \$(echo {} | awk '{print 
 function dcrm() {
     for s in $(docker ps -a | fzf $FZF_DOCKIT_PREVIEW \
         --header="Remove container(s)" \
-        --header-lines=1 -m -q "$1" | awk '{print $1}');
-    do docker rm $s;
+        --header-lines=1 -m -q "$1" | awk '{print $1}')
+    do docker container rm $s;
     done;
+}
+
+function dcl() {
+    # https://unix.stackexchange.com/questions/29724/how-to-properly-collect-an-array-of-lines-in-zsh
+    local cid_array=("${(@f)$(docker ps -a | fzf $FZF_DOCKIT_PREVIEW \
+        --header="Select container to run" \
+        --header-lines=1 -m | awk '{print $1}')}")
+
+    if [ ${#cid_array} -eq 0 ]; then
+        echo "Nothing was selected"
+        return
+    fi
+    local cmd=$(echo "rm\ninspect" | fzf --header="Select command")
+    # echo "Containers: ${cid_array[@]}"
+    # vared -p "Command: " cmd
+    print -z docker container $cmd ${cid_array[@]}
 }
 
 # Select one or more running docker container to stop
@@ -55,10 +71,10 @@ function dirm() {
 }
 
 function dit() { # docker inspect filter test
-JQ_PREFIX="docker container inspect 8235cc373374 | jq "
+JQ_PREFIX="docker container inspect 8235cc373374 | jq -C "
 INITIAL_QUERY=""
 FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" \
-    fzf --bind "change:reload:$JQ_PREFIX '.[0].$(echo {q})' || true" \
+    fzf --bind "change:reload:$JQ_PREFIX '$(echo {q})' || true" \
     --bind "ctrl-r:reload:$JQ_PREFIX ." \
     --ansi --phony --query "$INITIAL_QUERY"
 }

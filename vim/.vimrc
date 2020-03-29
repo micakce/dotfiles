@@ -263,6 +263,10 @@ Plug 'weirongxu/plantuml-previewer.vim'
 " let g:mustache_operators = 0
 Plug 'tweekmonster/django-plus.vim'
 
+" " Check later
+" Plug 'haya14busa/vim-asterisk'
+Plug 'haya14busa/is.vim'
+
 " All of your Plugs must be added before the following line
 call plug#end()            " required
 
