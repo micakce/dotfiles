@@ -99,6 +99,8 @@ source $ZSH/oh-my-zsh.sh
 # Normal Aliases
 alias vconf="vim ~/.vimrc"
 alias zconf="vim ~/.zshrc"
+alias tconf="vim ~/.tmux.conf"
+alias dockit="vim ~/dotfiles/shell/custom/plugins/dockit/dockit.plugin.zsh"
 alias szsh="source ~/.zshrc"
 alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
@@ -115,22 +117,6 @@ runhis() {
     history | fzf -m -q "$1" | awk '{ print substr($0, index($0,$4))  }' | bash
 }
 
-### PROCESS
-# mnemonic: [K]ill [P]rocess
-# show output of "ps -ef", use [tab] to select one or multiple entries
-# press [enter] to kill selected processes and go back to the process list.
-# or press [escape] to go back to the process list. Press [escape] twice to exit completely.
-kp () {
-
-    local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
-
-    if [ "x$pid" != "x" ]
-    then
-        echo $pid | xargs kill -${1:-9}
-        kp
-    fi
-}
-
 # fzf options
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_COMPLETION_TRIGGER=','
@@ -139,7 +125,7 @@ export FZF_PREVIEW_OPTS="
 --bind='alt-j:preview-down,alt-n:preview-down'
 --bind='ctrl-r:toggle-all'
 --bind='ctrl-s:toggle-sort'
---bind='?:toggle-preview'
+--bind='alt-p:toggle-preview'
 --bind='alt-w:toggle-preview-wrap'"
 
 export FZF_DEFAULT_OPTS="
@@ -148,19 +134,25 @@ $FZF_PREVIEW_OPTS
 --reverse
 --border"
 
-
-# --files: List files that would be searched but do not search
-# --no-ignore: Do not respect .gitignore, etc...
-# --hidden: Search hidden files and folders
-# --follow: Follow symlinks
-# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
-
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
 
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
 export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf "$@" --height 100% --preview-window down --preview 'tree -C {} -I node_modules | head -200' ;;
+    cp|mv|rm)     fzf "$@" --height 100% --preview-window down:40% --preview 'tree -C {} -I node_modules | head -200' ;;
+    export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
+    ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
+    *)            fzf "$@" ;;
+  esac
+}
 
 
 c() {
@@ -183,4 +175,19 @@ c() {
   fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
 }
 
-autoload -Uz compinit && compinit -i
+# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
+fkill() {
+    local pid
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi
+}
+
+# autoload -Uz compinit && compinit -i
