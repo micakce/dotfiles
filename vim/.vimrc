@@ -10,18 +10,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
-" TO DELETE
-" Plug 'mcchrish/nnn.vim'
-" Plug 'mxw/vim-jsx'
-" let g:vim_jsx_pretty_highlight_close_tag=1
-" let g:vim_jsx_pretty_colorful_config=1
-" Plug 'JamshedVesuna/vim-markdown-preview' "sudo apt install xdotool
-" Plug 'joeyespo/grip'
-" let vim_markdown_preview_hotkey='<leader>om'
-" let vim_markdown_preview_toggle=0
-" let vim_markdown_preview_github=1
-" let vim_markdown_preview_pandoc=0
-
 Plug 'godlygeek/tabular'
 " Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
@@ -31,17 +19,9 @@ Plug 'pangloss/vim-javascript'
 
 Plug 'MaxMEllon/vim-jsx-pretty'
 
-
-
 Plug 'drewtempelmeyer/palenight.vim'
 
-Plug 'vim-airline/vim-airline' "{{{
-" set laststatus=2
-" let g:airline_theme='murmur'
-" set t_Co=256
-" let g:airline_powerline_fonts = 1
-" let g:airline_symbols.maxlinenr ='' "}}}
-
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes' "{{{
 let g:airline_theme='murmur'
 set laststatus=2
@@ -50,11 +30,7 @@ if !exists('g:airline_symbols') "{{{
     let g:airline_symbols = {}
 endif
 let g:airline_symbols.maxlinenr ='|' "}}}
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#tabline#left_alt_sep = ''
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#left_sep = '⦒' "}}}
-
+"}}}
 
 Plug 'easymotion/vim-easymotion'
 map f <Leader><Leader>f
@@ -70,11 +46,10 @@ nmap ga <Plug>(EasyAlign)
 "}}}
 
 Plug 'christoomey/vim-tmux-navigator'
-" nmap <Leader>a <c-a>
 
 Plug 'Yggdroot/indentLine'
 let g:indentLine_color_term = 8
-let g:indentLine_char = '┊' "↕  ⦚ ≀ ⟩ ⦂⦊ ⦒⫶ ⚡ ϟ ¦ ┋ ⦙ ░┊
+let g:indentLine_char = '┊'
 
 Plug 'jiangmiao/auto-pairs'
 " let g:AutoPairsShortcutBackInsert = 'ß'
@@ -85,10 +60,6 @@ Plug 'jiangmiao/auto-pairs'
 
 Plug 'tpope/vim-commentary' "{{{
 autocmd Filetype matlab setlocal commentstring=%\ %s
-" autocmd Filetype python setlocal commentstring=#'\ %s'
-vmap <leader>yc s"}}}<C-c>_PA"{{{
-noremap <leader>ysc {jA "{{{<C-c>}kA "}}}<C-c>
-noremap <leader>dsc di{"_dipP "}}}o<C-c>
 
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -96,13 +67,8 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-dadbod'
 
-" Plug 'zxqfl/tabnine-vim'
-
-
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" let g:fzf_buffers_jump = 1
 noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
 noremap <c-b> :Buffers<CR>
@@ -123,20 +89,14 @@ function! RipgrepFzf(query, fullscreen)
     let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
     call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
-command! -bang -nargs=* GGrep
-            \ call fzf#vim#grep(
-            \   'git grep --line-number '.shellescape(<q-args>), 0,
-            \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
-
+command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
             \   fzf#vim#with_preview(), <bang>0)
 
-command! -bang -nargs=* Find
+command! -bang -nargs=* Ffind
             \ call fzf#vim#grep(
             \ 'rg
             \ --column
@@ -154,23 +114,8 @@ command! -bang -nargs=* Find
             \           : fzf#vim#with_preview('right:50%:hidden', '?'),
             \   <bang>0)
 
-" --column: Show column number
-" --line-number: Show line number
-" --no-heading: Do not show file headings in results
-" --fixed-strings: Search term as a literal string
-" --ignore-case: Case insensitive search
-" --no-ignore: Do not respect .gitignore, etc...
-" --hidden: Search hidden files and folders
-" --follow: Follow symlinks
-" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
-" --color: Search color options
-
 Plug 'jremmen/vim-ripgrep'
 
-
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-" source $HOME/dotfiles/vim/autocompletion.vimrc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 set hidden
 set cmdheight=2
@@ -247,44 +192,47 @@ Plug 'alvan/vim-closetag'
 let g:closetag_filetypes = 'html,xhtml,phtml,javascript'
 
 Plug 'mattn/emmet-vim'
-" imap ,<Tab> <C-y>,
-" imap ,j <C-y>j
-
 
 Plug 'aklt/plantuml-syntax'
-Plug 'tyru/open-browser.vim'
-Plug 'weirongxu/plantuml-previewer.vim'
-" Plug 'scrooloose/vim-slumlord'
-
-" Plug 'mustache/vim-mustache-handlebars'
-" " Enable/disable abbreviations {{if => {{#if _}}{{/if}}
-" let g:mustache_abbreviations = 0
-" " Enable/disable object operatos ie, ae (inside/around element), enabled bydefault
-" let g:mustache_operators = 0
-Plug 'tweekmonster/django-plus.vim'
 
 " " Check later
 " Plug 'haya14busa/vim-asterisk'
 Plug 'haya14busa/is.vim'
 
+Plug 'vimwiki/vimwiki'
+set nocompatible
+filetype plugin on
+syntax on
+let g:vimwiki_folding = 'syntax'
+if !exists('wiki')
+    let wiki={}
+    let wiki.path= "~/dotfiles/vimwiki/wiki"
+    let wiki.path_html= "~/dotfiles/vimwiki/wiki_html"
+    let wiki.syntax= "markdown"
+    let wiki.ext= ".md"
+    " let wiki.template_path ="~/dotfiles/vimwiki/wiki/templates"
+    " let wiki.template_default="default"
+    let wiki.template_ext=".html"
+endif
+let g:vimwiki_list = [wiki]
+" let g:vimwiki_ext2syntax = {'.md': 'markdown',
+"             \ '.mkd': 'markdown',
+            " \ '.wiki': 'media'}
+
 " All of your Plugs must be added before the following line
 call plug#end()            " required
-
 filetype plugin indent on    " required
 
-"" File Navegation Netrw
-"" Misc
 
-" tree-view
+"" File Navegation
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 
-" noremap  i<CR><c-c>
+" Miscelaneos
 noremap <silent> <Leader>tw :%s,\s*$,,g<CR>'':nohl<CR>
 set switchbuf+=usetab,newtab
 autocmd BufEnter *.hbs :set ft=html
 com! FormatJSON %!python3 -m json.tool
-noremap mew xwP
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
@@ -299,25 +247,15 @@ noremap <Leader>ev :bel vsplit $MYVIMRC<CR>
 noremap <Leader>evh :e $MYVIMRC<CR>
 noremap <Leader>sv :source $MYVIMRC<CR>
 noremap <Leader>br mm:s/\S/&\r/g<CR>:nohl<CR>dd'm
-noremap <Leader>h :tabprevious<CR>
-noremap <Leader>l :tabnext<CR>
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o ""autocomment insertion
-" nnoremap  i<CR><c-c>
 nnoremap <Leader>o Go
-" noremap <Leader>gu<CR> :! gulp && clear && node public/dist/%:t<CR>
 inoremap <C-f> <C-c>A
 set showcmd
-" Command Mode
-" noremap! <C-J> <down>
-" noremap! <C-K> <up>
 
-" automatic reloading of .vimrc
-autocmd! bufwritepost .vimrc source %
 " Mouse and backspace
 set mouse=a " on OSX press ALT and click
 set bs=2 " make backspace behave like normal again
 noremap <silent> <C-n> :nohl<CR>
-" vnoremap <C-n> :nohl<CR>
 
 " Quicksave command
 nnoremap  <Leader>u :update<CR>
@@ -326,7 +264,6 @@ nnoremap  <Leader>u :update<CR>
 nnoremap <Leader>q :quit<CR>
 nnoremap <Leader>Q :q!<CR>
 nnoremap <Leader>Qa :qa!<CR>
-nnoremap <Leader>wq :wq<CR>
 
 map <c-j> <c-w>j
 map <c-k> <c-w>k
@@ -347,10 +284,7 @@ autocmd ColorScheme * highlight fLiteral ctermfg=45
 " " This is to match brackets, messess up jsx syntax
 " au InsertLeave * match fLiteral /{.*}/
 
-" Color scheme mkdir -p ~/.vim/colors && cd ~/.vim/colors wget -O
-" color my_html
 " Activa and desactivate spelling
-noremap <F8> :call Spelling()<CR>
 function! Spelling()
     if  &spell
         execute "setlocal spell!"
@@ -360,14 +294,14 @@ function! Spelling()
         echomsg "Spelling is on"
     endif
 endfunction
+noremap <F8> :call Spelling()<CR>
+
 hi SpellBad ctermbg=yellow ctermfg=black
 hi SpellCap ctermbg=yellow ctermfg=black
+
 set cursorline
 " set cursorcolumn
 hi Cursorline cterm=none ctermbg=235
-" hi Cursorcolumn ctermbg=235
-" autocmd BufEnter *.html colorscheme my_html
-" au BufEnter * colorscheme wombat256mod
 
 " Showing line numbers and length
 set number " show line numbers
@@ -382,7 +316,7 @@ highlight colorcolumn ctermbg=233
 set history=700
 set undolevels=700
 
-" " Real programmers don't use TABs but spaces
+" Real programmers don't use TABs but spaces
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -400,9 +334,6 @@ set smartcase
 set nobackup
 set nowritebackup
 set noswapfile
-
-" Better navigating through omnicomplete option list
-" See http://stackoverflow.com/questions/2170023/how-to-map-keys-for-popup-menu-in-vim
 
 ""Move Lines
 vnoremap j :m'>+<CR>gv=gv
@@ -425,7 +356,6 @@ noremap <Leader>cc "_cc
 noremap <Leader>x "_x
 
 " Better search
-" noremap <F3> :vimgrep //j **/*<left><left><left><left><left><left><left>
 function! Vimgrep()
     call inputsave()
     let search = input('Enter search: ')
@@ -464,8 +394,6 @@ augroup END
 augroup java
     autocmd!
     autocmd FileType java map <F5> :call CompileJava()<CR>
-    " autocmd FileType java nnoremap ¢ :w !javac %<CR>
-    " autocmd FileType java nnoremap <F5> :!java -cp %:p:h %:t:r<CR>
 augroup END
 
 func! CompileJava()
