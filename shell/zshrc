@@ -106,6 +106,9 @@ alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
 # Prefix aliases
 alias -s pdf='zathura'
+alias -s mkv='vlc'
+alias -s png='eog'
+alias -s jpg='eog'
 # Expandable aliases
 alias -g D='& disown'
 mkcd ()
@@ -135,18 +138,27 @@ $FZF_PREVIEW_OPTS
 --border"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
+export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{.git,node_modules}"'
 
+# # command to generate dir list
+# _fzf_compgen_dir() {
+#     rg --hidden --sort-files --files --glob "!{.git,node_modules}" --null 2> /dev/null  | xargs -0 dirname | uniq
+# }
 
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
-export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
 
 _fzf_comprun() {
   local command=$1
   shift
-
   case "$command" in
-    cd)           fzf "$@" --height 100% --preview-window down --preview 'tree -C {} -I node_modules | head -200' ;;
+    cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree -C {} -I node_modules | head -200' ;;
     cp|mv|rm)     fzf "$@" --height 100% --preview-window down:40% --preview 'tree -C {} -I node_modules | head -200' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
@@ -190,4 +202,9 @@ fkill() {
     fi
 }
 
-# autoload -Uz compinit && compinit -i
+
+
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
+export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
+autoload -Uz compinit && compinit -i
