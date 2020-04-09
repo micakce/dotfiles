@@ -1,4 +1,4 @@
-# Personal Linux Cheat Sheet
+# Check size of a folder
 
 Check the size of a folder
 
