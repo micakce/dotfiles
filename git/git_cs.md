@@ -1,6 +1,7 @@
 View changes in files after pull
 
-Suppose you're pulling to master. You can refer to the previous position of master by master@{1} (or even master@{10.minutes.ago}; see the specifying revisions section of the git-rev-parse man page), so that you can do things like
+Suppose you're pulling to master. You can refer to the previous position of master by master@{1} (or even master@{10.minutes.ago};
+see the specifying revisions section of the git-rev-parse man page), so that you can do things like
 
 ```bash
 
