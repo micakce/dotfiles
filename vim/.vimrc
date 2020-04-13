@@ -13,6 +13,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'godlygeek/tabular'
 " Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+let g:mkdp_auto_close = 0
+noremap <leader>mp :MarkdownPreview<CR>
 
 
 Plug 'pangloss/vim-javascript'
@@ -121,6 +123,20 @@ set hidden
 set cmdheight=2
 set updatetime=300
 set signcolumn=yes
+
+" set statusline^=%{coc#status()}
+" Disable vim-airline integration:
+" let g:airline#extensions#coc#enabled = 0
+" " Change error symbol:
+" let airline#extensions#coc#error_symbol = 'Error:'
+" " Change warning symbol:
+" let airline#extensions#coc#warning_symbol = 'Warning:'
+" " Change error format:
+" let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+" " Change warning format:
+" let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+
+" Specify a directory for plugins
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -139,6 +155,7 @@ endfunction
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent><expr> ñ coc#refresh()
 
+Plug 'honza/vim-snippets'
 " ### CocInstall coc-snippets ###
 " Use <C-l> for trigger snippet expand.
 imap <C-l> <Plug>(coc-snippets-expand)
@@ -153,37 +170,6 @@ vmap <C-j> <Plug>(coc-snippets-select)
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
-
-Plug 'dense-analysis/ale'
-let g:ale_enabled = 0
-let g:ale_fix_on_save = 1
-" let g:airline#extensions#ale#enabled = 1
-" let g:ale_set_highlights = 0
-" highlight clear ALEErrorSign
-" highlight clear ALEWarningSign
-" let g:ale_java_javac_classpath = '~/studying/java_101/authorizeTransactions/lib/org/json/'
-" let g:ale_java_javalsp_executable =
-"             \ {
-"             \   'java': {
-"             \     'externalDependencies': [
-"             \       '~/studying/java_101/authorizeTransactions/lib/json-20190722.jar'
-"             \     ],
-"             \     'classPath': [
-"             \       '~/studying/java_101/authorizeTransactions/lib/json-20190722.jar'
-"             \     ]
-"             \   }
-"             \ }
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_open_list = 1
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_fixers = {
-            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-            \   'javascript': ['eslint'],
-            \   'java': ['google_java_format'],
-            \}
 
 Plug 'wellle/targets.vim' "Argument-Text-Object
 Plug 'michaeljsmith/vim-indent-object'
@@ -306,10 +292,10 @@ hi Cursorline cterm=none ctermbg=235
 " Showing line numbers and length
 set number " show line numbers
 set relativenumber "show relative line numbers
-set tw=79 " width of document (used by gd)
 set nowrap " don't automatically wrap on load
-set fo-=t " don't automatically wrap text when typing
-set colorcolumn=80
+" set fo-=t " don't automatically wrap text when typing
+set tw=89 " width of document (used by gd)
+set colorcolumn=90
 highlight colorcolumn ctermbg=233
 
 " Useful settings
