@@ -134,6 +134,7 @@ export FZF_PREVIEW_OPTS="
 export FZF_DEFAULT_OPTS="
 $FZF_PREVIEW_OPTS
 --height 50%
+--cycle
 --reverse
 --border"
 

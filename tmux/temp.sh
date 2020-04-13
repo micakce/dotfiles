@@ -13,4 +13,7 @@ then
 elif [ $temp -gt 40 ];
 then
     echo "#[fg=colour233,bg=colour2,bold] $temp°C";
+elif [ $temp -gt 30 ];
+then
+    echo "#[fg=colour233,bg=colour12,bold] $temp°C";
 fi
