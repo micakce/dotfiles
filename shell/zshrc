@@ -159,8 +159,8 @@ _fzf_comprun() {
   local command=$1
   shift
   case "$command" in
-    cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree -C {} -I node_modules | head -200' ;;
-    cp|mv|rm)     fzf "$@" --height 100% --preview-window down:40% --preview 'tree -C {} -I node_modules | head -200' ;;
+    cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
+    cp|mv|rm)     fzf "$@" --height 100% --preview-window down:40% --preview '[ -d {} ] && tree --dirsfirst -C {} || bat --color=always {} | head -500' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)            fzf "$@" ;;
