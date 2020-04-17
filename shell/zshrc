@@ -104,6 +104,7 @@ alias dockit="vim ~/dotfiles/shell/custom/plugins/dockit/dockit.plugin.zsh"
 alias szsh="source ~/.zshrc"
 alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
+alias py="python3"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s mkv='vlc'
