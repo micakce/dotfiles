@@ -24,24 +24,24 @@ snap install ripgrep --classic
 
 FILE=$HOME/.vimrc
 if test -f "$FILE"; then
-	echo "--->  Backing up any previous .vimrc"
-	mv $HOME/.vimrc $HOME/.vimrc.bak
-	echo "--->  Linking .vimrc"
-	ln -sf $BASEDIR/vim/.vimrc $HOME/.vimrc
+    echo "--->  Backing up any previous .vimrc"
+    mv $HOME/.vimrc $HOME/.vimrc.bak
+    echo "--->  Linking .vimrc"
+    ln -sf $BASEDIR/vim/.vimrc $HOME/.vimrc
 else
-	echo "--->  Linking .vimrc"
-	ln -sf $BASEDIR/vim/.vimrc $HOME/.vimrc
+    echo "--->  Linking .vimrc"
+    ln -sf $BASEDIR/vim/.vimrc $HOME/.vimrc
 fi
 
 FILE=$HOME/.gvimrc
 if test -f "$FILE"; then
-	echo "--->  Backing up any previous .gvimrc"
-	mv $HOME/.gvimrc $HOME/.gvimrc.bak
-	echo "--->  Linking .gvimrc"
-	ln -sf $BASEDIR/vim/.gvimrc $HOME/.gvimrc
+    echo "--->  Backing up any previous .gvimrc"
+    mv $HOME/.gvimrc $HOME/.gvimrc.bak
+    echo "--->  Linking .gvimrc"
+    ln -sf $BASEDIR/vim/.gvimrc $HOME/.gvimrc
 else
-	echo "--->  Linking .gvimrc"
-	ln -sf $BASEDIR/vim/.gvimrc $HOME/.gvimrc
+    echo "--->  Linking .gvimrc"
+    ln -sf $BASEDIR/vim/.gvimrc $HOME/.gvimrc
 fi
 
 # Installing tmux

@@ -1,4 +1,3 @@
-
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " VimPlug: Auto install vimplug, plugin manager
@@ -24,7 +23,7 @@ Plug 'tpope/vim-dadbod' " Connect with databases
 Plug 'tpope/vim-commentary' " VimCommentary
 " JUNEGUNN: !PUTO CRACK!
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
-Plug 'junegunn/vim-slash' " Search highlighting improved
+Plug 'junegunn/vim-slash' " Slash
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "FZF
 Plug 'junegunn/fzf.vim'
 Plug 'jremmen/vim-ripgrep'
@@ -48,13 +47,11 @@ let g:mkdp_auto_close = 0
 noremap <leader>mp :MarkdownPreview<CR>
 
 " VimAirline: Nice status bar
-let g:airline_theme='murmur'
 set laststatus=2
 set t_Co=256
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-    " let g:airline_symbols.maxlinenr ='|'
-endif
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme='murmur'
 
 " VimEasyMotion: Jump cursor wherever you want
 map f <Leader><Leader>f
@@ -75,6 +72,14 @@ autocmd Filetype matlab setlocal commentstring=%\ %s
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+" Slash: Improved search highlighting
+if has('timers')
+    " Blink 2 times with 50ms interval
+    noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 75)
+else
+    noremap <plug>(slash-after) zz
+endif
 
 "            FZF: Everything fuzzy finder
 " Files: Find fies in project with fzf
@@ -178,7 +183,7 @@ set showcmd
 
 " Mouse and backspace
 set mouse=a " on OSX press ALT and click
-" set bs=2 " make backspace behave like normal again
+set bs=2 " make backspace behave like normal again
 noremap <silent> <C-n> :nohl<CR>
 
 " Quicksave command
