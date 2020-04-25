@@ -105,6 +105,7 @@ alias szsh="source ~/.zshrc"
 alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
 alias py="python3"
+alias nvim="~/studying/learn_vim_the_hard_way/nvim.appimage"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s mkv='vlc'
@@ -161,7 +162,7 @@ _fzf_comprun() {
   shift
   case "$command" in
     cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm)     fzf "$@" --height 100% --preview-window down:40% --preview '[ -d {} ] && tree --dirsfirst -C {} || bat --color=always {} | head -500' ;;
+    cp|mv|rm|vim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} || bat --color=always {} | head -200' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)            fzf "$@" ;;
@@ -203,8 +204,6 @@ fkill() {
         echo $pid | xargs kill -${1:-9}
     fi
 }
-
-
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:/snap/bin:$PATH

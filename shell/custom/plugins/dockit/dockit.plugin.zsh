@@ -97,12 +97,12 @@ function dil() { #docker image list
 
 
 function jqit() { # jq interactive filtering
-JQ_PREFIX=" $@ | jq -C "
+JQ_PREFIX=" cat $1 | jq -C "
 INITIAL_QUERY=""
 FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" \
-    fzf --bind "change:reload:$JQ_PREFIX '$(echo {q})' || true" \
+    fzf --bind "change:reload:$JQ_PREFIX {q} || true" \
     --bind "ctrl-r:reload:$JQ_PREFIX ." \
-    --ansi --phony --query "$INITIAL_QUERY"
+    --ansi --phony
 }
 
 function RG() { # fzf as filter and not fuzzy finder
