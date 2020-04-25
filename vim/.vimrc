@@ -7,6 +7,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } } " MarkDownPreview
 Plug 'drewtempelmeyer/palenight.vim' " My favorite colorscheme, aparently
@@ -33,10 +34,12 @@ Plug 'wellle/targets.vim' " Argument based text object
 Plug 'michaeljsmith/vim-indent-object' " Indent based text object
 Plug 'mattn/emmet-vim' "HTML
 Plug 'vimwiki/vimwiki' "VimWiki
+Plug 'airblade/vim-gitgutter' "GitGutter
 call plug#end()            " required
 filetype plugin indent on    " required
 
-" Who is the boss?
+
+" Who is the boss key?
 let mapleader = " "
 
 colorscheme palenight
@@ -76,15 +79,22 @@ nmap ga <Plug>(EasyAlign)
 " Slash: Improved search highlighting
 if has('timers')
     " Blink 2 times with 50ms interval
-    noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 75)
+    noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 45)
 else
     noremap <plug>(slash-after) zz
 endif
 
 "            FZF: Everything fuzzy finder
+" General_options:
+" Open in a new full window
+let g:fzf_layout = { 'window': 'enew' }
+" hide status bar
+autocmd! FileType fzf set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
 " Files: Find fies in project with fzf
 command! -bang -nargs=? -complete=dir Files
-            \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+            \ call fzf#vim#files(<q-args>, fzf#vim#with_preview("down:50%"), <bang>0)
 
 "Find: Find files by content
 function! RipgrepFzf(query, fullscreen)
@@ -92,7 +102,7 @@ function! RipgrepFzf(query, fullscreen)
     let initial_command = printf(command_fmt, shellescape(a:query))
     let reload_command = printf(command_fmt, '{q}')
     let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec, "down:50%"), a:fullscreen)
 endfunction
 command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 
@@ -107,20 +117,67 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 set hidden
 set updatetime=300
 set signcolumn=yes
-" inoremap <silent><expr> <TAB>
-"             \ pumvisible() ? "\<C-n>" :
-"             \ <SID>check_back_space() ? "\<TAB>" :
-"             \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" function! s:check_back_space() abort
-"     let col = col('.') - 1
-"     return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" inoremap <silent><expr> ñ coc#refresh()
+" set completeopt+=noselect
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <esc>r coc#refresh()
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Remap for rename current word
+nmap <F2> <Plug>(coc-rename)
+
+" coc config
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ ]
+" " from readme
+" " if hidden is not set, TextEdit might fail.
+" set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup
+" Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
+" set updatetime=300
+" " don't give |ins-completion-menu| messages.
+" set shortmess+=c
+" " always show signcolumns
+" set signcolumn=yes
 " VimSnippets: Useful snippets
 " " ### CocInstall coc-snippets ###
 " " Use <C-l> for trigger snippet expand.
@@ -211,7 +268,7 @@ autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 
 " " This is to match brackets, messess up jsx syntax
-" au InsertLeave * match fLiteral /f\('\|"\).*\({[^}]*}\).*\('\|"\)/;/{[^}]*}/
+" au InsertLeave * match fLiteral2 /f\('\|"\).*\({[^}]*}\).*\('\|"\)/;/{[^}]*}/
 " au! InsertLeave * match fLiteral /f\('\|"\).*\({[^}]*}\).*\('\|"\)/\2
 
 " Activa and desactivate spelling
@@ -304,6 +361,7 @@ augroup PYTHON
     autocmd!
     autocmd ColorScheme * highlight fLiteral ctermfg=133
     autocmd BufRead,BufEnter,InsertLeave *.py match fLiteral /{[^}]*}/
+    autocmd FileType python set foldmethod=indent
 augroup END
 
 augroup XML
@@ -345,12 +403,16 @@ function! Compile() "{{{
         execute "!nodejs " . bufname("%")
     elseif &filetype=="python"
         silent !clear
-        execute "w !python3 %"
+        execute "w | !clear & python3 %"
     endif
 endfunction
-nnoremap ¢ :call Compile()<CR> "}}}
+nnoremap ¢ :call Compile()<CR>
+"}}}
 
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
 set background=dark
+
+" LearnVimTheHardWay:
+autocmd  VimEnter * echom ">^.^<"
