@@ -1,37 +1,46 @@
 #!/bin/bash
 
-#function to parse the json response from curl command 
+# function to parse the error json response from curl command
 function jsonValue() {
 KEY=$1
 num=$2
-awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'$KEY'\042/){print $(i+1)}}}' | tr -d '"' | sed -n ${num}p
+awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'$KEY'\042/){print $(i+1)}}}' | tr -d '"' | \
+    sed -n ${num}p
 }
 
-repo_name=$1
-readme=$2
-url="https://github.com/micakce/$repo_name.git"
+# import user and password variables
+. git_credentials
 
-test -z $repo_name && echo "Repo name required." 1>&2 && exit 1
+# if not passed as first argument, current repo root folder name is taken
+if test $1; then
+    repo_name=$1
+else
+    repo_name=$(basename `git rev-parse --show-toplevel` 2>/dev/null)
+    err=$?
+    if [ $err -gt 0 ]; then
+        echo "Execute script from repository or pass repository name" && exit
+    fi
+fi
 
-# curl -u 'micakce' https://api.github.com/user/repos -d "{\"name\":\"$repo_name\"}"
-response=`curl -s -u 'micakce' https://api.github.com/user/repos -d "{\"name\":\"$1\"}"`
+
+# curl command to create repo
+response=`curl -s -u $user:$password https://api.github.com/user/repos \
+    -d "{\"name\":\"$repo_name\"}"`
+
+# if repo creation fails, parse response to get error message, display it and exit
 message=`echo $response | jsonValue message`
-
 if [ ${#message} -gt 0 ]; then
     echo $message
     exit
 fi
 
-echo $response > git.json
+# #  Repo creation response has all repo info, you can save this to a file, or not.
+# echo $response > git.json
 
 echo "El repositorio se ha creado exitosamente"
 
-if [ ${#readme} -gt 0 ]; then
-    echo $readme > README.md
-else
-    echo "Remember to ad a Readme.md file"
-fi
-
+# url for setting the origin
+url="https://github.com/micakce/$repo_name.git"
 OUT=`git remote 2> /dev/null`
 err=$?
 
