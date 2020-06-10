@@ -1,4 +1,4 @@
-DOCKIT_JQ_PATTERN=".[0] | { Id: .Id, Mounts: .Mounts, Config: {CMD: .Config.Cmd }}"
+DOCKIT_JQ_PATTERN=".[0] | { Id: .Id, Mounts: .Mounts, Config: {CMD: .Config }}"
 FZF_DOCKIT_PREVIEW="--preview=docker inspect {1} | jq -C '$DOCKIT_JQ_PATTERN'"
 
 # Select one or more docker container(s) to remove
@@ -27,6 +27,7 @@ function dcl() {
         --bind "ctrl-y:execute-silent(echo -n {1} | xclip -selection clipboard )+abort" \
         --bind "alt-i:execute(docker inspect {1} | jq -C . | less -R > /dev/tty)" \
         --header="Select container to run" \
+        --preview-window="down:50%" \
         --header-lines=1 -m | awk '{print $1}')}")
 
     if [ "${cid_array[1]}" -eq "" 2> /dev/null ]; then
@@ -82,17 +83,18 @@ function dirm() {
 
 function dil() { #docker image list
     # https://unix.stackexchange.com/questions/29724/how-to-properly-collect-an-array-of-lines-in-zsh
-    local cid_array=("${(@f)$(docker image ls $@ | fzf $FZF_DOCKIT_PREVIEW \
+    local cid_array=("${(@f)$(docker image ls $@ | fzf \
         --preview="docker inspect {3} | jq -C '$DOCKIT_JQ_PATTERN'" \
+        --preview-window="down:50%" \
         --bind "ctrl-y:execute-silent(echo -n {3} | xclip -selection clipboard )+abort" \
         --bind "alt-i:execute(docker inspect {3} | jq -C . | less -R > /dev/tty)" \
         --header="Docker image list " \
-        --header-lines=1 -m | awk '{print $1}')}")
+        --header-lines=1 -m | awk '{print $3}')}")
     if [ "${cid_array[1]}" -eq "" 2> /dev/null ]; then
         return
     fi
     local cmd=$(echo "rm\ninspect" | fzf --header="Select command")
-    print -z docker container $cmd ${cid_array[@]}
+    print -z docker image $cmd ${cid_array[@]}
 }
 
 

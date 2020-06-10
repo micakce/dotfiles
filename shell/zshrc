@@ -7,7 +7,7 @@ export ZSH=~/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="micakce"
+ZSH_THEME="oxide"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -106,6 +106,8 @@ alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
 alias py="python3"
 alias nvim="~/studying/learn_vim_the_hard_way/nvim.appimage"
+alias draw="~/.appImage/draw.io-x86_64-13.0.1.AppImage &>/dev/null & disown"
+alias mp="multipass"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s mkv='vlc'
@@ -135,13 +137,13 @@ export FZF_PREVIEW_OPTS="
 
 export FZF_DEFAULT_OPTS="
 $FZF_PREVIEW_OPTS
---height 50%
+--height 100%
 --cycle
 --reverse
 --border"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
-export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{.git,node_modules}"'
+export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
 
 # # command to generate dir list
 # _fzf_compgen_dir() {
@@ -149,7 +151,7 @@ export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{.git,node_modules}"'
 # }
 
 _fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git" . "$1"
+  fd --hidden --follow --exclude ".git" --exclude "node_modules" . "$1"
 }
 
 # Use fd to generate the list for directory completion
@@ -162,7 +164,7 @@ _fzf_comprun() {
   shift
   case "$command" in
     cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} || bat --color=always {} | head -200' ;;
+    cp|mv|rm|vim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)            fzf "$@" ;;
@@ -190,6 +192,14 @@ c() {
   fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
 }
 
+V() {
+        local file=`fzf`
+        if [ -n "$file" ]; then
+        vim $file;
+        fi
+
+}
+
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.
 fkill() {
     local pid
@@ -209,3 +219,6 @@ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:/snap/bin:$PATH
 export CLASS_PATH=/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/
 autoload -Uz compinit && compinit -i
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$HOME/.symfony/bin:$PATH"

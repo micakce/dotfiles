@@ -54,9 +54,12 @@ if test -f "$FILE"; then
     mv $HOME/.tmux.conf $HOME/.tmux.conf.bak
     echo "--->  Linking .tmux.conf"
     ln -sf $BASEDIR/tmux/.tmux.conf $HOME/.tmux.conf
+    echo "--->  Instaling TPM"
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 else
     echo "--->  Linking .tmux.conf"
     ln -sf $BASEDIR/tmux/.tmux.conf $HOME/.tmux.conf
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
 # echo "--->  Making backup of .tmux folder"
