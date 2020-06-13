@@ -52,7 +52,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$HOME/dotfiles/shell/custom
+ZSH_CUSTOM=$HOME/dotfiles/zsh/custom
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -65,11 +65,13 @@ copyfile
 copydir
 docker
 dockit
+zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -124,52 +126,6 @@ runhis() {
     history | fzf -m -q "$1" | awk '{ print substr($0, index($0,$4))  }' | bash
 }
 
-# fzf options
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_COMPLETION_TRIGGER=','
-export FZF_PREVIEW_OPTS="
---bind='alt-k:preview-up,alt-p:preview-up'
---bind='alt-j:preview-down,alt-n:preview-down'
---bind='ctrl-r:toggle-all'
---bind='ctrl-s:toggle-sort'
---bind='alt-p:toggle-preview'
---bind='alt-w:toggle-preview-wrap'"
-
-export FZF_DEFAULT_OPTS="
-$FZF_PREVIEW_OPTS
---height 100%
---cycle
---reverse
---border"
-
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
-export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
-
-# # command to generate dir list
-# _fzf_compgen_dir() {
-#     rg --hidden --sort-files --files --glob "!{.git,node_modules}" --null 2> /dev/null  | xargs -0 dirname | uniq
-# }
-
-_fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git" --exclude "node_modules" . "$1"
-}
-
-# Use fd to generate the list for directory completion
-_fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".git" . "$1"
-}
-
-_fzf_comprun() {
-  local command=$1
-  shift
-  case "$command" in
-    cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
-    export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
-    ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
-    *)            fzf "$@" ;;
-  esac
-}
 
 
 c() {
@@ -222,3 +178,6 @@ autoload -Uz compinit && compinit -i
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.symfony/bin:$PATH"
+
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"

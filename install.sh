@@ -79,14 +79,14 @@ if test -f "$FILE"; then
     echo "--->  Making backup of zshrc"
     mv $HOME/.zshrc $HOME/.zshrc.bak
     echo "--->  Linking .zshrc"
-    ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
+    ln -sf $BASEDIR/zsh/zshrc $HOME/.zshrc
 else
     echo "--->  Linking .zshrc"
-    ln -sf $BASEDIR/shell/zshrc $HOME/.zshrc
+    ln -sf $BASEDIR/zsh/zshrc $HOME/.zshrc
 fi
 
 echo "--->  Installing customized theme"
-ln -sf $BASEDIR/shell/custom/theme/micakce.zsh-theme $BASEDIR/shell/oh-my-zsh/themes/micakce.zsh-theme
+ln -sf $BASEDIR/zsh/custom/theme/micakce.zsh-theme $BASEDIR/zsh/oh-my-zsh/themes/micakce.zsh-theme
 
 echo ""
 echo "====  Successfully installed environment  ===="

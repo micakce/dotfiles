@@ -69,10 +69,10 @@ map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 " map  n <Plug>(easymotion-next)
 " map  N <Plug>(easymotion-prev)
-" map f <Leader><Leade" Gif config
-" map F <Leader><Leader>F
-" map t <Leader><Leader>t
-" map T <Leader><Leader>T
+map <leader>f <Leader><Leader>f
+map <leader>F <Leader><Leader>F
+" map <leader>t <Leader><Leader>t
+" map <leader>T <Leader><Leader>T
 
 " IndentLine: Indent guide lines
 let g:indentLine_color_term = 8
@@ -82,7 +82,7 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
 
-"            JUNEGUNN: ¡PUTO CRACK!
+" JUNEGUNN: ¡PUTO CRACK!
 " VimEasyAlign: Best aligment plugin ever
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -97,7 +97,7 @@ else
     noremap <plug>(slash-after) zz
 endif
 
-"            FZF: Everything fuzzy finder
+" FZF: Everything fuzzy finder
 " General_options:
 " Open in a new full window
 let g:fzf_layout = { 'window': 'enew' }
@@ -121,7 +121,7 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview(), <bang>0)
 
 
-"Find: Find files by content
+" Find: Find files by content
 function! RipgrepFzf(query, fullscreen)
     let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always %s --glob "!{node_modules}" || true'
     let initial_command = printf(command_fmt, shellescape(a:query))
