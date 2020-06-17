@@ -1,4 +1,4 @@
-## Create repo from command line using GitHub API
+# Create repo from command line using GitHub API
 
 ### Use
 
@@ -23,3 +23,8 @@ curl -s -u username https://api.github.com/user/repos -d "{\"name\":\"$repo_name
 
 Enter host password for user 'username':
 ```
+
+# Create ctags based on hooks
+
+`git_template/hooks` containes scripts that automatically generates tags in the repos
+base on defined actions. Implementation based on [TPope blog post](https://tbaggery.com/2011/08/08/effortless-ctags-with-git.html)

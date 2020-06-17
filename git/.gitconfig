@@ -1,0 +1,5 @@
+[user]
+	email = d.guanipa@paisanoscreando.com
+	name = dguanipa
+[init]
+	templatedir = ~/.git_template

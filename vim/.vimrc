@@ -22,7 +22,7 @@ Plug 'tpope/vim-repeat' " Mini macros dot repeat
 Plug 'tpope/vim-surround' " Object-text surround commands
 Plug 'tpope/vim-dadbod' " Connect with databases
 Plug 'tpope/vim-commentary' " VimCommentary
-Plug 'tpope/vim-eunuch' " UNIX file commands sugar
+Plug 'tpope/vim-eunuch' " Eunuch
 " JUNEGUNN: !PUTO CRACK!
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
 Plug 'junegunn/vim-slash' " Slash
@@ -81,6 +81,11 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
+
+" " Eunuch: UNIX file commands sugar
+" function! s:Copy(name)
+"         ex
+" endfunction
 
 " JUNEGUNN: ¡PUTO CRACK!
 " VimEasyAlign: Best aligment plugin ever
@@ -145,7 +150,7 @@ set updatetime=300
 set signcolumn=yes
 " set completeopt+=noselect
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <silent><expr> <esc>r coc#refresh()
+inoremap <silent><expr> r coc#refresh()
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
@@ -362,6 +367,8 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 nnoremap <c-h> <c-w>h
+nnoremap <c-w>l <c-w>l:vertical resize 130<CR>
+nnoremap <c-w>h <c-w>h:vertical resize 130<CR>
 nnoremap <expr> <c-w><c-k> (v:count == 0 ? 5 : v:count) . '<c-w>+'
 nnoremap <expr> <c-w><c-j> (v:count == 0 ? 5 : v:count) . '<c-w>-'
 nnoremap <expr> <c-w><c-l> (v:count == 0 ? 5 : v:count) . '<c-w>>'
@@ -438,7 +445,7 @@ set undolevels=700
 " Real programmers don't use TABs but spaces
 set tabstop=4
 set softtabstop=4
-" set shiftwidth=4
+set shiftwidth=4
 set shiftround
 set expandtab
 
