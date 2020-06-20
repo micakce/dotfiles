@@ -23,6 +23,7 @@ Plug 'tpope/vim-surround' " Object-text surround commands
 Plug 'tpope/vim-dadbod' " Connect with databases
 Plug 'tpope/vim-commentary' " VimCommentary
 Plug 'tpope/vim-eunuch' " Eunuch
+Plug 'tpope/vim-fugitive' " Fugitive
 " JUNEGUNN: !PUTO CRACK!
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
 Plug 'junegunn/vim-slash' " Slash
@@ -87,6 +88,8 @@ autocmd Filetype matlab setlocal commentstring=%\ %s
 "         ex
 " endfunction
 
+" " Fugitive:
+" set statusline+=%{FugitiveStatusline()}
 " JUNEGUNN: ¡PUTO CRACK!
 " VimEasyAlign: Best aligment plugin ever
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -140,6 +143,7 @@ command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
 nnoremap f :MatchFileNameFind<CR>
+nnoremap t :Tags<CR>
 noremap <c-b> :Buffers<CR>
 inoremap <Leader><c-f> <plug>(fzf-complete-path)
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
@@ -516,6 +520,13 @@ augroup XML
     autocmd FileType xml setlocal foldmethod=syntax
     autocmd FileType xml setlocal tabstop=2 softtabstop=2  shiftwidth=2
     autocmd FileType xml :%foldopen!
+augroup END
+
+augroup PHP
+    autocmd!
+    autocmd FileType php let g:indentLine_enabled = 1
+" let g:indentLine_concealcursor = 'inc'
+" let g:indentLine_conceallevel = 2
 augroup END
 
 augroup MARKDOWN
