@@ -17,6 +17,7 @@ Plug 'easymotion/vim-easymotion' " VimEasyMotion
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Yggdroot/indentLine' " IndentLine
 Plug 'jiangmiao/auto-pairs' " Automatic brackets and quotes insert
+Plug 'majutsushi/tagbar'  " TagBar
 " TPOPE: ¡CAPO!
 Plug 'tpope/vim-repeat' " Mini macros dot repeat
 Plug 'tpope/vim-surround' " Object-text surround commands
@@ -83,6 +84,10 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
 
+" TabBar:
+nmap <leader>t :TagbarToggle<CR>
+" let g:tagbar_iconchars = ['↠', '↡']
+
 " " Eunuch: UNIX file commands sugar
 " function! s:Copy(name)
 "         ex
@@ -112,21 +117,21 @@ let g:fzf_layout = { 'window': 'enew' }
 " let g:fzf_layout = { 'window': {'width': 0.9, 'height': 0.6} }
 " hide status bar
 autocmd! FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+            \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 " Files: Find fies in project with fzf
 command! -bang -nargs=? -complete=dir Files
             \ call fzf#vim#files(<q-args>, fzf#vim#with_preview("down:50%"), <bang>0)
 
 command! -bang -nargs=* MatchFileNameFind
-  \ call fzf#vim#grep(
-  \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
+            \ call fzf#vim#grep(
+            \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+            \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
 
 command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
+            \ call fzf#vim#grep(
+            \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+            \   fzf#vim#with_preview(), <bang>0)
 
 
 " Find: Find files by content
@@ -144,6 +149,7 @@ noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
 nnoremap f :MatchFileNameFind<CR>
 nnoremap t :Tags<CR>
+nnoremap T :BTags<CR>
 noremap <c-b> :Buffers<CR>
 inoremap <Leader><c-f> <plug>(fzf-complete-path)
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
@@ -187,11 +193,11 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
 endfunction
 
 " Highlight symbol under cursor on CursorHold
@@ -201,12 +207,12 @@ nmap <F2> <Plug>(coc-rename)
 
 " coc config
 let g:coc_global_extensions = [
-                        \ 'coc-json',
-                        \ 'coc-tsserver',
-                        \ 'coc-prettier',
-                        \ 'coc-eslint',
-                        \ 'coc-snippets',
-                        \ ]
+            \ 'coc-json',
+            \ 'coc-tsserver',
+            \ 'coc-prettier',
+            \ 'coc-eslint',
+            \ 'coc-snippets',
+            \ ]
 " " from readme
 " " if hidden is not set, TextEdit might fail.
 " set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup
@@ -232,8 +238,8 @@ imap <C-l> <Plug>(coc-snippets-expand)
 " Targets: Augmented text object
 " allow argument text object to work inside '{}' as well
 autocmd User targets#mappings#user call targets#mappings#extend({
-                        \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}
-                        \ })
+            \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}
+            \ })
 
 " VimWiki: Documentation tool
 set nocompatible
@@ -257,6 +263,7 @@ let g:vim_jsx_pretty_highlight_close_tag=1
 
 " NerdTree:
 noremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
 
 " PythonSyntax:
 let g:python_highlight_all = 1
@@ -267,7 +274,7 @@ let g:netrw_banner = 0
 
 " Window:
 " copy yanked text to tmux pane
-function! Send_to_tmux(count) abort " ------------------------------ {{{
+function! s:Send_to_tmux(count) abort " ------------------------------ {{{
     let _count = (a:count == 0) ? 3 : a:count
     let text = @z
     let text = substitute(text, '\n', '', 'g')
@@ -279,27 +286,28 @@ function! Send_to_tmux(count) abort " ------------------------------ {{{
     unlet _count
     unlet text
 endfunction
-nnoremap <expr> <Leader>st '"zyip:call Send_to_tmux('.v:count.')<CR>'
-xnoremap <expr> <Leader>st '"zy:call Send_to_tmux('.v:count.')<CR>'}}}
+nnoremap <expr> <Leader>st '"zyip:call s:Send_to_tmux('.v:count.')<CR>'
+xnoremap <expr> <Leader>st '"zy:call s:Send_to_tmux('.v:count.')<CR>'
+"}}}
 
 " send paragraph under curso to terminal https://vi.stackexchange.com/questions/14300/vim-how-to-send-entire-line-to-a-buffer-of-type-terminal
 function s:exec_on_term(lnum1, lnum2)
-  " get terminal buffer
-  let g:terminal_buffer = get(g:, 'terminal_buffer', -1)
-  " open new terminal if it doesn't exist
-  if g:terminal_buffer == -1 || !bufexists(g:terminal_buffer)
-    bel terminal
-    let g:terminal_buffer = bufnr('')
-    wincmd p
-  " split a new window if terminal buffer hidden
-  elseif bufwinnr(g:terminal_buffer) == -1
-    exec 'sbuffer ' . g:terminal_buffer
-    wincmd p
-  endif
-  " join lines with "\<cr>", note the extra "\<cr>" for last line
-  " send joined lines to terminal.
-  call term_sendkeys(g:terminal_buffer,
-        \ join(getline(a:lnum1, a:lnum2), "\<cr>") . "\<cr>")
+    " get terminal buffer
+    let g:terminal_buffer = get(g:, 'terminal_buffer', -1)
+    " open new terminal if it doesn't exist
+    if g:terminal_buffer == -1 || !bufexists(g:terminal_buffer)
+        bel terminal
+        let g:terminal_buffer = bufnr('')
+        wincmd p
+        " split a new window if terminal buffer hidden
+    elseif bufwinnr(g:terminal_buffer) == -1
+        exec 'sbuffer ' . g:terminal_buffer
+        wincmd p
+    endif
+    " join lines with "\<cr>", note the extra "\<cr>" for last line
+    " send joined lines to terminal.
+    call term_sendkeys(g:terminal_buffer,
+                \ join(getline(a:lnum1, a:lnum2), "\<cr>") . "\<cr>")
 endfunction
 
 command! -range ExecOnTerm call s:exec_on_term(<line1>, <line2>)
@@ -322,31 +330,34 @@ inoremap <C-e> <end>
 inoremap u <c-o>viwU<c-o>A
 inoremap jk <esc>
 inoremap ,cl console.log();<c-c>hi
+
 " QuickFix: quickfix related config
 " open quickfix item in vertical split
 " always open file in new tab and go to tab if already open
 set switchbuf=usetab
 augroup filetype_qf
-        autocmd!
-        autocmd FileType qf nnoremap <buffer> <C-v> <C-w><Enter><C-w>L
-        autocmd FileType qf nnoremap <buffer> <C-t> <C-w><Enter><C-w>T
+    autocmd!
+    autocmd FileType qf nnoremap <buffer> <C-v> <C-w><Enter><C-w>L
+    autocmd FileType qf nnoremap <buffer> <C-t> <C-w><Enter><C-w>T
 augroup END
+
 " CommandModeMappins:
 cnoremap <c-a> <home>
 cnoremap <c-j> <down>
 cnoremap <c-k> <up>
+
 set path+=**
 set wildignore+=**/node_modules/**
-noremap <silent> <Leader>tw :%s,\s*$,,g<CR>'':nohl<CR>
+" noremap <silent> <Leader>tw :%s,\s*$,,g<CR>'':nohl<CR>
 autocmd BufEnter *.hbs :set ft=html<CR>
 com! FormatJSON %!python3 -m json.tool
 nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
 nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
-noremap <Leader>= mmgg=G'mz.
+noremap <Leader>= mmgg=G'mzz
 noremap <Leader>scl _iconsole.log(<c-c>A)<c-c>F;xA;<c-c>
-noremap <Leader>tn :tabnew<CR>
+" noremap <Leader>tn :tabnew<CR>
 noremap <Leader>ev :tabnew $MYVIMRC<CR>
 noremap <Leader>evh :e $MYVIMRC<CR>
 noremap <Leader>sv :source $MYVIMRC<CR>
@@ -362,6 +373,7 @@ set bs=2 " make backspace behave like normal again
 
 " Quicksave command
 nnoremap  <Leader>u :update<CR>
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " Quick quit command
 nnoremap <Leader>q :quit<CR>
@@ -491,6 +503,44 @@ noremap  <Leader>C "+C
 noremap  <Leader>x "+x
 vnoremap <Leader>y "+y
 
+""" Custom Functions
+"" Trim Whitespaces
+function! s:TrimWhitespaces()
+    let l:save = winsaveview()
+    %s/\\\@<!\s\+$//e
+    call winrestview(l:save)
+endfunction
+command! TW call s:TrimWhitespaces()
+
+function! EnterOrIndentTag()
+    let line = getline(".")
+    let col = getpos(".")[2]
+    let before = line[col-2]
+    let after = line[col-1]
+    if before == ">" && after == "<"
+        return "\<Enter>\<C-o>==\<C-o>O"
+    endif
+    return "\<Enter>"
+endfunction
+
+function! Compile() "{{{
+    if  &filetype=="html"
+        silent !clear
+        execute "!google-chrome " . bufname("%")
+    elseif &filetype=="javascript"
+        silent !clear
+        execute "!nodejs " . bufname("%")
+    elseif &filetype=="python"
+        silent !clear
+        execute "w | !clear & python3 %"
+    elseif &filetype=="go"
+        silent !clear
+        execute "update | !clear & go run %"
+    endif
+endfunction
+nnoremap ¢ :call Compile()<CR>
+nnoremap € :call Compile()<CR>
+"}}}
 " Better search
 function! Vimgrep()
     call inputsave()
@@ -525,26 +575,20 @@ augroup END
 augroup PHP
     autocmd!
     autocmd FileType php let g:indentLine_enabled = 1
-" let g:indentLine_concealcursor = 'inc'
-" let g:indentLine_conceallevel = 2
 augroup END
 
 augroup MARKDOWN
     autocmd!
-    autocmd FileType markdown let g:indentLine_enabled = 0
-" let g:indentLine_concealcursor = 'inc'
-" let g:indentLine_conceallevel = 2
 augroup END
 
 augroup JSON
     autocmd!
-    autocmd FileType json let g:indentLine_enabled = 0
     autocmd FileType json setlocal conceallevel=2
     autocmd FileType json setlocal foldmethod=syntax
     autocmd FileType json setlocal tabstop=2 softtabstop=2  shiftwidth=2
     autocmd FileType json :%foldopen!
-" let g:indentLine_concealcursor = 'inc'
-" let g:indentLine_conceallevel = 2
+    " let g:indentLine_concealcursor = 'inc'
+    " let g:indentLine_conceallevel = 2
 augroup END
 
 augroup JAVASCRIPT
@@ -557,31 +601,7 @@ augroup YAML
     autocmd FileType yaml setlocal ts=2 sts=2 sw=2
 augroup END
 
-function! EnterOrIndentTag()
-    let line = getline(".")
-    let col = getpos(".")[2]
-    let before = line[col-2]
-    let after = line[col-1]
-    if before == ">" && after == "<"
-        return "\<Enter>\<C-o>==\<C-o>O"
-    endif
-    return "\<Enter>"
-endfunction
 
-function! Compile() "{{{
-    if  &filetype=="html"
-        silent !clear
-        execute "!google-chrome " . bufname("%")
-    elseif &filetype=="javascript"
-        silent !clear
-        execute "!nodejs " . bufname("%")
-    elseif &filetype=="python"
-        silent !clear
-        execute "w | !clear & python3 %"
-    endif
-endfunction
-nnoremap ¢ :call Compile()<CR>
-"}}}
 
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc

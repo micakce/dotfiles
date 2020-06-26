@@ -97,12 +97,27 @@ function dil() { #docker image list
     print -z docker image $cmd ${cid_array[@]}
 }
 
+function dnl() {
+    # https://unix.stackexchange.com/questions/29724/how-to-properly-collect-an-array-of-lines-in-zsh
+    local cid_array=("${(@f)$(docker network ls $@ | fzf $FZF_DOCKIT_PREVIEW \
+        --bind "ctrl-y:execute-silent(echo -n {1} | xclip -selection clipboard )+abort" \
+        --bind "alt-i:execute(docker inspect {1} | jq -C . | less -R > /dev/tty)" \
+        --header="Docker networks" \
+        --preview-window="down:50%" \
+        --header-lines=1 -m | awk '{print $1}')}")
+
+    if [ "${cid_array[1]}" -eq "" 2> /dev/null ]; then
+        return
+    fi
+    local cmd=$(echo "rm\ninspect" | fzf --header="Select command")
+    print -z docker network $cmd ${cid_array[@]}
+}
 
 function jqit() { # jq interactive filtering
 JQ_PREFIX=" cat $1 | jq -C "
 INITIAL_QUERY=""
-FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" \
-    fzf --bind "change:reload:$JQ_PREFIX {q} || true" \
+FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
+    --bind "change:reload:$JQ_PREFIX {q} || true" \
     --bind "ctrl-r:reload:$JQ_PREFIX ." \
     --ansi --phony
 }
@@ -110,11 +125,11 @@ FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" \
 function RG() { # fzf as filter and not fuzzy finder
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
 INITIAL_QUERY=""
-FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" \
-  fzf --bind "change:reload:$RG_PREFIX {q} || true" \
-      --ansi --phony --query "$INITIAL_QUERY"
+FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+    --bind "change:reload:$RG_PREFIX {q} || true" \
+    --ansi --phony --query "$INITIAL_QUERY"
 }
-
+bindkey -s '\C-f' 'RG\n'
 
 # COMPLETION
 
