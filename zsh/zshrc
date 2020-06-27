@@ -113,6 +113,7 @@ alias py="python3"
 alias nvim="~/studying/learn_vim_the_hard_way/nvim.appimage"
 alias draw="~/.appImage/draw.io-x86_64-13.0.1.AppImage &>/dev/null & disown"
 alias mp="multipass"
+alias dc="docker-compose"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s mkv='vlc'
@@ -120,6 +121,14 @@ alias -s png='eog'
 alias -s jpg='eog'
 # Expandable aliases
 alias -g D='& disown'
+
+function expand-alias() {
+	zle _expand_alias
+	zle self-insert
+}
+zle -N expand-alias
+bindkey -M main ' ' expand-alias
+
 mkcd ()
 {
     mkdir -p -- "$1" && cd -P -- "$1"

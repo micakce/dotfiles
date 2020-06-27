@@ -19,6 +19,17 @@ $FZF_PREVIEW_OPTS
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
 export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
 
+function RG() { # fzf as filter and not fuzzy finder
+RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
+INITIAL_QUERY=""
+FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+    --bind "change:reload:$RG_PREFIX {q} || true" \
+    --ansi --phony --query "$INITIAL_QUERY" \
+    --preview 'bat --color=always $(echo {} | cut -d : -f 1 ) | head -200' \
+    --preview-window="down:60%"
+}
+bindkey -s '\C-f' 'RG\n'
+
 # # command to generate dir list
 # _fzf_compgen_dir() {
 #     rg --hidden --sort-files --files --glob "!{.git,node_modules}" --null 2> /dev/null  | xargs -0 dirname | uniq
