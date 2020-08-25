@@ -1,6 +1,6 @@
 CONTAINER_JQ_PATTERN=".[0] | { Id, Image: .Config.Image, Status: .State.Status, Workdir: .Config.WorkingDir, EntryPoint: .Config.Entrypoint,Cmd: .Config.Cmd, Binds: .HostConfig.Binds, Ports: .NetworkSettings.Ports, Mounts, Networks: .NetworkSettings.Networks }"
 CONTAINER_PREVIEW="--preview=docker inspect {1} | jq -C '$CONTAINER_JQ_PATTERN'"
-DOCKER_OPTS="rm\nstart\nrename\ninspect\ntag"
+DOCKER_OPTS="rm\nstart\nstop\nrename\ninspect\ntag\nlogs"
 
 # Select one or more docker container(s) to remove
 function dcrm() {
@@ -35,7 +35,14 @@ function dcl() {
     if [ "${cid_array[1]}" -eq "" 2> /dev/null ]; then
         return
     fi
-    local cmd=$(echo $DOCKER_OPTS | fzf --header="Select command")
+    local cmd=$(echo $DOCKER_OPTS | fzf --header="Select command" \
+    --preview="docker container {1} --help | less" \
+    --preview-window="down:70%")
+
+    if [ "$cmd" -eq "" 2> /dev/null ]; then
+        return
+    fi
+
     print -z docker container $cmd ${cid_array[@]}
 }
 
@@ -130,7 +137,7 @@ function dvl() {
         return
     fi
     local cmd=$(echo $DOCKER_OPTS | fzf --header="Select command")
-    print -z docker network $cmd ${cid_array[@]}
+    print -z docker volume $cmd ${cid_array[@]}
 }
 
 function jqit() { # jq interactive filtering
@@ -153,7 +160,8 @@ _fzf_complete_docker_image_post() {
 
 _fzf_complete_docker_image () {
     _fzf_complete "$DOCKER_FZF_PREFIX \
-        --preview=\"docker inspect \$(echo {} | awk '{print "'$3'"}') | jq -C '$DOCKIT_JQ_PATTERN'\" \
+        --preview=\"docker inspect {3} | jq -C .\" \
+        --preview-window=\"down:70%\" \
         -m --header-lines=1" "$@" < <(
         docker images
     )
@@ -163,11 +171,13 @@ _fzf_complete_docker_container_post() {
     awk '{print $NF}'
 }
 
+#         $CONTAINER_PREVIEW \
 _fzf_complete_docker_container () {
     _fzf_complete "$DOCKER_FZF_PREFIX \
-        --preview=\"docker container inspect \$(echo {} | awk '{print "'$1'"}') | jq -C '$DOCKIT_JQ_PATTERN'\" \
+        --preview=\"docker inspect {1} | jq -C '$CONTAINER_JQ_PATTERN'\" \
+        --preview-window=\"down:70%\" \
         -m --header-lines=1" "$@" < <(
-        docker ps -a
+        docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
     )
 }
 
@@ -177,9 +187,10 @@ _fzf_complete_docker_container_running_post() {
 
 _fzf_complete_docker_container_running () {
     _fzf_complete "$DOCKER_FZF_PREFIX \
-        --preview=\"docker container inspect \$(echo {} | awk '{print "'$1'"}') | jq -C '$DOCKIT_JQ_PATTERN'\" \
+        --preview=\"docker inspect {1} | jq -C '$CONTAINER_JQ_PATTERN'\" \
+        --preview-window=\"down:70%\" \
         -m --header-lines=1" "$@" < <(
-        docker ps
+        docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
     )
 }
 

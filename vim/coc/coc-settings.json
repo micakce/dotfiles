@@ -1,0 +1,28 @@
+{
+  "python.jediEnabled": false,
+  // Prettier options
+  // "coc.preferences.formatOnSaveFiletypes": ["json"],
+  // TabNine options
+  "tabnine.disable_filetypes": ["vimwiki", "javascript", "vim", "markdown", "yaml"],
+  // Javascript options
+  "tsserver.enable": true,
+  // Eslint options
+  "eslint.enable": false,
+  "eslint.run": "onSave",
+  // YAML options
+  "yaml.schemas": {
+    "kubernetes": "/*.yaml",
+    "https://raw.githubusercontent.com/docker/cli/master/cli/compose/schema/data/config_schema_v3.9.json": ["/*compose.yml"]
+  },
+  // LSP
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    }
+  }
+}

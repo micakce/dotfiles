@@ -9,7 +9,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } } " MarkDownPreview
+Plug 'vim-ctrlspace/vim-ctrlspace' " To verify
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'drewtempelmeyer/palenight.vim' " My favorite colorscheme, aparently
 Plug 'vim-airline/vim-airline' " VimAirline
 Plug 'vim-airline/vim-airline-themes'
@@ -27,16 +28,17 @@ Plug 'tpope/vim-eunuch' " Eunuch
 Plug 'tpope/vim-fugitive' " Fugitive
 " JUNEGUNN: !PUTO CRACK!
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
-Plug 'junegunn/vim-slash' " Slash
+Plug 'junegunn/rainbow_parentheses.vim' "RainBowParentheses
+" Plug 'junegunn/vim-slash' " Slash
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "FZF
 Plug 'junegunn/fzf.vim'
 Plug 'jremmen/vim-ripgrep'
+Plug 'junegunn/vim-emoji'
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "COC
 Plug 'honza/vim-snippets' " VimSnippets
 Plug 'wellle/targets.vim' " Targets
 Plug 'michaeljsmith/vim-indent-object' " Indent based text object
 Plug 'mattn/emmet-vim' "HTML
-Plug 'vimwiki/vimwiki' "VimWiki
 " JAVASCRIPT:
 Plug 'pangloss/vim-javascript' " JavaScript syntax
 Plug 'maxmellon/vim-jsx-pretty' " JSXSyntax
@@ -44,14 +46,16 @@ Plug 'airblade/vim-gitgutter' "GitGutter
 Plug 'preservim/nerdtree' "NerdTree
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
+Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
 call plug#end()            " required
 filetype plugin indent on    " required
-let g:indentLine_enabled = 0
 
 " Who is the boss key?
 let mapleader = " "
 
 colorscheme palenight
+
+let g:CtrlSpaceDefaultMappingKey = "<C-m> "
 
 "MarkdDownPreview: Needs neovim or Vim version >= 8.2
 " Dont close the preview when changing buffer
@@ -73,10 +77,9 @@ omap / <Plug>(easymotion-tn)
 " map  N <Plug>(easymotion-prev)
 map <leader>f <Leader><Leader>f
 map <leader>F <Leader><Leader>F
-" map <leader>t <Leader><Leader>t
-" map <leader>T <Leader><Leader>T
 
 " IndentLine: Indent guide lines
+let g:indentLine_enabled = 0
 let g:indentLine_color_term = 8
 " let g:indentLine_char = '┊'
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -84,8 +87,8 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
 
-" TabBar:
-nmap <leader>t :TagbarToggle<CR>
+" TagBar:
+nmap <localleader>t :TagbarToggle<CR>
 " let g:tagbar_iconchars = ['↠', '↡']
 
 " " Eunuch: UNIX file commands sugar
@@ -95,6 +98,7 @@ nmap <leader>t :TagbarToggle<CR>
 
 " " Fugitive:
 " set statusline+=%{FugitiveStatusline()}
+
 " JUNEGUNN: ¡PUTO CRACK!
 " VimEasyAlign: Best aligment plugin ever
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -102,7 +106,12 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
+" RainBowParentheses:
+let g:rainbow#max_level = 16
+" let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+
 " Slash: Improved search highlighting
+source $HOME/dotfiles/vim/slash.vim
 if has('timers')
     " Blink 2 times with 50ms interval
     noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 45)
@@ -148,8 +157,11 @@ command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
 nnoremap f :MatchFileNameFind<CR>
+nnoremap <M-f> :MatchFileNameFind<CR>
 nnoremap t :Tags<CR>
+nnoremap <M-t> :Tags<CR>
 nnoremap T :BTags<CR>
+nnoremap <M-T> :BTags<CR>
 noremap <c-b> :Buffers<CR>
 inoremap <Leader><c-f> <plug>(fzf-complete-path)
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
@@ -160,7 +172,7 @@ set updatetime=300
 set signcolumn=yes
 " set completeopt+=noselect
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <silent><expr> r coc#refresh()
+inoremap <silent><expr> <M-r> coc#refresh()
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
@@ -172,9 +184,9 @@ function! s:check_back_space() abort
 endfunction
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -182,6 +194,7 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " nmap <leader>f <Plug>(coc-codeaction)
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 nnoremap p :Prettier<CR>
+nnoremap <M-p>p :Prettier<CR>
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -234,6 +247,8 @@ imap <C-l> <Plug>(coc-snippets-expand)
 " " let g:coc_snippet_prev = '<c-k>'
 " " Use <C-j> for both expand and jump (make expand higher priority.)
 " " imap <C-j> <Plug>(coc-snippets-expand-jump)
+" " Go:
+" autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Targets: Augmented text object
 " allow argument text object to work inside '{}' as well
@@ -241,29 +256,13 @@ autocmd User targets#mappings#user call targets#mappings#extend({
             \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}
             \ })
 
-" VimWiki: Documentation tool
-set nocompatible
-filetype plugin on
-syntax on
-let g:vimwiki_folding = 'syntax'
-if !exists('wiki')
-    let wiki={}
-    let wiki.path= "~/dotfiles/vimwiki/wiki"
-    let wiki.path_html= "~/dotfiles/vimwiki/wiki_html"
-    let wiki.syntax= "markdown"
-    let wiki.ext= ".md"
-    " let wiki.template_path ="~/dotfiles/vimwiki/wiki/templates"
-    " let wiki.template_default="default"
-    let wiki.template_ext=".html"
-endif
-let g:vimwiki_list = [wiki]
-
 " JSXSyntax:
 let g:vim_jsx_pretty_highlight_close_tag=1
 
 " NerdTree:
 noremap <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
+noremap <silent> <leader>nf :NERDTreeFind<CR>
 
 " PythonSyntax:
 let g:python_highlight_all = 1
@@ -274,49 +273,74 @@ let g:netrw_banner = 0
 
 " Window:
 " copy yanked text to tmux pane
-function! s:Send_to_tmux(count) abort " ------------------------------ {{{
-    let _count = (a:count == 0) ? 3 : a:count
+function! Send_to_tmux(count) abort " ------------------------------ {{{
+    let _count = (a:count == 0) ? 2 : a:count
     let text = @z
-    let text = substitute(text, '\n', '', 'g')
-    execute "!" . text . " | jq > /dev/tty "
-    execute "!tmux send-keys -t " . _count . " \"" . text . " | jq\""
-    execute "!tmux send-keys -t " . _count . " Enter"
+    " let text = substitute(text, '\n', '', 'g')
+    " execute "!" . text . " | jq > /dev/tty "
+    " execute "!tmux send-keys -t " . _count . " \"" . text . " | jq\""
+    " execute "!tmux send-keys -t " . _count . " Enter"
     " execute "!tmux send-keys -t 3 '" text " | jq' Enter"
-    " execute "!tmux send-keys -t " . _count . "'" text "' Enter"
+    execute "!tmux send-keys -t " . _count . "'" text "' Enter"
     unlet _count
     unlet text
 endfunction
-nnoremap <expr> <Leader>st '"zyip:call s:Send_to_tmux('.v:count.')<CR>'
-xnoremap <expr> <Leader>st '"zy:call s:Send_to_tmux('.v:count.')<CR>'
+nnoremap <expr> <Leader>st '"zyip:call Send_to_tmux('.v:count.')<CR>'
+xnoremap <expr> <Leader>st '"zy:call Send_to_tmux('.v:count.')<CR>'
 "}}}
 
-" send paragraph under curso to terminal https://vi.stackexchange.com/questions/14300/vim-how-to-send-entire-line-to-a-buffer-of-type-terminal
-function s:exec_on_term(lnum1, lnum2)
-    " get terminal buffer
-    let g:terminal_buffer = get(g:, 'terminal_buffer', -1)
-    " open new terminal if it doesn't exist
-    if g:terminal_buffer == -1 || !bufexists(g:terminal_buffer)
-        bel terminal
-        let g:terminal_buffer = bufnr('')
-        wincmd p
-        " split a new window if terminal buffer hidden
-    elseif bufwinnr(g:terminal_buffer) == -1
-        exec 'sbuffer ' . g:terminal_buffer
-        wincmd p
-    endif
-    " join lines with "\<cr>", note the extra "\<cr>" for last line
-    " send joined lines to terminal.
-    call term_sendkeys(g:terminal_buffer,
-                \ join(getline(a:lnum1, a:lnum2), "\<cr>") . "\<cr>")
-endfunction
+" send paragraph under curso to terminal
+if has("nvim")
+    au! TermClose * if (exists("g:last_terminal_chan_id") && g:last_terminal_chan_id == b:terminal_job_id) | unlet g:last_terminal_chan_id | endif
+    " https://vi.stackexchange.com/questions/21449/send-keys-to-a-terminal-buffer
+    function! Exec_on_term(cmd)
+        if a:cmd=="normal"
+            exec "normal \"vyip"
+        else
+            exec "normal gv\"vy"
+        endif
+        if !exists("g:last_terminal_chan_id")
+            vs
+            terminal
+            let g:last_terminal_chan_id = b:terminal_job_id
+            wincmd p
+        endif
+        call chansend(g:last_terminal_chan_id, @v)
+    endfunction
+else
+    " https://vi.stackexchange.com/questions/14300/vim-how-to-send-entire-line-to-a-buffer-of-type-terminal
+    function! Exec_on_term(cmd)
+        " get terminal buffer
+        exec "normal yip"
+        let g:terminal_buffer = get(g:, 'terminal_buffer', -1)
+        " open new terminal if it doesn't exist
+        if g:terminal_buffer == -1 || !bufexists(g:terminal_buffer)
+            bel terminal
+            let g:terminal_buffer = bufnr('')
+            wincmd p
+            " split a new window if terminal buffer hidden
+        elseif bufwinnr(g:terminal_buffer) == -1
+            exec 'sbuffer ' . g:terminal_buffer
+            wincmd p
+        endif
+        " send joined lines to terminal.
+        if (a:cmd=="normal")
+            call term_sendkeys(g:terminal_buffer, @")
+        else
+            call term_sendkeys(g:terminal_buffer, @*)
+        endif
+    endfunction
+endif
+nnoremap <leader>r :call Exec_on_term("normal")<CR>
+vnoremap <leader>r :<c-u>call Exec_on_term("visual")<CR>
 
-command! -range ExecOnTerm call s:exec_on_term(<line1>, <line2>)
-nnoremap <leader>r :'{,'}-1ExecOnTerm<cr>
-vnoremap <leader>r :ExecOnTerm<cr>
 
 " #TODO clean up the rest from here on
 
 " Miscelaneos: Random shit that needs to organized better
+inoremap  ``<left>
+inoremap  ``````<left><left><left>
+
 " RegExp:
 " nnoremap / /\v
 " vnoremap / /\v
@@ -325,11 +349,14 @@ cnoremap \>s/ \>smagic/
 " nnoremap :g/ :g/\v
 " nnoremap :g// :g//
 
+
 " InsertMappings:
 inoremap <C-e> <end>
-inoremap u <c-o>viwU<c-o>A
+inoremap u <esc>viwUea
+inoremap <M-u> <esc>viwUea
 inoremap jk <esc>
 inoremap ,cl console.log();<c-c>hi
+
 
 " QuickFix: quickfix related config
 " open quickfix item in vertical split
@@ -349,15 +376,15 @@ cnoremap <c-k> <up>
 set path+=**
 set wildignore+=**/node_modules/**
 " noremap <silent> <Leader>tw :%s,\s*$,,g<CR>'':nohl<CR>
-autocmd BufEnter *.hbs :set ft=html<CR>
+" autocmd BufEnter *.hbs :set ft=html<CR>
 com! FormatJSON %!python3 -m json.tool
-nnoremap <Leader>cu :set undoreload=0<CR> :edit<CR>
+nnoremap <silent> <Leader>cu :set undoreload=0 <bar> edit<CR>
 nnoremap <Leader>E :Ex<CR>
 runtime macros/matchit.vim
 nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
-noremap <Leader>= mmgg=G'mzz
+noremap <Leader>= :call IndentBuffer()<CR>
 noremap <Leader>scl _iconsole.log(<c-c>A)<c-c>F;xA;<c-c>
-" noremap <Leader>tn :tabnew<CR>
+noremap <Leader>tn :tabnew<CR>
 noremap <Leader>ev :tabnew $MYVIMRC<CR>
 noremap <Leader>evh :e $MYVIMRC<CR>
 noremap <Leader>sv :source $MYVIMRC<CR>
@@ -369,46 +396,55 @@ set showcmd
 " Mouse and backspace
 set mouse=a " on OSX press ALT and click
 set bs=2 " make backspace behave like normal again
-" noremap <silent> <C-n> :nohl<CR>
 
 " Quicksave command
 nnoremap  <Leader>u :update<CR>
-command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " Quick quit command
 nnoremap <Leader>q :quit<CR>
 
 " Window mappins
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-l> <c-w>l
-nnoremap <c-h> <c-w>h
+nnoremap <c-j> wincmd j
+nnoremap <c-k> wincmd k
+nnoremap <c-l> wincmd l
+nnoremap <c-h> wincmd h
 nnoremap <c-w>l <c-w>l:vertical resize 130<CR>
 nnoremap <c-w>h <c-w>h:vertical resize 130<CR>
-nnoremap <expr> <c-w><c-k> (v:count == 0 ? 5 : v:count) . '<c-w>+'
-nnoremap <expr> <c-w><c-j> (v:count == 0 ? 5 : v:count) . '<c-w>-'
-nnoremap <expr> <c-w><c-l> (v:count == 0 ? 5 : v:count) . '<c-w>>'
-nnoremap <expr> <c-w><c-h> (v:count == 0 ? 5 : v:count) . '<c-w><'
+nnoremap <expr> <c-w><c-k> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>+'
+nnoremap <expr> <c-w><c-j> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>-'
+nnoremap <expr> <c-w><c-l> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>>'
+nnoremap <expr> <c-w><c-h> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w><'
 nnoremap <silent> <leader>l :bnext<CR>
 nnoremap <silent> <leader>h :bprevious<CR>
-nnoremap <silent> gb :bnext<CR>
-nnoremap <silent> gB :bprevious<CR>
-nnoremap <silent> 0gb :bfirst<CR>
-nnoremap <silent> 9gb :blast<CR>
+nnoremap <silent> gn :bnext<CR>
+nnoremap <silent> gp :bprevious<CR>
 nnoremap <silent> gl :b#<CR>
 nnoremap <silent> <leader>9 :blast<CR>
 nnoremap <silent> <leader>0 :bfirst<CR>
-nnoremap <silent> <leader>bd :b#<CR>:bd#<CR>
+nnoremap <silent> <leader>bd :blast<CR>:bd#<CR>
 set splitbelow
 set splitright
 
+
+
 " Terminal mappings
-tnoremap <c-j> <c-w>j
-tnoremap <c-k> <c-w>k
-tnoremap <c-l> <c-w>l
-tnoremap <c-h> <c-w>h
+tnoremap <M-j> <c-\><c-n><c-w>j
+tnoremap <M-k> <c-\><c-n><c-w>k
+tnoremap <M-l> <c-\><c-n><c-w>l
+tnoremap <M-h> <c-\><c-n><c-w>h
+tnoremap <c-j> <c-\><c-n><c-w>j
+tnoremap <c-k> <c-\><c-n><c-w>k
+tnoremap <c-l> <c-\><c-n><c-w>l
+tnoremap <c-h> <c-\><c-n><c-w>h
 tnoremap <esc> <c-\><c-n>
 tnoremap <c-w>q <c-\><c-n>
+if has('nvim')
+    augroup nvim_term
+        autocmd BufWinEnter,WinEnter term://* startinsert
+        autocmd TermOpen,TermEnter term://* startinsert
+    augroup END
+endif
 
 " map sort function to a key
 vnoremap <Leader>s :sort<CR>
@@ -418,8 +454,10 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Show whitespace MUST be inserted BEFORE the colorscheme command
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+highlight UnwanttedTab ctermbg=red guibg=darkred
+highlight TrailSpace guibg=red ctermbg=darkred
+autocmd InsertLeave * match UnwanttedTab /\t/
+autocmd InsertLeave * match TrailSpace /\s\+$/
 
 " " This is to match brackets, messess up jsx syntax
 " au InsertLeave * match fLiteral2 /f\('\|"\).*\({[^}]*}\).*\('\|"\)/;/{[^}]*}/
@@ -440,18 +478,17 @@ noremap <F8> :call Spelling()<CR>
 " hi SpellCap ctermbg=yellow ctermfg=black
 
 
-" set cursorcolumn
+" set ((cursor|color)|(line|column))
 set cursorline
-hi Cursorline cterm=none ctermbg=235
-
+highlight Cursorline cterm=none ctermbg=236
+set tw=89 " width of document (used by gd)
+set colorcolumn=90
+highlight colorcolumn ctermbg=236
 " Showing line numbers and length
 set number " show line numbers
 set relativenumber "show relative line numbers
 set nowrap " don't automatically wrap on load
 " set fo-=t " don't automatically wrap text when typing
-set tw=89 " width of document (used by gd)
-set colorcolumn=90
-highlight colorcolumn ctermbg=233
 set wildmenu
 
 " Useful settings
@@ -459,9 +496,9 @@ set history=700
 set undolevels=700
 
 " Real programmers don't use TABs but spaces
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set shiftround
 set expandtab
 
@@ -478,17 +515,23 @@ set nowritebackup
 set noswapfile
 
 """Move Lines
-"vnoremap j :m'>+<CR>gv=gv
-"vnoremap k :m-2<CR>gv=gv
-"nnoremap j :normal! ddp==<CR>
-"nnoremap k  :<c-u> execute "normal! dd" . v:count . "kP=="<CR>
-nnoremap j :m .+1<CR>==
-nnoremap k :m .-2<CR>==
-inoremap j  <Esc>:m .+1<CR>==gi
-inoremap k  <Esc>:m .-2<CR>==gi
-vnoremap j :m '>+1<CR>gv=gv
-vnoremap k :m '<-2<CR>gv=gv
-nnoremap yp yyp
+if has("nvim")
+    nnoremap <M-j> :m .+1<CR>==
+    nnoremap <M-k> :m .-2<CR>==
+    inoremap <M-j>  <Esc>:m .+1<CR>==gi
+    inoremap <M-k>  <Esc>:m .-2<CR>==gi
+    vnoremap <M-j> :m '>+1<CR>gv=gv
+    vnoremap <M-k> :m '<-2<CR>gv=gv
+else
+    nnoremap j :m .+1<CR>==
+    nnoremap k :m .-2<CR>==
+    inoremap j  <Esc>:m .+1<CR>==gi
+    inoremap k  <Esc>:m .-2<CR>==gi
+    vnoremap j :m '>+1<CR>gv=gv
+    vnoremap k :m '<-2<CR>gv=gv
+endif
+nnoremap yp "-yy"-p
+nnoremap yP "-yy"-P
 
 " Better copy/paste
 " set clipboard=unnamedplus
@@ -512,6 +555,12 @@ function! s:TrimWhitespaces()
 endfunction
 command! TW call s:TrimWhitespaces()
 
+function! IndentBuffer()
+    let l:save = winsaveview()
+    exec "normal gg=G"
+    call winrestview(l:save)
+endfunction
+
 function! EnterOrIndentTag()
     let line = getline(".")
     let col = getpos(".")[2]
@@ -523,23 +572,41 @@ function! EnterOrIndentTag()
     return "\<Enter>"
 endfunction
 
-function! Compile() "{{{
-    if  &filetype=="html"
-        silent !clear
-        execute "!google-chrome " . bufname("%")
-    elseif &filetype=="javascript"
-        silent !clear
-        execute "!nodejs " . bufname("%")
-    elseif &filetype=="python"
-        silent !clear
-        execute "w | !clear & python3 %"
-    elseif &filetype=="go"
-        silent !clear
-        execute "update | !clear & go run %"
-    endif
-endfunction
-nnoremap ¢ :call Compile()<CR>
-nnoremap € :call Compile()<CR>
+if has("nvim") " ------------------------------- {{{
+    function! Compile()
+        if  &filetype=="html"
+            silent !clear
+            execute "!google-chrome " . bufname("%")
+        elseif &filetype=="javascript"
+            silent !clear
+            execute "!nodejs " . bufname("%")
+        elseif &filetype=="python"
+            silent !clear
+            execute "update | !python3 %"
+        elseif &filetype=="go"
+            silent !clear
+            execute "update | sp | term go run %"
+        endif
+    endfunction
+else
+    function! Compile()
+        if  &filetype=="html"
+            silent !clear
+            execute "!google-chrome " . bufname("%")
+        elseif &filetype=="javascript"
+            silent !clear
+            execute "!nodejs " . bufname("%")
+        elseif &filetype=="python"
+            silent !clear
+            execute "update | !python3 %"
+        elseif &filetype=="go"
+            silent !clear
+            execute "update | !go run %"
+        endif
+    endfunction
+endif
+nnoremap <silent> ¢ :call Compile()<CR>
+nnoremap <silent> € :call Compile()<CR>
 "}}}
 " Better search
 function! Vimgrep()
@@ -569,7 +636,7 @@ augroup XML
     autocmd FileType xml let g:xml_syntax_folding=1
     autocmd FileType xml setlocal foldmethod=syntax
     autocmd FileType xml setlocal tabstop=2 softtabstop=2  shiftwidth=2
-    autocmd FileType xml :%foldopen!
+    " autocmd FileType xml :%foldopen!
 augroup END
 
 augroup PHP
@@ -583,27 +650,24 @@ augroup END
 
 augroup JSON
     autocmd!
-    autocmd FileType json setlocal conceallevel=2
+    " autocmd FileType json setlocal conceallevel=2
+    " autocmd FileType json let g:indentLine_enabled = 0
     autocmd FileType json setlocal foldmethod=syntax
-    autocmd FileType json setlocal tabstop=2 softtabstop=2  shiftwidth=2
-    autocmd FileType json :%foldopen!
+    autocmd FileType json syntax match Comment +\/\/.\+$+
+    " autocmd FileType json :%foldopen!
     " let g:indentLine_concealcursor = 'inc'
     " let g:indentLine_conceallevel = 2
 augroup END
 
 augroup JAVASCRIPT
     autocmd!
-    autocmd FileType javascript setlocal tabstop=2 softtabstop=2  shiftwidth=2
+    " autocmd FileType javascript let g:indentLine_enabled = 1
 augroup END
 
 augroup YAML
     autocmd!
-    autocmd FileType yaml setlocal ts=2 sts=2 sw=2
 augroup END
-
-
-
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
-set background=dark
+" set background=dark

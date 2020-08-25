@@ -49,7 +49,7 @@ _fzf_comprun() {
   shift
   case "$command" in
     cd|ls)        fzf "$@" --height 100% --preview-window down --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
+    cp|mv|rm|vim|nvim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)            fzf "$@" ;;
