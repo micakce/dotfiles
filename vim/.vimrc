@@ -9,7 +9,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" Plug 'jamessan/vim-gnupg' "
 Plug 'vim-ctrlspace/vim-ctrlspace' " To verify
+Plug 'mhinz/vim-startify' " Startify
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'drewtempelmeyer/palenight.vim' " My favorite colorscheme, aparently
 Plug 'vim-airline/vim-airline' " VimAirline
@@ -55,7 +57,11 @@ let mapleader = " "
 
 colorscheme palenight
 
-let g:CtrlSpaceDefaultMappingKey = "<C-m> "
+" Startify:
+let g:startify_bookmarks = [ {'vc': '~/.vimrc'}, { 'zc': '~/.zshrc' }, {'u': '~/paisanoscreando/uiwi-odoo-woocommerce'}, {'m': '~/paisanoscreando/mutual'} ]
+
+" CtrlSpace:
+let g:CtrlSpaceDefaultMappingKey = "<M-m> "
 
 "MarkdDownPreview: Needs neovim or Vim version >= 8.2
 " Dont close the preview when changing buffer
@@ -162,6 +168,7 @@ nnoremap t :Tags<CR>
 nnoremap <M-t> :Tags<CR>
 nnoremap T :BTags<CR>
 nnoremap <M-T> :BTags<CR>
+nnoremap <M-h> :History:<CR>
 noremap <c-b> :Buffers<CR>
 inoremap <Leader><c-f> <plug>(fzf-complete-path)
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
@@ -453,15 +460,20 @@ vnoremap <Leader>s :sort<CR>
 vnoremap < <gv
 vnoremap > >gv
 
-" Show whitespace MUST be inserted BEFORE the colorscheme command
-highlight UnwanttedTab ctermbg=red guibg=darkred
-highlight TrailSpace guibg=red ctermbg=darkred
-autocmd InsertLeave * match UnwanttedTab /\t/
-autocmd InsertLeave * match TrailSpace /\s\+$/
+autocmd Syntax * syn match TrailSpace /\s\+$/
+highlight TrailSpace ctermbg=darkred
 
-" " This is to match brackets, messess up jsx syntax
-" au InsertLeave * match fLiteral2 /f\('\|"\).*\({[^}]*}\).*\('\|"\)/;/{[^}]*}/
-" au! InsertLeave * match fLiteral /f\('\|"\).*\({[^}]*}\).*\('\|"\)/\2
+autocmd Syntax * syn match RestGet /http GET/
+highlight RestGet   ctermfg=45 cterm=bold
+
+autocmd Syntax * syn match RestPost /http POST/
+highlight RestPost   ctermfg=40 cterm=bold
+
+autocmd Syntax * syn match RestPut /http PUT/
+highlight RestPut   ctermfg=203 cterm=bold
+
+autocmd Syntax * syn match RestDelete /http DELETE/
+highlight RestDelete   ctermfg=196 cterm=bold
 
 " Activa and desactivate spelling
 function! Spelling()
