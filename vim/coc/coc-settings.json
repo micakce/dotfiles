@@ -1,7 +1,7 @@
 {
   "python.jediEnabled": false,
   // Prettier options
-  // "coc.preferences.formatOnSaveFiletypes": ["json"],
+  "coc.preferences.formatOnSaveFiletypes": ["typescript"],
   // TabNine options
   "tabnine.disable_filetypes": ["vimwiki", "javascript", "vim", "markdown", "yaml"],
   // Javascript options

@@ -102,6 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Normal Aliases
+alias kpm="~/development/docker/kpm/runServer.sh"
 alias vconf="vim ~/.vimrc"
 alias zconf="vim ~/.zshrc"
 alias tconf="vim ~/.tmux.conf"
@@ -118,6 +119,11 @@ alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
 # Prefix aliases
 alias -s pdf='zathura'
+alias -s rest='nvim'
+alias -s py='nvim'
+alias -s js='nvim'
+alias -s txt='nvim'
+alias -s mkv='vlc'
 alias -s mkv='vlc'
 alias -s png='eog'
 alias -s jpg='eog'
