@@ -117,6 +117,7 @@ alias mp="multipass"
 alias dc="docker-compose"
 alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
+alias n="nvim"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s rest='nvim'

@@ -15,7 +15,7 @@ BASEDIR=$(cd "$(dirname "$0")"; pwd)
 
 # Installing vim
 echo "===>  Installing VIM  <==="
-sudo apt-get install vim > /dev/null # we need the non-system vim
+# sudo apt-get install vim > /dev/null # we need the non-system vim
 sudo apt-get install curl > /dev/null # we need the non-system vim
 echo ""
 
@@ -90,4 +90,9 @@ ln -sf $BASEDIR/zsh/custom/theme/micakce.zsh-theme $BASEDIR/zsh/oh-my-zsh/themes
 
 echo ""
 echo "====  Successfully installed environment  ===="
+echo "====  Plese reboot your system ===="
+echo "====  Plese reboot your system ===="
+
+echo "==== Then install:\n- bat (catbat)\n- Execute 'Ctrl-b I' to install tmux plugins\n- ===="
+echo "====  Plese reboot your system ===="
 echo "====  Plese reboot your system ===="
