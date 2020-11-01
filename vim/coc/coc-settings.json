@@ -6,6 +6,7 @@
   "tabnine.disable_filetypes": ["vimwiki", "javascript", "vim", "markdown", "yaml"],
   // Javascript options
   "tsserver.enable": true,
+  "tsserver.npm": "/usr/local/bin/npm",
   // Eslint options
   "eslint.enable": false,
   "eslint.run": "onSave",

@@ -487,7 +487,7 @@ augroup REST
   highlight RestPut ctermfg=166 cterm=bold
 
   autocmd  FileType rest syn match RestDelete /http DELETE/
-  autocmd  FileType rest syn match RestDelete /curl .* DELETE/
+  autocmd  FileType rest syn match RestDelete /curl .*DELETE/
   highlight RestDelete ctermfg=196 cterm=bold
 augroup end
 
