@@ -140,8 +140,24 @@ function dvl() {
     print -z docker volume $cmd ${cid_array[@]}
 }
 
-function jqit() { # jq interactive filtering
+alias dcbc="docker image build -t build-context -f - . <<EOF
+FROM busybox
+COPY . /build-context
+WORKDIR /build-context
+CMD find .
+EOF"
+
+function jqdoc() { # jq interactive filtering
 JQ_PREFIX=" cat $1 | jq -C "
+INITIAL_QUERY=""
+FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
+    --bind "change:reload:$JQ_PREFIX {q} || true" \
+    --bind "ctrl-r:reload:$JQ_PREFIX ." \
+    --ansi --phony
+}
+
+function jqit() { # jq interactive filtering
+JQ_PREFIX=" cat - | jq -C "
 INITIAL_QUERY=""
 FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
     --bind "change:reload:$JQ_PREFIX {q} || true" \

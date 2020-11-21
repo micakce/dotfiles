@@ -62,6 +62,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh/custom
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+aws
 git
 forgit
 copyfile
@@ -74,7 +75,11 @@ zsh-autosuggestions
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+setopt share_history
 
+# zsh-completions
+source $HOME/dotfiles/zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+zstyle ':completion::*:aws::*' fzf-completion-opts --preview='if [[ {1} != "--"* ]]; then aws {1} help; fi'
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -102,6 +107,9 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Normal Aliases
+alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
+alias hugo="docker run --rm -it -v $PWD:/src  klakegg/hugo:ext-alpine"
+alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo:ext-alpine server"
 alias kpm="~/development/docker/kpm/runServer.sh"
 alias vconf="vim ~/.vimrc"
 alias zconf="nvim ~/.zshrc"
@@ -112,7 +120,6 @@ alias szsh="source ~/.zshrc"
 # alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
 alias py="python3"
-alias draw="~/.appImage/draw.io-x86_64-13.0.1.AppImage &>/dev/null & disown"
 alias mp="multipass"
 alias dc="docker-compose"
 alias ldd="lazydocker -f dev-docker-compose.yml"
@@ -149,8 +156,6 @@ runhis() {
     history | fzf -m -q "$1" | awk '{ print substr($0, index($0,$4))  }' | bash
 }
 
-
-
 c() {
   local cols sep google_history open
   cols=$(( COLUMNS / 3 ))
@@ -171,14 +176,6 @@ c() {
   fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
 }
 
-V() {
-        local file=`fzf`
-        if [ -n "$file" ]; then
-        vim $file;
-        fi
-
-}
-
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.
 fkill() {
     local pid
@@ -194,6 +191,8 @@ fkill() {
     fi
 }
 
+FORGIT_COPY_CMD='xclip -selection clipboard'
+
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 export PATH="$JAVA_HOME/bin:/snap/bin:$PATH"
 export CLASS_PATH="/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/"
@@ -202,7 +201,10 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.symfony/bin:$PATH"
 export PATH="/usr/local/go/bin:$PATH"
 export PATH=$PATH:/usr/local/go/bin
-# export GOPATH="$HOME/.go"
-# export PATH="$GOPATH/bin:$PATH"
+export GOPATH="$HOME/.go"
+export PATH="$GOPATH/bin:$PATH"
+export PATH="/usr/bin/aws:$PATH"
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
 autoload -Uz compinit && compinit -i
+# autoload bashcompinit && bashcompinit
+# complete -C '/usr/bin/aws_completer' aws

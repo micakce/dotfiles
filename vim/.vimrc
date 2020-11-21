@@ -131,9 +131,6 @@ endif
 " Open in a new full window
 let g:fzf_layout = { 'window': 'enew' }
 " let g:fzf_layout = { 'window': {'width': 0.9, 'height': 0.6} }
-" hide status bar
-autocmd! FileType fzf set laststatus=0 noshowmode noruler
-      \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 " Files: Find fies in project with fzf
 command! -bang -nargs=? -complete=dir Files
@@ -160,6 +157,17 @@ function! RipgrepFzf(query, fullscreen)
 endfunction
 command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 
+" Tags: Replacing ctags?
+nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --select-1 --exit-0 --no-reverse'})<CR>
+
+" CompleteLine: 
+inoremap <expr> <c-x><c-s-l> fzf#vim#complete(fzf#wrap({
+      \ 'prefix': '^.*$',
+      \ 'source': 'rg -n ^ --color always',
+      \ 'options': '--ansi --delimiter : --nth 3..',
+      \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
+
+
 " Mappings:
 noremap <c-p> :Files<CR>
 noremap <c-f> :Find<CR>
@@ -170,9 +178,29 @@ nnoremap <M-t> :Tags<CR>
 nnoremap T :BTags<CR>
 nnoremap <M-T> :BTags<CR>
 nnoremap <M-h> :History:<CR>
+
 noremap <c-b> :Buffers<CR>
-inoremap <Leader><c-f> <plug>(fzf-complete-path)
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+" inoremap <Leader><c-f> <plug>(fzf-complete-path)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd',{'down': '15%'})
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd',{'window': { 'width': 0.4, 'height': 0.2, 'yoffset': Y_cursor_offset(), 'xoffset': X_cursor_offset()}})
+
+function! Y_cursor_offset()
+  let visible_lines = line('w$') - line('w0')
+  let current_line = line('.') - line('w0')
+  let offset = current_line/(visible_lines*1.0)
+  let shift_offset = offset + offset*0.2
+  return shift_offset
+endfunction
+
+function! X_cursor_offset()
+  if col('.') <= 2
+    return 0.05
+  endif
+  let offset = (col('.')*1.0)/winwidth(0)
+  let shift_offset = offset + offset*0.8 + 0.02
+  return shift_offset
+endfunction
 
 " COC: LSP auto-completion engine
 set hidden
@@ -181,6 +209,7 @@ set signcolumn=yes
 " set completeopt+=noselect
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent><expr> <M-r> coc#refresh()
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -189,6 +218,7 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
+
 endfunction
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
@@ -209,6 +239,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -291,7 +323,7 @@ function! Send_to_tmux(count) abort " ------------------------------ {{{
   " execute "!tmux send-keys -t " . _count . " \"" . text . " | jq\""
   " execute "!tmux send-keys -t " . _count . " Enter"
   " execute "!tmux send-keys -t 3 '" text " | jq' Enter"
-  execute "!tmux send-keys -Rt" . _count . " '" .  text  . "' Enter"
+  silent execute "!tmux send-keys -Rt" . _count . " '" .  text  . "' Enter"
   " execute '!tmux send-keys -t 2 ' . '"hola mardito" Enter'
   unlet _count
   unlet text
@@ -306,7 +338,7 @@ if has("nvim")
   " https://vi.stackexchange.com/questions/21449/send-keys-to-a-terminal-buffer
   function! Exec_on_term(cmd)
     if a:cmd=="normal"
-      exec "normal \"vyip"
+      exec "normal mk\"vyip"
     else
       exec "normal gv\"vy"
     endif
@@ -317,6 +349,7 @@ if has("nvim")
       wincmd p
     endif
     call chansend(g:last_terminal_chan_id, @v)
+    exec "normal `k"
   endfunction
 else
   " https://vi.stackexchange.com/questions/14300/vim-how-to-send-entire-line-to-a-buffer-of-type-terminal
@@ -573,7 +606,16 @@ noremap  <Leader>c "+c
 noremap  <Leader>C "+C
 noremap  <Leader>x "+x
 vnoremap <Leader>y "+y
-nnoremap <Leader>cp :!echo -n %:p <bar> xclip -selection clipboard<CR>
+nnoremap <Leader>cfp :let @+=expand("%:p")<CR>
+nnoremap <Leader>cft :let @+=expand("%:t")<CR>
+nnoremap <Leader>cfh :let @+=expand("%:h")<CR>
+function! CFH()
+  call inputsave()
+  let search = input('Enter filename: ')
+  call inputrestore()
+  execute "Rg " . search
+endfunction
+noremap <F3> :call Vimgrep()<CR>
 
 
 """ Custom Functions
