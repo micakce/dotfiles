@@ -22,6 +22,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'Yggdroot/indentLine' " IndentLine
 Plug 'jiangmiao/auto-pairs' " Automatic brackets and quotes insert
 Plug 'majutsushi/tagbar'  " TagBar
+Plug 'machakann/vim-highlightedyank'  " YankHighlight
 " TPOPE: ¡CAPO!
 Plug 'tpope/vim-repeat' " Mini macros dot repeat
 Plug 'tpope/vim-surround' " Object-text surround commands
@@ -160,12 +161,12 @@ command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 " Tags: Replacing ctags?
 nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --select-1 --exit-0 --no-reverse'})<CR>
 
-" CompleteLine: 
-inoremap <expr> <c-x><c-s-l> fzf#vim#complete(fzf#wrap({
-      \ 'prefix': '^.*$',
-      \ 'source': 'rg -n ^ --color always',
-      \ 'options': '--ansi --delimiter : --nth 3..',
-      \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
+" " CompleteLine: 
+" inoremap <expr> <c-x><c-s-l> fzf#vim#complete(fzf#wrap({
+"       \ 'prefix': '^.*$',
+"       \ 'source': 'rg -n ^ --color always',
+"       \ 'options': '--ansi --delimiter : --nth 3..',
+"       \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 
 
 " Mappings:
@@ -178,15 +179,14 @@ nnoremap <M-t> :Tags<CR>
 nnoremap T :BTags<CR>
 nnoremap <M-T> :BTags<CR>
 nnoremap <M-h> :History:<CR>
-
 noremap <c-b> :Buffers<CR>
-" inoremap <Leader><c-f> <plug>(fzf-complete-path)
-" imap <c-x><c-f> <plug>(fzf-complete-path)
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd',{'down': '15%'})
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd',{'window': { 'width': 0.4, 'height': 0.2, 'yoffset': Y_cursor_offset(), 'xoffset': X_cursor_offset()}})
 
 function! Y_cursor_offset()
   let visible_lines = line('w$') - line('w0')
+  if line('w$') < winheight(0)
+    return 0.3
+  endif
   let current_line = line('.') - line('w0')
   let offset = current_line/(visible_lines*1.0)
   let shift_offset = offset + offset*0.2
@@ -563,11 +563,6 @@ set shiftwidth=2
 set shiftround
 set expandtab
 
-" Make search case insensitive
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
 
 " Disable stupid backup and swap files - they trigger too many events
 " for file system watchers
@@ -609,13 +604,12 @@ vnoremap <Leader>y "+y
 nnoremap <Leader>cfp :let @+=expand("%:p")<CR>
 nnoremap <Leader>cft :let @+=expand("%:t")<CR>
 nnoremap <Leader>cfh :let @+=expand("%:h")<CR>
-function! CFH()
-  call inputsave()
-  let search = input('Enter filename: ')
-  call inputrestore()
-  execute "Rg " . search
+function! Duplicate_File()
+  let name = input('Enter filename: ')
+  silent execute '!cp % %:h/' . name
+  silent execute 'e %:h/' . name
 endfunction
-noremap <F3> :call Vimgrep()<CR>
+noremap <leader>df :call Duplicate_File()<CR>
 
 
 """ Custom Functions
@@ -680,7 +674,14 @@ endif
 nnoremap <silent> ¢ :call Compile()<CR>
 nnoremap <silent> € :call Compile()<CR>
 "}}}
+
 " Better search
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set inccommand=split
+
 function! Vimgrep()
   call inputsave()
   let search = input('Enter search: ')
@@ -688,6 +689,7 @@ function! Vimgrep()
   execute "Rg " . search
 endfunction
 noremap <F3> :call Vimgrep()<CR>
+
 
 " augroup myvimrc
 "     autocmd!
