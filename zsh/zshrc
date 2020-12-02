@@ -127,7 +127,6 @@ alias ld="lazydocker"
 alias nv="nvim"
 # Prefix aliases
 alias -s pdf='zathura'
-alias -s rest='nvim'
 alias -s py='nvim'
 alias -s js='nvim'
 alias -s txt='nvim'

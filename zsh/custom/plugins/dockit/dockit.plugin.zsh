@@ -157,7 +157,7 @@ FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
 }
 
 function jqit() { # jq interactive filtering
-JQ_PREFIX=" cat - | jq -C "
+JQ_PREFIX=" cat $1 | jq -C "
 INITIAL_QUERY=""
 FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
     --bind "change:reload:$JQ_PREFIX {q} || true" \
