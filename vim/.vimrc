@@ -21,7 +21,6 @@ Plug 'easymotion/vim-easymotion' " VimEasyMotion
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Yggdroot/indentLine' " IndentLine
 Plug 'jiangmiao/auto-pairs' " Automatic brackets and quotes insert
-Plug 'majutsushi/tagbar'  " TagBar
 Plug 'machakann/vim-highlightedyank'  " YankHighlight
 " TPOPE: ¡CAPO!
 Plug 'tpope/vim-repeat' " Mini macros dot repeat
@@ -95,14 +94,7 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
 
-" TagBar:
-nmap <localleader>t :TagbarToggle<CR>
-" let g:tagbar_iconchars = ['↠', '↡']
-
 " " Eunuch: UNIX file commands sugar
-" function! s:Copy(name)
-"         ex
-" endfunction
 
 " " Fugitive:
 " set statusline+=%{FugitiveStatusline()}
@@ -168,6 +160,49 @@ nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --
 "       \ 'options': '--ansi --delimiter : --nth 3..',
 "       \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 
+" " DeleteBuffers: 
+function! s:format_buffer(b)
+  let l:name = bufname(a:b)
+  let l:name = empty(l:name) ? '[No Name]' : fnamemodify(l:name, ":p:~:.")
+  let l:flag = a:b == bufnr('')  ? '%' :
+        \ (a:b == bufnr('#') ? '#' : ' ')
+  let l:modified = getbufvar(a:b, '&modified') ? ' [+]' : ''
+  let l:readonly = getbufvar(a:b, '&modifiable') ? '' : ' [RO]'
+  let l:extra = join(filter([l:modified, l:readonly], '!empty(v:val)'), '')
+  return substitute(printf("[%s] %s\t%s\t%s", a:b, l:flag, l:name, l:extra), '^\s*\|\s*$', '', 'g')
+endfunction
+function! s:delete_buffers()
+  let l:preview_window = get(g:, 'fzf_preview_window', &columns >= 120 ? 'right': '')
+  let l:options = [
+        \   '-m',
+        \   '--tiebreak=index',
+        \   '-d', '\t',
+        \   '--prompt', 'Delete> '
+        \ ]
+  if len(l:preview_window)
+    let l:options = extend(l:options, get(fzf#vim#with_preview(
+          \   {"placeholder": "{2}"},
+          \   l:preview_window
+          \ ), 'options', []))
+  endif
+
+  return fzf#run(fzf#wrap({
+        \ 'source':  map(
+        \   filter(
+        \     range(1, bufnr('$')),
+        \     {_, nr -> buflisted(nr) && !getbufvar(nr, "&modified")}
+        \   ),
+        \   {_, nr -> s:format_buffer(nr)}
+        \ ),
+        \ 'sink*': {
+        \   lines -> execute('bdelete ' . join(map(lines, {
+        \     _, line -> substitute(split(line)[0], '^\[\|\]$', '', 'g')
+        \   })), 'silent!')
+        \ },
+        \ 'options': l:options,
+        \}))
+endfunction
+command! BD call s:delete_buffers()
 
 " Mappings:
 noremap <c-p> :Files<CR>
@@ -519,8 +554,8 @@ augroup REST
   autocmd Syntax * syn match RestPut /curl .*PUT/
   highlight RestPut ctermfg=166 cterm=bold
 
-  autocmd  FileType rest syn match RestDelete /http DELETE/
-  autocmd  FileType rest syn match RestDelete /curl .*DELETE/
+  autocmd Syntax * syn match RestDelete /http DELETE/
+  autocmd Syntax * syn match RestDelete /curl .*DELETE/
   highlight RestDelete ctermfg=196 cterm=bold
 augroup end
 
