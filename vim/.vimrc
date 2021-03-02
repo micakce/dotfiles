@@ -50,6 +50,7 @@ Plug 'preservim/nerdtree' "NerdTree
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()            " required
 filetype plugin indent on    " required
 
@@ -300,6 +301,7 @@ let g:coc_global_extensions = [
       \ 'coc-prettier',
       \ 'coc-eslint',
       \ 'coc-snippets',
+      \ 'coc-yaml',
       \ ]
 " " from readme
 " " if hidden is not set, TextEdit might fail.
@@ -351,7 +353,7 @@ let g:netrw_banner = 0
 function! Send_to_tmux(count) abort " ------------------------------ {{{
   let _count = (a:count == 0) ? 'bottom-right' : a:count
   let text = @z
-  let text = substitute(text, '\n', '', 'g')
+  let text = substitute(text, '\n', '\r', 'g')
   let text = substitute(text, "'", '"', 'g')
   " let text = substitute(text, '\$$', '\$$', 'g')
   " execute "!" . text . " | jq > /dev/tty "
@@ -383,7 +385,12 @@ if has("nvim")
       let g:last_terminal_chan_id = b:terminal_job_id
       wincmd p
     endif
-    call chansend(g:last_terminal_chan_id, @v)
+
+    if getreg('"v') =~ "^\n"
+      call chansend(g:last_terminal_chan_id, expand("%:p")."\n")
+    else
+      call chansend(g:last_terminal_chan_id, @v)
+    endif
     exec "normal `k"
   endfunction
 else

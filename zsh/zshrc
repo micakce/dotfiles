@@ -72,6 +72,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh/custom
 plugins=(
 aws
 git
+git-flow
 forgit
 copyfile
 copydir
@@ -124,11 +125,12 @@ alias zconf="nvim ~/.zshrc"
 alias tconf="nvim ~/.tmux.conf"
 alias dockit="vim ~/dotfiles/zsh/custom/plugins/dockit/dockit.plugin.zsh"
 alias szsh="source ~/.zshrc"
+alias k="kubectl"
 # alias tmuxs="tmux attach -t main || tmux new -s main"
 # alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
 alias py="python3"
-alias mp="multipass"
+alias m="multipass"
 alias dc="docker-compose"
 alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
