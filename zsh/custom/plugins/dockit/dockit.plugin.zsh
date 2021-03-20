@@ -165,6 +165,34 @@ FZF_DEFAULT_COMMAND="$JQ_PREFIX '$INITIAL_QUERY'" fzf \
     --ansi --phony
 }
 
+function sedit() { # jq interactive filtering
+FZF_DEFAULT_COMMAND="sed -n '/.*/p' $1" fzf \
+    --bind "change:reload:sed -n '/{q}/p' $1 || true" \
+    --bind "ctrl-r:reload:sed -n '/.*/p' $1" \
+    --bind "ctrl-s:execute-silent(sed -n '/{q}/p' $1 > sedit-$(date --iso-8601=seconds))+abort" \
+    --ansi --phony
+}
+
+function rgit() { # jq interactive filtering
+RG_OPTS=${@:2:#}
+FZF_DEFAULT_COMMAND="rg $RG_OPTS -pe '\b\B' $1" fzf \
+    --bind "change:reload:rg $RG_OPTS -pe {q} $1 || true" \
+    --bind "ctrl-r:reload:rg $RG_OPTS -pe '^$' $1" \
+    --bind "ctrl-s:execute-silent(rg -pe {q} $1 > sedit-$(date --iso-8601=seconds))+abort" \
+    --ansi --phony
+}
+
+
+function fuzit() { # jq interactive filtering
+STUFF=${@:1:#}
+# FZF_DEFAULT_COMMAND="echo $($@) | sed -e '/.*/p'" fzf \
+FZF_DEFAULT_COMMAND="" fzf \
+    --bind "change:reload: $STUFF | sed {q}  || true" \
+    --bind "ctrl-r:reload: sed " \
+    --ansi --phony
+}
+
+
 # COMPLETION
 
 # export DOCKER_FZF_PREFIX="--bind ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all"

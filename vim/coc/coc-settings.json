@@ -25,5 +25,6 @@
         "usePlaceholders": true
       }
     }
-  }
+  },
+  "java.format.settings.url": "/home/dangelo/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
 }

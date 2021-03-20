@@ -56,6 +56,8 @@ filetype plugin indent on    " required
 
 " Who is the boss key?
 let mapleader = " "
+" " Second to boss key?
+" let mapleader = ","
 
 colorscheme palenight
 
@@ -275,6 +277,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 
 
@@ -496,8 +500,8 @@ nnoremap <c-j> wincmd j
 nnoremap <c-k> wincmd k
 nnoremap <c-l> wincmd l
 nnoremap <c-h> wincmd h
-nnoremap <c-w>l <c-w>l:vertical resize 130<CR>
-nnoremap <c-w>h <c-w>h:vertical resize 130<CR>
+" nnoremap <c-w>l <c-w>l:vertical resize 130<CR>
+" nnoremap <c-w>h <c-w>h:vertical resize 130<CR>
 nnoremap <expr> <c-w><c-k> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>+'
 nnoremap <expr> <c-w><c-j> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>-'
 nnoremap <expr> <c-w><c-l> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>>'
