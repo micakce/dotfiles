@@ -77,7 +77,7 @@ forgit
 copyfile
 copydir
 docker
-dockit
+fzf-it
 pass
 zsh-autosuggestions
 )

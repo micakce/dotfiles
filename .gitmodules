@@ -1,9 +1,15 @@
 [submodule "zsh/custom/plugins/zsh-autosuggestions"]
 	path = zsh/custom/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
 [submodule "zsh/custom/themes/powerlevel10k"]
 	path = zsh/custom/themes/powerlevel10k
-	url = https://github.com/romkatv/powerlevel10k.git
+	url = git@github.com:romkatv/powerlevel10k.git
 [submodule "tmux/tmux-powerline"]
 	path = tmux/tmux-powerline
 	url = https://github.com/erikw/tmux-powerline.git
+[submodule "zsh/custom/plugins/fzf-it"]
+	path = zsh/custom/plugins/fzf-it
+	url = git@github.com:micakce/fzf-it.git
+[submodule "zsh/custom/plugins/fzf-tab-completion"]
+	path = zsh/custom/plugins/fzf-tab-completion
+	url = git@github.com:lincheney/fzf-tab-completion.git
