@@ -13,3 +13,6 @@
 [submodule "zsh/custom/plugins/fzf-tab-completion"]
 	path = zsh/custom/plugins/fzf-tab-completion
 	url = git@github.com:lincheney/fzf-tab-completion.git
+[submodule "tmux/plugins/tmux-powerline"]
+	path = tmux/plugins/tmux-powerline
+	url = git@github.com:micakce/tmux-powerline.git
