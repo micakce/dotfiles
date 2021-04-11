@@ -117,11 +117,14 @@ zstyle ':completion::*:aws::*' fzf-completion-opts --preview='if [[ {1} != "--"*
 # Example aliases
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Normal Aliases
+alias nvim="/home/dangelo/.appimg/nvim.appimage"
+alias nv="nvim"
+alias ngs="nv -c Gst"
 alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
 alias hugo="docker run --rm -it -v $PWD:/src  klakegg/hugo:ext-alpine"
 alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo:ext-alpine server"
 alias kpm="~/development/docker/kpm/runServer.sh"
-alias vconf="vim ~/.vimrc"
+alias vconf="nvim ~/.vimrc"
 alias zconf="nvim ~/.zshrc"
 alias tconf="nvim ~/.tmux.conf"
 alias dockit="vim ~/dotfiles/zsh/custom/plugins/dockit/dockit.plugin.zsh"
@@ -135,7 +138,6 @@ alias m="multipass"
 alias dc="docker-compose"
 alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
-alias nv="nvim"
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s py='nvim'
@@ -204,9 +206,9 @@ fkill() {
 FORGIT_COPY_CMD='xclip -selection clipboard'
 
 # export JAVA_HOME="/usr/lib/jvm/jdk-15.0.2"
-export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_281"
-# export JAVA_HOME="/usr/lib/jvm/jdk-11.0.10"
-# export PATH="$JAVA_HOME/bin"
+# export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_281"
+export JAVA_HOME="/usr/lib/jvm/jdk-11.0.10"
+export PATH="$JAVA_HOME/bin:$PATH"
 # export PATH="$JAVA_HOME/bin:/snap/bin:$PATH"
 # export CLASS_PATH="/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/"
 export PYENV_ROOT="$HOME/.pyenv"

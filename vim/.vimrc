@@ -10,6 +10,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 " Plug 'jamessan/vim-gnupg' "
+Plug 'aklt/plantuml-syntax'
 Plug 'cespare/vim-toml'
 Plug 'vim-ctrlspace/vim-ctrlspace' " To verify
 Plug 'mhinz/vim-startify' " Startify
@@ -32,6 +33,7 @@ Plug 'tpope/vim-fugitive' " Fugitive
 " JUNEGUNN: !PUTO CRACK!
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
 Plug 'junegunn/rainbow_parentheses.vim' "RainBowParentheses
+Plug 'junegunn/vim-peekaboo' "Peekaboo
 " Plug 'junegunn/vim-slash' " Slash
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "FZF
 Plug 'junegunn/fzf.vim'
@@ -47,13 +49,15 @@ Plug 'pangloss/vim-javascript' " JavaScript syntax
 Plug 'maxmellon/vim-jsx-pretty' " JSXSyntax
 Plug 'airblade/vim-gitgutter' "GitGutter
 Plug 'preservim/nerdtree' "NerdTree
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
 " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()            " required
 filetype plugin indent on    " required
-
+" let java_highlight_functions = 1
 " Who is the boss key?
 let mapleader = " "
 " " Second to boss key?
@@ -160,14 +164,14 @@ command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 " Tags: Replacing ctags?
 nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --select-1 --exit-0 --no-reverse'})<CR>
 
-" " CompleteLine: 
+" " CompleteLine:
 " inoremap <expr> <c-x><c-s-l> fzf#vim#complete(fzf#wrap({
 "       \ 'prefix': '^.*$',
 "       \ 'source': 'rg -n ^ --color always',
 "       \ 'options': '--ansi --delimiter : --nth 3..',
 "       \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 
-" " DeleteBuffers: 
+" " DeleteBuffers:
 function! s:format_buffer(b)
   let l:name = bufname(a:b)
   let l:name = empty(l:name) ? '[No Name]' : fnamemodify(l:name, ":p:~:.")
@@ -192,7 +196,6 @@ function! s:delete_buffers()
           \   l:preview_window
           \ ), 'options', []))
   endif
-
   return fzf#run(fzf#wrap({
         \ 'source':  map(
         \   filter(
@@ -344,10 +347,33 @@ autocmd User targets#mappings#user call targets#mappings#extend({
 " JSXSyntax:
 let g:vim_jsx_pretty_highlight_close_tag=1
 
-" NerdTree:
-noremap <C-n> :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
-noremap <silent> <leader>nf :NERDTreeFind<CR>
+" " NerdTree:
+" noremap <C-n> :NERDTreeToggle<CR>
+" let NERDTreeShowHidden=1
+" noremap <silent> <leader>nf :NERDTreeFind<CR>
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>nr :NvimTreeRefresh<CR>
+nnoremap <leader>nf :NvimTreeFindFile<CR>
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★",
+    \   'deleted': ""
+    \   },
+    \ 'folder': {
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   'symlink_open': "",
+    \   }
+    \ }
 
 " PythonSyntax:
 let g:python_highlight_all = 1
@@ -358,7 +384,7 @@ let g:netrw_banner = 0
 
 " Window:
 " copy yanked text to tmux pane
-function! Send_to_tmux(count) abort " ------------------------------ {{{
+function! Send_to_tmux(count) " ------------------------------ {{{
   let _count = (a:count == 0) ? 'bottom-right' : a:count
   let text = @z
   let text = substitute(text, '\n', '\r', 'g')
