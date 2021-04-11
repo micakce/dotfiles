@@ -80,6 +80,10 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='murmur'
 
+" testing rounded separators (extra-powerline-symbols):
+let g:airline_left_sep = ""
+let g:airline_right_sep = ""
+
 " VimEasyMotion: Jump cursor wherever you want
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
