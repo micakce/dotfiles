@@ -111,6 +111,10 @@ autocmd Filetype matlab setlocal commentstring=%\ %s
 " set statusline+=%{FugitiveStatusline()}
 
 " JUNEGUNN: ¡PUTO CRACK!
+
+" Peekaboo: 
+let g:peekaboo_prefix="<leader>"
+
 " VimEasyAlign: Best aligment plugin ever
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
