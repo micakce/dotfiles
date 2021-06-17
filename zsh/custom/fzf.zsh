@@ -2,8 +2,8 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_COMPLETION_TRIGGER=','
 export FZF_PREVIEW_OPTS="
---bind='alt-k:preview-up,alt-p:preview-up'
---bind='alt-j:preview-down,alt-n:preview-down'
+--bind='alt-k:preview-up'
+--bind='alt-j:preview-down'
 --bind='ctrl-r:toggle-all'
 --bind='ctrl-s:toggle-sort'
 --bind='alt-p:toggle-preview'
@@ -38,12 +38,12 @@ bindkey -s '\C-f' 'RG\n'
 # }
 
 _fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git" --exclude "node_modules" . "$1"
+  fd --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".git" --exclude "node_modules" . "$1"
+  fd --type d --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" . "$1"
 }
 
 _fzf_comprun() {
@@ -54,7 +54,41 @@ _fzf_comprun() {
     cp|mv|rm|vim|nvim)     fzf "$@" --height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
-    aws)          fzf "$@" ;;
+    # aws)          fzf "$@" ;;
     *)            fzf "$@" ;;
   esac
 }
+
+####################################################################################
+#                                       GIT                                        #
+####################################################################################
+
+# Will return non-zero status if the current directory is not managed by git
+is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
+}
+
+gt() {
+  # "Nothing to see here, move along"
+  is_in_git_repo || return
+
+  # Pass the list of the tags to fzf-tmux
+  # - "{}" in preview option is the placeholder for the highlighted entry
+  # - Preview window can display ANSI colors, so we enable --color=always
+  # - We can terminate `git show` once we have $LINES lines
+  git tag --sort -version:refname |
+    fzf-tmux --multi --preview-window right:70% \
+             --preview 'git show --color=always {} | head -'$LINES
+}
+
+# A helper function to join multi-line output from fzf
+join-lines() {
+  local item
+  while read item; do
+    echo -n "${(q)item} "
+  done
+}
+
+fzf-gt-widget() LBUFFER+=$(gt | join-lines)
+zle -N fzf-gt-widget
+bindkey '^g^t' fzf-gt-widget
