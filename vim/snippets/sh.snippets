@@ -1,0 +1,70 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet curl "Header application/json" i
+curlaj -X ${1:Method} ${2:"http://localhost"} \
+	-H "Content-Type:application/json" \
+	-d '{
+${3}
+	}'
+${4}
+endsnippet
+
+snippet ctaj "Header application/json" i
+Content-Type:application/json
+endsnippet
+
+snippet ctaxw "Header application/x-www.." i
+Content-Type:application/x-www-form-urlencoded
+endsnippet
+
+snippet ctaxm "Header application/xml" i
+Content-Type:application/xml
+endsnippet
+
+snippet ctaz "Header application/zip" i
+Content-Type:application/zip
+endsnippet
+
+snippet cttcs "Header text/css" i
+Content-Type:text/css
+endsnippet
+
+snippet cttcv "Header text/csv" i
+Content-Type:text/csv
+endsnippet
+
+snippet ctth "Header text/html" i
+Content-Type:text/html
+endsnippet
+
+snippet cttp "Header text/plain" i
+Content-Type:text/plain
+endsnippet
+
+snippet cttx "Header text/xml" i
+Content-Type:text/xml
+endsnippet

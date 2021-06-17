@@ -1,14 +1,13 @@
 {
-  "python.jediEnabled": false,
+  // Snippets
+  "snippets.userSnippetsDirectory": "~/dotfiles/vim/snippets",
   // Prettier options
   "coc.preferences.formatOnSaveFiletypes": ["typescript"],
-  // TabNine options
-  "tabnine.disable_filetypes": ["vimwiki", "javascript", "vim", "markdown", "yaml"],
+  // // TabNine options
+  // "tabnine.disable_filetypes": ["vimwiki", "javascript", "vim", "markdown", "yaml"],
   // Javascript options
   "tsserver.enable": true,
   "tsserver.npm": "/usr/local/bin/npm",
-  // Eslint options
-  "eslint.enable": false,
   "eslint.run": "onSave",
   // YAML options
   "yaml.schemas": {
@@ -26,5 +25,16 @@
       }
     }
   },
-  "java.format.settings.url": "/home/dangelo/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
+  "java.enabled": false,
+  "java.format.settings.url": "/home/dangelo/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-1.8",
+      "path": "/usr/lib/jvm/jdk1.8.0_281"
+    },
+    {
+      "name": "JavaSE-11",
+      "path": "/usr/lib/jvm/jdk-11.0.10"
+    }
+  ]
 }

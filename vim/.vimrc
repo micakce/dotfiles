@@ -10,6 +10,9 @@ endif
 
 call plug#begin('~/.vim/plugged')
 " Plug 'jamessan/vim-gnupg' "
+Plug 'pantharshit00/vim-prisma'
+" Plug 'shaunsingh/solarized.nvim'
+Plug 'altercation/vim-colors-solarized'
 Plug 'aklt/plantuml-syntax'
 Plug 'cespare/vim-toml'
 Plug 'vim-ctrlspace/vim-ctrlspace' " To verify
@@ -29,8 +32,10 @@ Plug 'tpope/vim-surround' " Object-text surround commands
 Plug 'tpope/vim-dadbod' " Connect with databases
 Plug 'tpope/vim-commentary' " VimCommentary
 Plug 'tpope/vim-eunuch' " Eunuch
+Plug 'tpope/vim-abolish' " Abolish
 Plug 'tpope/vim-fugitive' " Fugitive
 " JUNEGUNN: !PUTO CRACK!
+Plug 'junegunn/gv.vim' "GV fugitive aid for commit browsing
 Plug 'junegunn/vim-easy-align' " VimEasyAlign
 Plug 'junegunn/rainbow_parentheses.vim' "RainBowParentheses
 Plug 'junegunn/vim-peekaboo' "Peekaboo
@@ -54,7 +59,7 @@ Plug 'kyazdani42/nvim-tree.lua'
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
-" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()            " required
 filetype plugin indent on    " required
 " let java_highlight_functions = 1
@@ -64,6 +69,7 @@ let mapleader = " "
 " let mapleader = ","
 
 colorscheme palenight
+" set background=light
 
 " Startify:
 let g:startify_bookmarks = [ {'vc': '~/.vimrc'}, { 'zc': '~/.zshrc' }, {'u': '~/paisanoscreando/uiwi-odoo-woocommerce'}, {'m': '~/paisanoscreando/mutual'} ]
@@ -99,13 +105,20 @@ map <leader>F <Leader><Leader>F
 " IndentLine: Indent guide lines
 let g:indentLine_enabled = 1
 let g:indentLine_color_term = 8
-" let g:indentLine_char = '┊'
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
+autocmd Filetype json setlocal commentstring=%// %s
 
 " " Eunuch: UNIX file commands sugar
+function! DuplicateCurrentFile(path)
+  let path = "%:h/" . a:path
+  execute "saveas " . path
+  execute "edit " . path
+endfunction
+
+command! -bar -nargs=1 Duplicate call DuplicateCurrentFile(<q-args>)
 
 " " Fugitive:
 " set statusline+=%{FugitiveStatusline()}
@@ -136,6 +149,10 @@ endif
 
 " FZF: Everything fuzzy finder
 " General_options:
+noremap <c-b> :Buffers<CR>
+nnoremap <M-t> :Tags<CR>
+nnoremap <M-T> :BTags<CR>
+nnoremap <M-h> :History:<CR>
 " Open in a new full window
 let g:fzf_layout = { 'window': 'enew' }
 " let g:fzf_layout = { 'window': {'width': 0.9, 'height': 0.6} }
@@ -143,11 +160,23 @@ let g:fzf_layout = { 'window': 'enew' }
 " Files: Find fies in project with fzf
 command! -bang -nargs=? -complete=dir Files
       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview("down:50%"), <bang>0)
+noremap <c-p> :Files<CR>
+
+" Templates: Insert custom template
+command! -bang -nargs=* InsertTemplate 
+      \ call fzf#run(fzf#vim#with_preview({
+      \               'dir': '~/dotfiles/vim/templates',
+      \               'source': 'ls',
+      \               'sink': 'read',
+      \               'window': {'width': 0.5, 'height': 0.85},
+      \               }, 'down:70%'))
+noremap <M-i> :InsertTemplate<CR>
 
 command! -bang -nargs=* MatchFileNameFind
       \ call fzf#vim#grep(
       \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
       \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
+nnoremap <M-f> :MatchFileNameFind<CR>
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -164,6 +193,7 @@ function! RipgrepFzf(query, fullscreen)
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec, "down:50%"), a:fullscreen)
 endfunction
 command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
+noremap <c-f> :Find<CR>
 
 " Tags: Replacing ctags?
 nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --select-1 --exit-0 --no-reverse'})<CR>
@@ -218,18 +248,18 @@ function! s:delete_buffers()
 endfunction
 command! BD call s:delete_buffers()
 
-" Mappings:
-noremap <c-p> :Files<CR>
-noremap <c-f> :Find<CR>
-nnoremap f :MatchFileNameFind<CR>
-nnoremap <M-f> :MatchFileNameFind<CR>
-nnoremap t :Tags<CR>
-nnoremap <M-t> :Tags<CR>
-nnoremap T :BTags<CR>
-nnoremap <M-T> :BTags<CR>
-nnoremap <M-h> :History:<CR>
-noremap <c-b> :Buffers<CR>
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd',{'window': { 'width': 0.4, 'height': 0.2, 'yoffset': Y_cursor_offset(), 'xoffset': X_cursor_offset()}})
+" Complete Path:
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path(
+        \ 'fd',
+        \ {'window': 
+        \   {
+        \   'width': 0.4,
+        \   'height': 0.2,
+        \   'yoffset': Y_cursor_offset(),
+        \   'xoffset': X_cursor_offset()
+        \   }
+        \ })
+
 
 function! Y_cursor_offset()
   let visible_lines = line('w$') - line('w0')
@@ -355,9 +385,9 @@ let g:vim_jsx_pretty_highlight_close_tag=1
 " noremap <C-n> :NERDTreeToggle<CR>
 " let NERDTreeShowHidden=1
 " noremap <silent> <leader>nf :NERDTreeFind<CR>
-nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <silent> <C-n> :NvimTreeToggle<CR>:sleep 10m<CR>:wincmd =<CR>
 nnoremap <leader>nr :NvimTreeRefresh<CR>
-nnoremap <leader>nf :NvimTreeFindFile<CR>
+nnoremap <silent> <leader>nf :NvimTreeFindFile<CR>:sleep 10m<CR><c-w>=
 let g:nvim_tree_icons = {
     \ 'default': '',
     \ 'symlink': '',
@@ -409,7 +439,7 @@ xnoremap <expr> <Leader>st '"zy:call Send_to_tmux('.v:count.')<CR>'
 
 " send paragraph under curso to terminal
 if has("nvim")
-  au! TermClose * if (exists("g:last_terminal_chan_id") && g:last_terminal_chan_id == b:terminal_job_id) | unlet g:last_terminal_chan_id | endif
+  au! TermClose * if (exists("g:last_terminal_chan_id") && exists("b:terminal_job_id") && g:last_terminal_chan_id == b:terminal_job_id) | unlet g:last_terminal_chan_id | endif
   " https://vi.stackexchange.com/questions/21449/send-keys-to-a-terminal-buffer
   function! Exec_on_term(cmd)
     if a:cmd=="normal"
@@ -468,10 +498,11 @@ inoremap  ``````<left><left><left>
 " RegExp:
 " nnoremap / /\v
 " vnoremap / /\v
-cnoremap %s, %smagic,
-cnoremap \>s/ \>smagic/
+" cnoremap %s, %smagic,
+" cnoremap \>s/ \>smagic/
 " nnoremap :g/ :g/\v
 " nnoremap :g// :g//
+set magic
 
 
 " InsertMappings:
@@ -729,6 +760,15 @@ if has("nvim") " ------------------------------- {{{
     elseif &filetype=="python"
       silent !clear
       execute "update | !python3 %"
+    elseif &filetype=="lua"
+      silent !clear
+      execute "update | !lua %"
+    elseif &filetype=="wast"
+      silent !clear
+      execute "update | !wat2wasm %"
+    elseif &filetype=="rust"
+      silent !clear
+      execute "update | !rustc % && ./%:r"
     elseif &filetype=="go"
       silent !clear
       execute "update | sp | term go run %"
@@ -793,24 +833,38 @@ augroup XML
   " autocmd FileType xml :%foldopen!
 augroup END
 
-augroup PHP
-  autocmd!
-  autocmd FileType php let g:indentLine_enabled = 1
-augroup END
-
 augroup MARKDOWN
   autocmd!
 augroup END
 
 augroup JSON
   autocmd!
-  " autocmd FileType json setlocal conceallevel=2
-  " autocmd FileType json let g:indentLine_enabled = 0
   autocmd FileType json setlocal foldmethod=syntax | setlocal nofoldenable
   autocmd FileType json syntax match Comment +\/\/.\+$+
+  let g:indentLine_conceallevel = 0
   " autocmd FileType json :%foldopen!
   " let g:indentLine_concealcursor = 'inc'
-  " let g:indentLine_conceallevel = 2
+augroup END
+
+function! InsertJavaPackage()
+  let dir = expand('%:h')
+  if !(dir =~ "^.*\/src\/")
+    return
+  end
+  let dir = substitute(dir, "^.*\/src\/", "", "")
+  let dir = substitute(dir, "\/", ".", "g")
+  let dir = "package " . dir . ";"
+  let result = append(0, dir)
+  let filename = expand("%:t")
+  let filename = substitute(filename, "\.java", "", "")
+  let result = append(2, "")
+  let result = append(3, "public class " . filename . " {")
+  let result = append(4, "}")
+endfunction
+
+augroup JAVA
+  autocmd!
+  autocmd BufNewFile *.java call InsertJavaPackage()
 augroup END
 
 augroup JAVASCRIPT
@@ -818,10 +872,9 @@ augroup JAVASCRIPT
   " autocmd FileType javascript let g:indentLine_enabled = 1
 augroup END
 
-augroup YAML
-  autocmd!
-augroup END
+" augroup YAML
+"   autocmd!
+" augroup END
 
 source $HOME/dotfiles/vim/LISPCloseParens.vimrc
 source $HOME/dotfiles/vim/foldSetting.vimrc
-" set background=dark

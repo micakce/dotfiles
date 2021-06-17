@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+base=$(dirname $0)
+response="$base/post.response"
+
+if [[ -z $1 ]]; then
+  echo "Must pass valid "
+  exit 1
+fi
+
+curl -siX POST "$(cat .server)/" \
+  -H "Content-Type: application/json" \
+  -d @- <<EOF > $response
+  { 
+    "key": "value"
+    "key": []
+    "key": {}
+}
+EOF
+
+cat $response | jq -R 'fromjson? | .key' > .key
+
+if [[ $(cat .key) != "null" ]]; then
+  cat $response | jq -R 'fromjson?'
+  cat .key
+else
+  echo "nope"
+  cat $response
+  exit 1
+fi
+
+exit 0

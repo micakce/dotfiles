@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+base=$(dirname $0)
+response="$base/get.response"
+
+if [[ -z $1 ]]; then
+  echo "Must pass valid"
+  exit 1
+fi
+
+curl -siX GET "$(cat .server)/" \
+  -H "Content-Type:application/x-www-form-urlencoded" \
+  -d  key=value \
+  -d  key=value \
+  > $response
+
+cat $response | jq -R 'fromjson? | .key' > .key
+
+if [[ $(cat .key) != "null" ]]; then
+  cat $response | jq -R 'fromjson?'
+  cat .key
+else
+  echo "nope"
+  cat $response
+  exit 1
+fi
+
+exit 0
