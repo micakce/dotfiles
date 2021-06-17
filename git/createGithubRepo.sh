@@ -1,5 +1,6 @@
 #!/bin/bash
 
+base=$(dirname $0)
 # function to parse the error json response from curl command
 function jsonValue() {
 KEY=$1
@@ -9,7 +10,7 @@ awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'$KEY'\042/){print $(i+1)}}}' | tr -d 
 }
 
 # import user and password variables
-. git_credentials
+source $base/git_credentials
 
 # if not passed as first argument, current repo root folder name is taken
 if test $1; then
