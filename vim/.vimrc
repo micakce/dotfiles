@@ -186,7 +186,7 @@ command! -bang -nargs=* Rg
 
 " Find: Find files by content
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always %s --glob "!{node_modules}" || true'
+  let command_fmt = 'rg --smart-case --column --hidden --line-number --no-heading --color=always %s --glob "!{node_modules}" || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
