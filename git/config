@@ -1,0 +1,16 @@
+[core]
+	editor = nvim
+[user]
+	name = Dangelo Guanipa
+	email = dangelo.guanipa@witi.cl
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+[url "git@github-micakce:micakce"]
+    insteadOf = git@github.com:micakce
+; [merge]
+; 	tool = fugitive
+; 	conflictstyle = diff3
+[mergetool]
+	prompt = false
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gvdiffsplit!\" \"$MERGED\"

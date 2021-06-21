@@ -1,0 +1,34 @@
+source ~/.vimrc
+unmap /
+nmap <c-h> <c-w>h
+nmap <c-j> <c-w>j
+nmap <c-k> <c-w>k
+nmap <c-l> <c-w>l
+unmap gd
+unmap gr
+
+unmap <c-n>
+unmap <leader>nf
+
+nnoremap <c-n> :NERDTreeToggle<CR>
+nnoremap <silent> <leader>nf :NERDTreeFind<CR>
+nnoremap gl :action GoToLastTab<CR>
+nnoremap <c-b> :action About<CR>
+nnoremap <leader>ta :action TabsActions<CR>
+nnoremap <leader>mq _di"Oprivate String <Esc>pa;<CR>public static final String <Esc>pa_FIELD = "<Esc> PA;<Esc>jddO<Esc>j
+nnoremap gi :action GotoImplementation<CR>
+nnoremap <c-s-i> :action ImplementMethods<CR>
+nnoremap <a-i> :action QuickImplementations<CR>
+nnoremap <c-p> :action RecentFiles<CR>
+
+nnoremap <c-s-z> :action ToggleZenMode<CR>
+
+nnoremap <c-s-t> :action ActivateTerminalToolWindow<CR>
+
+nnoremap <c-s-b> :action ActivateBuildToolWindow<CR>
+
+nnoremap <c-s-r> :action ActivateRunToolWindow<CR>
+
+nnoremap <leader>= :action ReformatCode<CR>
+
+"nnoremap gl <c><tab>
