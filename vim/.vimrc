@@ -9,9 +9,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-" Plug 'jamessan/vim-gnupg' "
 Plug 'pantharshit00/vim-prisma'
-" Plug 'shaunsingh/solarized.nvim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'aklt/plantuml-syntax'
 Plug 'cespare/vim-toml'
@@ -54,8 +52,7 @@ Plug 'pangloss/vim-javascript' " JavaScript syntax
 Plug 'maxmellon/vim-jsx-pretty' " JSXSyntax
 Plug 'airblade/vim-gitgutter' "GitGutter
 Plug 'preservim/nerdtree' "NerdTree
-Plug 'kyazdani42/nvim-web-devicons' " for file icons
-Plug 'kyazdani42/nvim-tree.lua'
+Plug 'mcchrish/nnn.vim' "NNN
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
@@ -95,10 +92,6 @@ let g:airline_left_sep = ""
 let g:airline_right_sep = ""
 
 " VimEasyMotion: Jump cursor wherever you want
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
-" map  n <Plug>(easymotion-next)
-" map  N <Plug>(easymotion-prev)
 map <leader>f <Leader><Leader>f
 map <leader>F <Leader><Leader>F
 
@@ -176,7 +169,7 @@ command! -bang -nargs=* MatchFileNameFind
       \ call fzf#vim#grep(
       \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
       \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
-nnoremap <M-f> :MatchFileNameFind<CR>
+nnoremap <C-S-f> :MatchFileNameFind<CR>
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -250,7 +243,7 @@ command! BD call s:delete_buffers()
 
 " Complete Path:
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path(
-        \ 'fd',
+        \ 'fd -H',
         \ {'window': 
         \   {
         \   'width': 0.4,
@@ -382,32 +375,15 @@ autocmd User targets#mappings#user call targets#mappings#extend({
 let g:vim_jsx_pretty_highlight_close_tag=1
 
 " " NerdTree:
-" noremap <C-n> :NERDTreeToggle<CR>
-" let NERDTreeShowHidden=1
-" noremap <silent> <leader>nf :NERDTreeFind<CR>
-nnoremap <silent> <C-n> :NvimTreeToggle<CR>:sleep 10m<CR>:wincmd =<CR>
-nnoremap <leader>nr :NvimTreeRefresh<CR>
-nnoremap <silent> <leader>nf :NvimTreeFindFile<CR>:sleep 10m<CR><c-w>=
-let g:nvim_tree_icons = {
-    \ 'default': '',
-    \ 'symlink': '',
-    \ 'git': {
-    \   'unstaged': "✗",
-    \   'staged': "✓",
-    \   'unmerged': "",
-    \   'renamed': "➜",
-    \   'untracked': "★",
-    \   'deleted': ""
-    \   },
-    \ 'folder': {
-    \   'default': "",
-    \   'open': "",
-    \   'empty': "",
-    \   'empty_open': "",
-    \   'symlink': "",
-    \   'symlink_open': "",
-    \   }
-    \ }
+noremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+noremap <silent> <leader>nf :NERDTreeFind<CR>
+
+" NNN:
+let g:nnn#set_default_mappings = 0
+nnoremap <silent> <leader>nn :NnnPicker<CR>
+" let g:nnn#layout = { 'left': '~20%' } " or right, up, down
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 
 " PythonSyntax:
 let g:python_highlight_all = 1
@@ -800,7 +776,7 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
-set inccommand=split
+" set inccommand=split
 
 function! Vimgrep()
   call inputsave()
