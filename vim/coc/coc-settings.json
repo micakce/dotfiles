@@ -11,8 +11,8 @@
   "eslint.run": "onSave",
   // YAML options
   "yaml.schemas": {
-    "kubernetes": "/*.yaml",
-    "https://raw.githubusercontent.com/docker/cli/master/cli/compose/schema/data/config_schema_v3.9.json": ["/*compose.yml"]
+    "kubernetes": ["/k.*.yaml", "/k.*.yml"],
+    "https://raw.githubusercontent.com/docker/cli/master/cli/compose/schema/data/config_schema_v3.9.json": ["/*compose.yaml", "/*compose.yml"]
   },
   // LSP
   "languageserver": {
@@ -24,17 +24,17 @@
         "usePlaceholders": true
       }
     }
-  },
-  "java.enabled": false,
-  "java.format.settings.url": "/home/dangelo/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
-  "java.configuration.runtimes": [
-    {
-      "name": "JavaSE-1.8",
-      "path": "/usr/lib/jvm/jdk1.8.0_281"
-    },
-    {
-      "name": "JavaSE-11",
-      "path": "/usr/lib/jvm/jdk-11.0.10"
-    }
-  ]
+  }
+  // "java.enabled": false,
+  // "java.format.settings.url": "/home/dangelo/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
+  // "java.configuration.runtimes": [
+  //   {
+  //     "name": "JavaSE-1.8",
+  //     "path": "/usr/lib/jvm/jdk1.8.0_281"
+  //   },
+  //   {
+  //     "name": "JavaSE-11",
+  //     "path": "/usr/lib/jvm/jdk-11.0.10"
+  //   }
+  // ]
 }
