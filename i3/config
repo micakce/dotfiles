@@ -158,6 +158,27 @@ bindsym $mod+Control+Shift+8 move container to workspace 18; workspace 18
 bindsym $mod+Control+Shift+9 move container to workspace 19; workspace 19
 bindsym $mod+Control+Shift+0 move container to workspace 20; workspace 20
 
+# move focused container to workspace
+bindsym Mod1+Shift+1 move container to workspace 1;
+bindsym Mod1+Shift+2 move container to workspace 2;
+bindsym Mod1+Shift+3 move container to workspace 3;
+bindsym Mod1+Shift+4 move container to workspace 4;
+bindsym Mod1+Shift+5 move container to workspace 5;
+bindsym Mod1+Shift+6 move container to workspace 6;
+bindsym Mod1+Shift+7 move container to workspace 7;
+bindsym Mod1+Shift+8 move container to workspace 8;
+bindsym Mod1+Shift+9 move container to workspace 9;
+bindsym Mod1+Shift+0 move container to workspace 10;
+bindsym Mod1+Control+Shift+1 move container to workspace 11;
+bindsym Mod1+Control+Shift+2 move container to workspace 12;
+bindsym Mod1+Control+Shift+3 move container to workspace 13;
+bindsym Mod1+Control+Shift+4 move container to workspace 14;
+bindsym Mod1+Control+Shift+5 move container to workspace 15;
+bindsym Mod1+Control+Shift+6 move container to workspace 16;
+bindsym Mod1+Control+Shift+7 move container to workspace 17;
+bindsym Mod1+Control+Shift+8 move container to workspace 18;
+bindsym Mod1+Control+Shift+9 move container to workspace 19;
+bindsym Mod1+Control+Shift+0 move container to workspace 20;
 
 
 #####################################################################################################################
@@ -281,9 +302,8 @@ bindsym $mod+Shift+Right move right
 
 # next/previous workspace
 
-bindsym Mod1+Tab workspace next
-bindsym Mod1+Shift+Tab workspace prev
-bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
 
 #navigate workspaces next / previous
 bindsym Mod1+Ctrl+Right workspace next
@@ -730,7 +750,7 @@ bindsym mod1+Right exec --no-startup-id variety -n
 # previous wallpaper
 bindsym mod1+Left exec --no-startup-id variety -p
 # favorite wallpaper
-bindsym mod1+f exec --no-startup-id variety -f
+# bindsym mod1+f exec --no-startup-id variety -f
 # pause wallpaper
 bindsym mod1+Up exec --no-startup-id variety --pause
 # resume wallpaper
