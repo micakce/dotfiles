@@ -27,7 +27,7 @@ INITIAL_QUERY=""
 FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
     --bind "change:reload:$RG_PREFIX {q} || true" \
     --ansi --phony --query "$INITIAL_QUERY" \
-    --preview 'bat --color=always $(echo {} | cut -d : -f 1 ) | head -200' \
+    --preview 'bat --color=always $(echo {} | cut -d : -f 1 ) --line-range $(N=`echo {} | cut -d : -f 2`; let "M=$N+100"; echo $N:$M)' \
     --preview-window="down:60%"
 }
 bindkey -s '\C-f' 'RG\n'
@@ -46,16 +46,24 @@ _fzf_compgen_dir() {
   fd --type d --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" . "$1"
 }
 
+
+get_preview_window() {
+  if [[ $FZF_PREVIEW_COLUMNS -le 5 ]]; then
+    echo "down:80%"
+  else
+    echo "right"
+  fi
+}
+
 _fzf_comprun() {
   local command=$1
   shift
   case "$command" in
-    cd|ls)        fzf "$@" --height 100% --preview-window right --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim|nvim)     fzf "$@" --height 100% --preview-window right --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
-    export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
-    ssh)          fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
-    # aws)          fzf "$@" ;;
-    *)            fzf "$@" ;;
+    cd|ls)              fzf "$@" --height 100% --preview-window down:60% --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
+    cp|mv|rm|vim|nvim)  fzf "$@" --height 100% --preview-window $(get_preview_window) --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
+    export|unset)       fzf "$@" --preview "eval 'echo \$'{}" ;;
+    ssh)                fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
+    *)                  fzf "$@" ;;
   esac
 }
 
