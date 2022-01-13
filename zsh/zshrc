@@ -118,6 +118,7 @@ zstyle ':completion::*:aws::*' fzf-completion-opts --preview='if [[ {1} != "--"*
 #
 # Example aliases
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
 # Normal Aliases
 alias nv="nvim"
 alias ngs="nv -c \"Git | wincmd o\""
@@ -141,6 +142,9 @@ alias m="multipass"
 alias dc="docker compose"
 alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
+alias lg="lazygit"
+alias gg="lazygit"
+
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s py='nvim'
@@ -150,6 +154,7 @@ alias -s mkv='vlc'
 alias -s mkv='vlc'
 alias -s png='eog'
 alias -s jpg='eog'
+
 # Expandable aliases
 alias -g D='& disown'
 
@@ -221,7 +226,6 @@ export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export GOROOT="/usr/local/go"
 export PATH="$GOPATH:$GOBIN:$GOROOT/bin:$PATH"
-export PATH="/usr/local/go/bin:$PATH"
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
 export PATH="/usr/bin/aws:$PATH" # AWS
