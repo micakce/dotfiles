@@ -24,6 +24,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'Yggdroot/indentLine' " IndentLine
 Plug 'jiangmiao/auto-pairs' " Automatic brackets and quotes insert
 Plug 'machakann/vim-highlightedyank'  " YankHighlight
+Plug 'kdheepak/lazygit.nvim' " LazyGit
 " TPOPE: ¡CAPO!
 Plug 'tpope/vim-repeat' " Mini macros dot repeat
 Plug 'tpope/vim-surround' " Object-text surround commands
@@ -97,12 +98,16 @@ map <leader>F <Leader><Leader>F
 
 " IndentLine: Indent guide lines
 let g:indentLine_enabled = 1
-let g:indentLine_color_term = 8
+let g:indentLine_conceallevel = 1
+let g:indentLine_color_term = 240
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+" LazyGit:
+map <leader>gg :LazyGit<CR>
 
 " VimCommentary: Especific file comment syntax
 autocmd Filetype matlab setlocal commentstring=%\ %s
-autocmd Filetype json setlocal commentstring=%// %s
+autocmd Filetype json setlocal commentstring=//%s
 
 " " Eunuch: UNIX file commands sugar
 function! DuplicateCurrentFile(path)
@@ -169,7 +174,7 @@ command! -bang -nargs=* MatchFileNameFind
       \ call fzf#vim#grep(
       \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
       \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
-nnoremap <C-S-f> :MatchFileNameFind<CR>
+nnoremap <M-f> :MatchFileNameFind<CR>
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -592,7 +597,7 @@ highlight TrailSpace ctermbg=darkred
 
 augroup REST
   autocmd!
-  autocmd BufRead,BufEnter *.rest set ft=sh
+  autocmd BufRead,BufEnter *.rest,*.http,*.curl set ft=sh
 
   autocmd Syntax * syn match RestGet /http GET/
   autocmd Syntax * syn match RestGet /curl .*GET/
@@ -817,7 +822,7 @@ augroup JSON
   autocmd!
   autocmd FileType json setlocal foldmethod=syntax | setlocal nofoldenable
   autocmd FileType json syntax match Comment +\/\/.\+$+
-  let g:indentLine_conceallevel = 0
+  " let g:indentLine_conceallevel = 0
   " autocmd FileType json :%foldopen!
   " let g:indentLine_concealcursor = 'inc'
 augroup END
@@ -845,7 +850,7 @@ augroup END
 
 augroup JAVASCRIPT
   autocmd!
-  " autocmd FileType javascript let g:indentLine_enabled = 1
+  autocmd FileType javascript let g:indentLine_enabled = 1
 augroup END
 
 " augroup YAML
