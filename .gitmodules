@@ -10,12 +10,9 @@
 [submodule "zsh/custom/plugins/fzf-it"]
 	path = zsh/custom/plugins/fzf-it
 	url = git@github.com:micakce/fzf-it.git
-[submodule "zsh/custom/plugins/fzf-tab-completion"]
-	path = zsh/custom/plugins/fzf-tab-completion
-	url = git@github.com:lincheney/fzf-tab-completion.git
 [submodule "tmux/plugins/tmux-powerline"]
 	path = tmux/plugins/tmux-powerline
 	url = git@github.com:micakce/tmux-powerline.git
-[submodule "/home/dangelo/dotfiles/zsh/custom/plugins/fzf-tab"]
-	path = /home/dangelo/dotfiles/zsh/custom/plugins/fzf-tab
+[submodule "zsh/custom/plugins/fzf-tab"]
+	path = zsh/custom/plugins/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab
