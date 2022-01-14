@@ -251,10 +251,8 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path(
         \ 'fd -H',
         \ {'window': 
         \   {
-        \   'width': 0.4,
-        \   'height': 0.2,
-        \   'yoffset': Y_cursor_offset(),
-        \   'xoffset': X_cursor_offset()
+        \   'width': 0.8,
+        \   'height': 0.8,
         \   }
         \ })
 
