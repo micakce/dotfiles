@@ -25,6 +25,7 @@ Plug 'Yggdroot/indentLine' " IndentLine
 Plug 'jiangmiao/auto-pairs' " Automatic brackets and quotes insert
 Plug 'machakann/vim-highlightedyank'  " YankHighlight
 Plug 'kdheepak/lazygit.nvim' " LazyGit
+Plug 'APZelos/blamer.nvim' " GitBlamer
 " TPOPE: ¡CAPO!
 Plug 'tpope/vim-repeat' " Mini macros dot repeat
 Plug 'tpope/vim-surround' " Object-text surround commands
@@ -60,13 +61,13 @@ Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()            " required
 filetype plugin indent on    " required
+syntax on
+colorscheme palenight
 " let java_highlight_functions = 1
 " Who is the boss key?
 let mapleader = " "
 " " Second to boss key?
 " let mapleader = ","
-
-colorscheme palenight
 " set background=light
 
 " Startify:
