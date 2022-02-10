@@ -248,7 +248,17 @@ endfunction
 command! BD call s:delete_buffers()
 
 " Complete Path:
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path(
+function! FZF_complete_path_obsidian()
+  return fzf#run({
+        \ 'options': '--preview "bat --color=always {}.md" --preview-window down:70%',
+        \ 'source': 'fd -H --extension md --exec echo {.}',
+        \ 'sink': { line -> execute('normal! i' .. line) },
+        \ 'window': {'width': 0.9, 'height': 0.85},
+        \ })
+endfunction
+
+function! FZF_complete_path()
+  return fzf#vim#complete#path(
         \ 'fd -H',
         \ {'window': 
         \   {
@@ -256,6 +266,8 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path(
         \   'height': 0.8,
         \   }
         \ })
+endfunction
+inoremap <expr> <c-x><c-f> FZF_complete_path()
 
 
 function! Y_cursor_offset()
@@ -501,6 +513,19 @@ augroup filetype_qf
   autocmd!
   autocmd FileType qf nnoremap <buffer> <C-v> <C-w><Enter><C-w>L
   autocmd FileType qf nnoremap <buffer> <C-t> <C-w><Enter><C-w>T
+augroup END
+
+
+augroup obsidian
+  autocmd!
+  " autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+  autocmd InsertLeave *.md write
+  autocmd BufNewFile,BufRead *.md nnoremap <CR> ciW[[<c-o>p]]<c-c>
+  autocmd BufNewFile,BufRead *.md nnoremap <M-CR> ciW[[<c-o>p]]<c-c>:e <c-r>".md<CR>
+  autocmd BufNewFile,BufRead *.md inoremap <M-CR> [[]]<left><left><c-o>:call FZF_complete_path_obsidian()<CR>
+  autocmd BufNewFile,BufRead *.md vnoremap <M-CR> s[[<c-o>p]]<c-c>:e <c-r>".md<CR>
+  autocmd BufRead,BufNewFile $HOME/obsidian/* setlocal path+=$KB_DIRECTORY/** 
+  autocmd BufRead,BufNewFile $HOME/obsidian/* set suffixesadd+=.md
 augroup END
 
 " CommandModeMappins:
