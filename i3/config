@@ -25,6 +25,8 @@
 
 bindsym $mod+shift+control+l move workspace to output right; focus
 bindsym $mod+shift+control+h move workspace to output left; focus
+bindsym Mod1+shift+l exec i3lock
+bindsym $mod+shift+s exec --no-startup-id flameshot gui
 
 #####################################################################################################################
 #################                          Define the $mod variable/key                             #################
@@ -331,7 +333,7 @@ bindsym $mod+v split v
 
 # # enter fullscreen mode for the focused container
 # # Super + F in arcolinux is execute thunar
-# bindsym $mod+f fullscreen toggle
+bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # qwerty/azerty issue for letter z
@@ -564,6 +566,7 @@ bindsym control+mod1+t exec --no-startup-id termite; focus
 bindsym control+mod1+Return exec --no-startup-id termite; focus
 bindsym control+mod1+KP_Enter exec --no-startup-id termite; focus
 bindsym F12 exec --no-startup-id xfce4-terminal --drop-down; focus
+bindsym control+$mod+shift+b exec --no-startup-id xfce4-terminal -x btm; focus
 
 #System monitor
 bindsym control+Shift+Escape exec --no-startup-id xfce4-taskmanager;focus
