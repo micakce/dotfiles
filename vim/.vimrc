@@ -124,7 +124,7 @@ command! -bar -nargs=1 Duplicate call DuplicateCurrentFile(<q-args>)
 
 " JUNEGUNN: ¡PUTO CRACK!
 
-" Peekaboo: 
+" Peekaboo:
 let g:peekaboo_prefix="<leader>"
 
 " VimEasyAlign: Best aligment plugin ever
@@ -141,7 +141,7 @@ let g:rainbow#max_level = 16
 source $HOME/dotfiles/vim/slash.vim
 if has('timers')
   " Blink 2 times with 50ms interval
-  noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 45)
+  noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 60)
 else
   noremap <plug>(slash-after) zz
 endif
@@ -156,43 +156,49 @@ nnoremap <M-h> :History:<CR>
 let g:fzf_layout = { 'window': 'enew' }
 " let g:fzf_layout = { 'window': {'width': 0.9, 'height': 0.6} }
 
-" Files: Find fies in project with fzf
+" Files: Find files by name
 command! -bang -nargs=? -complete=dir Files
       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview("down:50%"), <bang>0)
 noremap <c-p> :Files<CR>
 
-" Templates: Insert custom template
-command! -bang -nargs=* InsertTemplate 
-      \ call fzf#run(fzf#vim#with_preview({
-      \               'dir': '~/dotfiles/vim/templates',
-      \               'source': 'ls',
-      \               'sink': 'read',
-      \               'window': {'width': 0.5, 'height': 0.85},
-      \               }, 'down:70%'))
-noremap <M-i> :InsertTemplate<CR>
-
-command! -bang -nargs=* MatchFileNameFind
+" FindFzf: Find files by content
+command! -bang -nargs=* FindFzf
       \ call fzf#vim#grep(
-      \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-      \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"), <bang>0)
-nnoremap <M-f> :MatchFileNameFind<CR>
+      \ "rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>),
+      \ 1,
+      \ fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up','--delimiter', ':', '--nth', '4..' ]},"down:50%"),
+      \ <bang>0)
+nnoremap <c-f> :FindFzf<CR>
 
-command! -bang -nargs=* Rg
+" FindFzfMatchFileName: Match file name as well as content
+command! -bang -nargs=* FindFzfMatchFileName
       \ call fzf#vim#grep(
-      \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-      \   fzf#vim#with_preview(), <bang>0)
+      \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>),
+      \   1,
+      \   fzf#vim#with_preview({'options': ['--bind','ñ:preview-down,Ñ:preview-up']},"down:50%"),
+      \   <bang>0)
+nnoremap <M-f> :FindFzfMatchFileName<CR>
 
-
-" Find: Find files by content
-function! RipgrepFzf(query, fullscreen)
+" FindRgFzf: Find files by content using regex
+function! RgFzf(query, fullscreen)
   let command_fmt = 'rg --smart-case --column --hidden --line-number --no-heading --color=always %s --glob "!{node_modules}" || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec, "down:50%"), a:fullscreen)
 endfunction
-command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
-noremap <c-f> :Find<CR>
+command! -nargs=* -bang FindRgFzf call RgFzf(<q-args>, <bang>0)
+noremap <M-r> :FindRgFzf<CR>
+
+" Templates: Insert custom template
+command! -bang -nargs=* InsertTemplate
+      \ call fzf#run(fzf#vim#with_preview({
+      \               'dir': '~/dotfiles/vim/templates',
+      \               'source': 'ls',
+      \               'sink': 'read',
+      \               'window': {'width': 0.85, 'height': 0.85},
+      \               }, 'down:70%'))
+noremap <M-i> :InsertTemplate<CR>
 
 " Tags: Replacing ctags?
 nnoremap <leader>] :call fzf#vim#tags(expand('<cword>'), {'options': '--exact --select-1 --exit-0 --no-reverse'})<CR>
@@ -260,7 +266,7 @@ endfunction
 function! FZF_complete_path()
   return fzf#vim#complete#path(
         \ 'fd -H',
-        \ {'window': 
+        \ {'window':
         \   {
         \   'width': 0.8,
         \   'height': 0.8,
@@ -270,6 +276,7 @@ endfunction
 inoremap <expr> <c-x><c-f> FZF_complete_path()
 
 
+"deprecated
 function! Y_cursor_offset()
   let visible_lines = line('w$') - line('w0')
   if line('w$') < winheight(0)
@@ -281,6 +288,7 @@ function! Y_cursor_offset()
   return shift_offset
 endfunction
 
+"deprecated
 function! X_cursor_offset()
   if col('.') <= 2
     return 0.05
@@ -319,8 +327,6 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " nmap <leader>f <Plug>(coc-codeaction)
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
-nnoremap p :Prettier<CR>
-nnoremap <M-p>p :Prettier<CR>
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -524,7 +530,7 @@ augroup obsidian
   autocmd BufNewFile,BufRead *.md nnoremap <M-CR> ciW[[<c-o>p]]<c-c>:e <c-r>".md<CR>
   autocmd BufNewFile,BufRead *.md inoremap <M-CR> [[]]<left><left><c-o>:call FZF_complete_path_obsidian()<CR>
   autocmd BufNewFile,BufRead *.md vnoremap <M-CR> s[[<c-o>p]]<c-c>:e <c-r>".md<CR>
-  autocmd BufRead,BufNewFile $HOME/obsidian/* setlocal path+=$KB_DIRECTORY/** 
+  autocmd BufRead,BufNewFile $HOME/obsidian/* setlocal path+=$KB_DIRECTORY/**
   autocmd BufRead,BufNewFile $HOME/obsidian/* set suffixesadd+=.md
 augroup END
 
