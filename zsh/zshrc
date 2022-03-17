@@ -75,7 +75,7 @@ git
 git-flow
 forgit
 copyfile
-copydir
+copypath
 docker
 docker-compose
 fzf-it
@@ -88,6 +88,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 setopt share_history
+setopt HIST_IGNORE_SPACE
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
