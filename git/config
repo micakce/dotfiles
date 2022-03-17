@@ -16,3 +16,6 @@
 	prompt = false
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+[alias]
+	last = log -1 HEAD
+	mt = mergetool
