@@ -71,7 +71,26 @@ let mapleader = " "
 " set background=light
 
 " Startify:
-let g:startify_bookmarks = [ {'vc': '~/.vimrc'}, { 'zc': '~/.zshrc' }, {'u': '~/paisanoscreando/uiwi-odoo-woocommerce'}, {'m': '~/paisanoscreando/mutual'} ]
+
+let g:startify_bookmarks = [
+      \ {'v': '~/.vimrc'},
+      \ {'z': '~/.zshrc' },
+      \ {'sd2': '~/wizards/sdbranch-docker'},
+      \ {'sd3': '~/wizards/BranchSDO-3.0'},
+      \ {'w': '~/wizards'},
+      \ ]
+
+let g:startify_commands = [
+      \ ['Help', ':h startify'],
+      \ ['SDB - Up', '!cd ~/wizards/BranchSDO-3.0 && make dev-up'],
+      \ ['SDB - Down', '!cd ~/wizards/BranchSDO-3.0 && make dev-down'],
+      \ ]
+
+let g:startify_lists = [
+      \ { 'type': 'commands'  },
+      \ { 'type': 'bookmarks' },
+      \ { 'type': 'files'     },
+      \ ]
 
 " CtrlSpace:
 let g:CtrlSpaceDefaultMappingKey = "<M-m> "
@@ -493,6 +512,10 @@ vnoremap <leader>r :<c-u>call Exec_on_term("visual")<CR>
 inoremap  ``<left>
 inoremap  ``````<left><left><left>
 
+" Diff:
+command! Difft windo diffthis
+command! Diffo windo diffoff
+
 " RegExp:
 " nnoremap / /\v
 " vnoremap / /\v
@@ -551,11 +574,11 @@ nnoremap <Leader>gib cib<c-c>"_cc<c-c>P
 noremap <Leader>= :call IndentBuffer()<CR>
 noremap <Leader>scl _iconsole.log(<c-c>A)<c-c>F;xA;<c-c>
 noremap <Leader>tn :tabnew<CR>
-noremap <Leader>ev :tabnew $MYVIMRC<CR>
-noremap <Leader>evh :e $MYVIMRC<CR>
-noremap <Leader>sv :source $MYVIMRC<CR>
+noremap <Leader>ev :tabnew ~/.vimrc<CR>
+noremap <Leader>evh :e ~/.vimrc<CR>
+noremap <Leader>sv :source ~/.vimrc<CR>
 noremap <Leader>br mm:s/\S/&\r/g<CR>:nohl<CR>dd'm
-noremap <Leader>bo :%bd<bar>e#<CR>
+" noremap <Leader>gL :bl
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o ""autocomment insertion
 nnoremap <Leader>o Go
 set showcmd
@@ -604,7 +627,7 @@ tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 tnoremap <c-h> <c-\><c-n><c-w>h
-tnoremap <esc> <c-\><c-n>
+tnoremap <M-o> <c-\><c-n>
 tnoremap <c-w>q <c-\><c-n>
 if has('nvim')
   augroup nvim_term
