@@ -232,6 +232,8 @@ export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
 export PATH="/usr/bin/aws:$PATH" # AWS
 export PATH="$HOME/.local/bin:$PATH" # AWS
 export EDITOR="vim"
+export NNN_FIFO="/tmp/nnn.fifo"
+export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;g:!git log;s:preview-tui'
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
 autoload -Uz compinit && compinit -i
 # autoload bashcompinit && bashcompinit
