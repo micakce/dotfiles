@@ -142,6 +142,9 @@ alias ldd="lazydocker -f dev-docker-compose.yml"
 alias ld="lazydocker"
 alias lg="lazygit"
 alias gg="lazygit"
+alias gdm="git branch --merged | egrep -v '(^\*|master|main|dev)' | xargs git branch -d"
+alias gswr="git reflog | egrep -io 'moving from ([^[:space:]]+)' | awk '{ print \$3 }' | awk ' !x[\$0]++' | egrep -v '^[a-f0-9]{40}$' | head -n100 | fzf --bind 'enter:execute(git switch {})+abort' --height 50%"
+alias gmt="git mergetool"
 
 # Prefix aliases
 alias -s pdf='zathura'
