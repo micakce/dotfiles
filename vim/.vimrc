@@ -59,6 +59,7 @@ Plug 'mcchrish/nnn.vim' "NNN
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'psliwka/vim-smoothie' " Smoothie
 call plug#end()            " required
 filetype plugin indent on    " required
 syntax on
@@ -432,6 +433,9 @@ let g:python_highlight_all = 1
 " Explorer: File Navigation
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
+
+" Smoothie:
+let g:smoothie_experimental_mappings = 1
 
 " Window:
 " copy yanked text to tmux pane
