@@ -24,11 +24,12 @@ export FZF_ALT_C_OPTS="--height 100% --preview-window down:50% --preview '[ -d {
 function RG() { # fzf as filter and not fuzzy finder
 RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
 INITIAL_QUERY=""
-FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+print -z $(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
     --bind "change:reload:$RG_PREFIX {q} || true" \
+    --bind 'enter:execute(echo {} | cut -d: -f1 | xargs echo nvim +$(echo {} | cut -d : -f 2) $@ )+abort' \
     --ansi --phony --query "$INITIAL_QUERY" \
     --preview 'bat --color=always $(echo {} | cut -d : -f 1 ) --line-range $(N=`echo {} | cut -d : -f 2`; let "M=$N+100"; echo $N:$M)' \
-    --preview-window="down:60%"
+    --preview-window="down:60%")
 }
 bindkey -s '\C-f' 'RG\n'
 
@@ -100,3 +101,14 @@ join-lines() {
 fzf-gt-widget() LBUFFER+=$(gt | join-lines)
 zle -N fzf-gt-widget
 bindkey '^g^t' fzf-gt-widget
+
+
+fzf_gdiff() {
+  preview="git diff $@ --color=always -- {-1}"
+  git diff $@ --name-only | fzf -m --ansi --preview $preview
+}
+
+# Open all files modified in commit 
+fcommit(){
+    vim $(git diff-tree --no-commit-id --name-only -r $1)
+}
