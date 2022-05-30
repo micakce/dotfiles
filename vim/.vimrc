@@ -9,8 +9,14 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" LUA:
+Plug 'hrsh7th/nvim-cmp' " LuaCMP
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
+Plug 'ggandor/leap.nvim'
+Plug 'luukvbaal/nnn.nvim'
+
 Plug 'pantharshit00/vim-prisma'
-Plug 'altercation/vim-colors-solarized'
 Plug 'aklt/plantuml-syntax'
 Plug 'cespare/vim-toml'
 Plug 'vim-ctrlspace/vim-ctrlspace' " To verify
@@ -54,13 +60,49 @@ Plug 'pangloss/vim-javascript' " JavaScript syntax
 Plug 'maxmellon/vim-jsx-pretty' " JSXSyntax
 Plug 'airblade/vim-gitgutter' "GitGutter
 Plug 'preservim/nerdtree' "NerdTree
-Plug 'mcchrish/nnn.vim' "NNN
+" Plug 'mcchrish/nnn.vim' "NNN
 " Plug 'ncm2/float-preview.nvim' "only works for nvim, dock LSP window to the top/bottom
 Plug 'vim-python/python-syntax' "PythonSyntax
 Plug 'mustache/vim-mustache-handlebars' "PythonSyntax
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'psliwka/vim-smoothie' " Smoothie
+Plug 'voldikss/vim-floaterm'
 call plug#end()            " required
+
+" lua << EOF
+" --Leap:
+" --require('leap').set_default_keymaps()
+" EOF
+" noremap t <Plug>(leap-forward)
+" noremap T <Plug>(leap-backward)
+" noremap f <Plug>(leap-forward-x)
+" noremap F <Plug>(leap-backward-x)
+
+lua << EOF
+
+--LuaCMP:
+local cmp = require'cmp'
+
+cmp.setup.cmdline(':', {
+  sources = {
+    { name = 'cmdline' }
+  }
+})
+
+cmp.setup.cmdline('/', {
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp_document_symbol' }
+  }, {
+    { name = 'buffer' }
+  })
+})
+
+--NNN
+require("nnn").setup()
+
+EOF
+
+
 filetype plugin indent on    " required
 syntax on
 colorscheme palenight
@@ -69,11 +111,11 @@ colorscheme palenight
 let mapleader = " "
 " " Second to boss key?
 " let mapleader = ","
-" set background=light
 
 " Startify:
 
 let g:startify_bookmarks = [
+      \ {'o': '~/obsidian'},
       \ {'v': '~/.vimrc'},
       \ {'z': '~/.zshrc' },
       \ {'sd2': '~/wizards/sdbranch-docker'},
@@ -114,8 +156,12 @@ let g:airline_left_sep = ""
 let g:airline_right_sep = ""
 
 " VimEasyMotion: Jump cursor wherever you want
-map <leader>f <Leader><Leader>f
-map <leader>F <Leader><Leader>F
+" map <leader>f <Leader><Leader>f
+" map <leader>F <Leader><Leader>F
+map f <Leader><Leader>f
+map F <Leader><Leader>F
+map t <Leader><Leader>t
+map T <Leader><Leader>T
 
 " IndentLine: Indent guide lines
 let g:indentLine_enabled = 1
@@ -169,8 +215,6 @@ endif
 " FZF: Everything fuzzy finder
 " General_options:
 noremap <c-b> :Buffers<CR>
-nnoremap <M-t> :Tags<CR>
-nnoremap <M-T> :BTags<CR>
 nnoremap <M-h> :History:<CR>
 " Open in a new full window
 let g:fzf_layout = { 'window': 'enew' }
@@ -180,6 +224,7 @@ let g:fzf_layout = { 'window': 'enew' }
 command! -bang -nargs=? -complete=dir Files
       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview("down:50%"), <bang>0)
 noremap <c-p> :Files<CR>
+noremap <C-S-p> :Files %:p:h<CR>
 
 " FindFzf: Find files by content
 command! -bang -nargs=* FindFzf
@@ -437,6 +482,10 @@ let g:netrw_banner = 0
 " Smoothie:
 let g:smoothie_experimental_mappings = 1
 
+" Floaterm:
+nnoremap <M-t> :FloatermToggle<CR>
+tnoremap <M-t> <c-\><c-n>:FloatermToggle<CR>
+
 " Window:
 " copy yanked text to tmux pane
 function! Send_to_tmux(count) " ------------------------------ {{{
@@ -609,14 +658,12 @@ nnoremap <expr> <c-w><c-k> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>+'
 nnoremap <expr> <c-w><c-j> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>-'
 nnoremap <expr> <c-w><c-l> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w>>'
 nnoremap <expr> <c-w><c-h> '<c-c>' . (v:count == 0 ? 12 : v:count) . '<c-w><'
-nnoremap <silent> <leader>l :bnext<CR>
-nnoremap <silent> <leader>h :bprevious<CR>
 nnoremap <silent> gn :bnext<CR>
 nnoremap <silent> gp :bprevious<CR>
 nnoremap <silent> gl :b#<CR>
 nnoremap <silent> <leader>9 :blast<CR>
 nnoremap <silent> <leader>0 :bfirst<CR>
-nnoremap <silent> <leader>bd :blast<CR>:bd#<CR>
+nnoremap <silent> <leader>bd :bp<bar>bd#<CR>
 set splitbelow
 set splitright
 

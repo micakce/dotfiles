@@ -118,6 +118,8 @@ setopt HIST_IGNORE_SPACE
 
 # Normal Aliases
 alias nv="nvim"
+alias vim="nvim"
+alias nvim="~/nvim7.appimage"
 alias ngs="nv -c \"Git | wincmd o\""
 alias gsfe="git submodule foreach"
 alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
@@ -233,7 +235,7 @@ export PATH="/usr/bin/aws:$PATH" # AWS
 export PATH="$HOME/.local/bin:$PATH" # AWS
 export EDITOR="vim"
 export NNN_FIFO="/tmp/nnn.fifo"
-export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;g:!git log;s:preview-tui'
+export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
 autoload -Uz compinit && compinit -i
 # autoload bashcompinit && bashcompinit
