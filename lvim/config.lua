@@ -171,8 +171,28 @@ lvim.plugins = {
   {
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
-    setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-    ft = { "markdown" },
+    ft = "markdown",
+    config = function()
+      vim.g.mkdp_auto_start = 1
+    end,
+  },
+  {
+    "tpope/vim-surround",
+    keys = { "c", "d", "y" },
+    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
+    setup = function()
+      vim.o.timeoutlen = 800
+    end
+  },
+  {
+    "phaazon/hop.nvim",
+    event = "BufRead",
+    config = function()
+      require("hop").setup()
+      vim.api.nvim_set_keymap("n", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+    end,
   },
 }
 
