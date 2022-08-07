@@ -39,12 +39,12 @@ bindkey -s '\C-f' 'RG\n'
 # }
 
 _fzf_compgen_path() {
-  fd --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" . "$1"
+  fd --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" --exclude "dist" . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" . "$1"
+  fd --type d --hidden --no-ignore --follow --exclude ".git" --exclude "node_modules" --exclude "dist" . "$1"
 }
 
 
@@ -61,7 +61,7 @@ _fzf_comprun() {
   shift
   case "$command" in
     cd|ls)              fzf "$@" --height 100% --preview-window down:60% --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim|nvim)  fzf "$@" --height 100% --preview-window $(get_preview_window) --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200' ;;
+    cp|mv|rm|vim|nvim|lvim)  fzf "$@" --height 100% --preview-window $(get_preview_window) --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || if [[ $(file -b {}) =~ ^"JPEG " ]]; then viu {}; else bat --color=always {} | head -200; fi;' ;;
     export|unset)       fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)                fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)                  fzf "$@" ;;

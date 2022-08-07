@@ -118,19 +118,21 @@ setopt HIST_IGNORE_SPACE
 
 # Normal Aliases
 alias nv="nvim"
-alias vim="nvim"
-alias nvim="~/nvim7.appimage"
+alias lv="lvim"
+alias vim="lvim"
 alias ngs="nv -c \"Git | wincmd o\""
 alias gsfe="git submodule foreach"
 alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
 alias hugo="docker run --rm -it -v $PWD:/src  klakegg/hugo:ext-alpine"
 alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo:ext-alpine server"
 alias kpm="~/development/docker/kpm/runServer.sh"
-alias vconf="nvim ~/.vimrc"
-alias zconf="nvim ~/.zshrc"
-alias gconf="nvim ~/.gitconfig"
-alias tconf="nvim ~/.tmux.conf"
-alias iconf="nvim ~/dotfiles/i3/config"
+alias vconf="lvim ~/.vimrc"
+alias zconf="lvim ~/.zshrc"
+alias fconf="lvim ~/dotfiles/zsh/custom/fzf.zsh"
+alias gconf="lvim ~/.gitconfig"
+alias tconf="lvim ~/.tmux.conf"
+alias iconf="lvim ~/dotfiles/i3/config"
+alias lconf="lvim ~/dotfiles/lvim/config.lua"
 alias dockit="vim ~/dotfiles/zsh/custom/plugins/dockit/dockit.plugin.zsh"
 alias szsh="source ~/.zshrc"
 alias k="kubectl"
@@ -150,9 +152,9 @@ alias gmt="git mergetool"
 
 # Prefix aliases
 alias -s pdf='zathura'
-alias -s py='nvim'
-alias -s js='nvim'
-alias -s txt='nvim'
+alias -s py='lvim'
+alias -s js='lvim'
+alias -s txt='lvim'
 alias -s mkv='vlc'
 alias -s mkv='vlc'
 alias -s png='eog'
@@ -236,6 +238,7 @@ export PATH="$HOME/.local/bin:$PATH" # AWS
 export EDITOR="vim"
 export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
+export COMPOSE_DOCKER_CLI_BUILD=1
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
 autoload -Uz compinit && compinit -i
 # autoload bashcompinit && bashcompinit
@@ -247,9 +250,9 @@ autoload -Uz compinit && compinit -i
 # enable kubect autocompletion
 [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export WASMTIME_HOME="$HOME/.wasmtime"
 

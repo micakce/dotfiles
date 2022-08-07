@@ -14,6 +14,10 @@ lvim.format_on_save = true
 lvim.colorscheme = "onedarker"
 vim.opt.relativenumber = true
 
+-- -- Gitsigns
+-- require('lvim.core.gitsigns').toggle_current_line_blame();
+-- vim.api.nvim_echo({ { vim.bo.buftype, "None" } }, true, {})
+
 
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
@@ -177,12 +181,48 @@ lvim.plugins = {
     end,
   },
   {
-    "tpope/vim-surround",
-    keys = { "c", "d", "y" },
-    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
-    setup = function()
-      vim.o.timeoutlen = 800
+    "kylechui/nvim-surround",
+    config = function()
+      require("nvim-surround").setup({})
     end
+  },
+  -- TPOPE
+  { "tpope/vim-abolish" },
+  { "tpope/vim-dadbod" },
+  { "tpope/vim-eunuch" },
+  { "tpope/vim-repeat", },
+  {
+    "tpope/vim-fugitive",
+    cmd = {
+      "G",
+      "Git",
+      "Gdiffsplit",
+      "Gread",
+      "Gwrite",
+      "Ggrep",
+      "GMove",
+      "GDelete",
+      "GBrowse",
+      "GRemove",
+      "GRename",
+      "Glgrep",
+      "Gclog",
+      "Gedit"
+    },
+    ft = { "fugitive" }
+  },
+  -- JUNEGUNN
+  {
+    'junegunn/fzf',
+    run = './install --bin',
+  },
+  {
+    "junegunn/vim-easy-align",
+    config = function()
+      vim.api.nvim_set_keymap('x', 'ga', '<Plug>(EasyAlign)', {})
+      vim.api.nvim_set_keymap('n', 'ga', '<Plug>(EasyAlign)', {})
+    end,
+
   },
   {
     "phaazon/hop.nvim",
@@ -191,8 +231,26 @@ lvim.plugins = {
       require("hop").setup()
       vim.api.nvim_set_keymap("n", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
       vim.api.nvim_set_keymap("n", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
+      vim.api.nvim_set_keymap("v", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
+      vim.api.nvim_set_keymap("v", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
       vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
     end,
+  },
+  { "elubow/cql-vim" },
+  { "nvim-treesitter/playground" },
+  {
+    "wellle/targets.vim",
+    config = function()
+      vim.cmd("autocmd User targets#mappings#user call targets#mappings#extend({ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]} })")
+    end
+  },
+  {
+    "github/copilot.vim",
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_assume_mapped = true
+      vim.api.nvim_set_keymap("i", "<A-t>", 'copilot#Accept("")', { expr = true, silent = true })
+    end
   },
 }
 
@@ -338,6 +396,13 @@ lvim.builtin.which_key.mappings["z"] = {
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.*" },
+  -- enable git blame line
+  callback = function()
+    require('gitsigns').toggle_current_line_blame()
+  end
+})
 -- vim.api.nvim_create_autocmd("BufEnter", {
 --   pattern = { "*.json", "*.jsonc" },
 --   -- enable wrap mode for json files only
