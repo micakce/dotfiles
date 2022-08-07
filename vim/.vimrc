@@ -15,6 +15,14 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
 Plug 'ggandor/leap.nvim'
 Plug 'luukvbaal/nnn.nvim'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'L3MON4D3/LuaSnip'
+
+"Testing:
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'rcarriga/nvim-dap-ui'
 
 Plug 'pantharshit00/vim-prisma'
 Plug 'aklt/plantuml-syntax'
@@ -51,7 +59,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/vim-emoji'
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "COC
-Plug 'honza/vim-snippets' " VimSnippets
 Plug 'wellle/targets.vim' " Targets
 Plug 'michaeljsmith/vim-indent-object' " Indent based text object
 Plug 'mattn/emmet-vim' "HTML
@@ -79,6 +86,41 @@ call plug#end()            " required
 " noremap F <Plug>(leap-backward-x)
 
 lua << EOF
+
+-- null-ls
+local null_ls = require('null-ls')
+null_ls.setup({
+sources = {
+  null_ls.builtins.diagnostics.codespell.with({
+  filetypes = { 'txt', 'md' },
+  }),
+}
+})
+
+--[[LuaSnip
+dofile("/home/dangelo/dotfiles/vim/snippets/snip.lua")
+local ls = require("luasnip")
+-- expand snip
+vim.keymap.set({ "i", "s" }, "<c-k>", function()
+  if ls.expand_or_jumpable() then
+    ls.expand_or_jump()
+  end
+end, { silent = true })
+
+-- jump to previous
+vim.keymap.set({ "i", "s" }, "<c-j>", function()
+  if ls.jumpable(-1) then
+    ls.jump(-1)
+  end
+end, { silent = true })
+
+-- switch list option
+vim.keymap.set({ "i" }, "<c-l>", function()
+  if ls.choice_active() then
+    ls.change_choice()()
+  end
+end)
+]]
 
 --LuaCMP:
 local cmp = require'cmp'
@@ -425,7 +467,6 @@ let g:coc_global_extensions = [
       \ 'coc-tsserver',
       \ 'coc-prettier',
       \ 'coc-eslint',
-      \ 'coc-snippets',
       \ 'coc-yaml',
       \ ]
 " " from readme
@@ -437,26 +478,13 @@ let g:coc_global_extensions = [
 " set shortmess+=c
 " " always show signcolumns
 " set signcolumn=yes
-" VimSnippets: Useful snippets
-" ### CocInstall coc-snippets ###
-" Use <C-l> for trigger snippet expand.
-imap <C-l> <Plug>(coc-snippets-expand)
-" " Use <C-j> for select text for visual placeholder of snippet.
-" vmap <C-l> <Plug>(coc-snippets-select)
-" " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-" " let g:coc_snippet_next = '<c-j>'
-" " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-" " let g:coc_snippet_prev = '<c-k>'
-" " Use <C-j> for both expand and jump (make expand higher priority.)
-" " imap <C-j> <Plug>(coc-snippets-expand-jump)
+
 " " Go:
 " autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Targets: Augmented text object
 " allow argument text object to work inside '{}' as well
-autocmd User targets#mappings#user call targets#mappings#extend({
-      \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}
-      \ })
+autocmd User targets#mappings#user call targets#mappings#extend({ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]} })
 
 " JSXSyntax:
 let g:vim_jsx_pretty_highlight_close_tag=1
@@ -511,25 +539,28 @@ xnoremap <expr> <Leader>st '"zy:call Send_to_tmux('.v:count.')<CR>'
 if has("nvim")
   au! TermClose * if (exists("g:last_terminal_chan_id") && exists("b:terminal_job_id") && g:last_terminal_chan_id == b:terminal_job_id) | unlet g:last_terminal_chan_id | endif
   " https://vi.stackexchange.com/questions/21449/send-keys-to-a-terminal-buffer
-  function! Exec_on_term(cmd)
-    if a:cmd=="normal"
-      exec "normal mk\"vyip"
-    else
-      exec "normal gv\"vy"
-    endif
+  function! Exec_on_term(cmd, run_file)
     if !exists("g:last_terminal_chan_id")
       vs
       terminal
       let g:last_terminal_chan_id = b:terminal_job_id
       wincmd p
     endif
-
-    if getreg('"v') =~ "^\n"
+    if a:run_file == 1
       call chansend(g:last_terminal_chan_id, expand("%:p")."\n")
     else
-      call chansend(g:last_terminal_chan_id, @v)
+      if a:cmd=="normal"
+        exec "normal mk\"vyip"
+      else
+        exec "normal gv\"vy"
+      endif
+      if getreg('"v') =~ "^\n"
+        call chansend(g:last_terminal_chan_id, expand("%:p")."\n")
+      else
+        call chansend(g:last_terminal_chan_id, @v)
+      endif
+      exec "normal `k"
     endif
-    exec "normal `k"
   endfunction
 else
   " https://vi.stackexchange.com/questions/14300/vim-how-to-send-entire-line-to-a-buffer-of-type-terminal
@@ -555,8 +586,9 @@ else
     endif
   endfunction
 endif
-nnoremap <leader>r :call Exec_on_term("normal")<CR>
-vnoremap <leader>r :<c-u>call Exec_on_term("visual")<CR>
+nnoremap <leader>r :update <bar> call Exec_on_term("normal", 0)<CR>
+vnoremap <leader>r :<c-u>call Exec_on_term("visual", 0)<CR>
+nnoremap <leader>R :update <bar> call Exec_on_term("normal", 1)<CR>
 
 
 " #TODO clean up the rest from here on
