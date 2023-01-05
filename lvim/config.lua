@@ -200,11 +200,8 @@ lvim.plugins = {
     config = function()
       vim.g.mkdp_auto_start = 1
       vim.g.mkdp_auto_close = 0
-      vim.g.mkdp_filetypes = { 'markdown', 'plantuml' }
     end,
   },
-
-  { "aklt/plantuml-syntax" },
   {
     "kylechui/nvim-surround",
     config = function()
@@ -249,24 +246,8 @@ lvim.plugins = {
     end,
 
   },
-  { 'ggandor/lightspeed.nvim' },
-  {
-    "nvim-pack/nvim-spectre",
-    config = function()
-      vim.api.nvim_create_user_command('Spectre', "lua require'spectre'.open()", {})
-      vim.cmd([[ ]])
-    end,
-  },
-  -- {
-  --   "phaazon/hop.nvim",
-  --   event = "BufRead",
-  --   config = function()
-  --     require("hop").setup()
-  --     vim.api.nvim_set_keymap("n", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
-  --     vim.api.nvim_set_keymap("n", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
-  --     vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
-  --   end,
-  -- },
+  { "ggandor/lightspeed.nvim" },
+  { "nvim-pack/nvim-spectre" },
   { "elubow/cql-vim" },
   { "nvim-treesitter/playground" },
   { "nvim-treesitter/nvim-treesitter-context" },
@@ -292,14 +273,6 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "<M-y>", ':lua require("harpoon.ui").nav_file(6)<cr>', { silent = true })
     end,
   },
-  -- {
-  --   "github/copilot.vim",
-  --   config = function()
-  --     vim.g.copilot_no_tab_map = true
-  --     vim.g.copilot_assume_mapped = true
-  --     vim.api.nvim_set_keymap("i", "<A-t>", 'copilot#Accept("")', { expr = true, silent = true })
-  --   end
-  -- },
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "BufRead",
