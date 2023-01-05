@@ -61,7 +61,7 @@ _fzf_comprun() {
   shift
   case "$command" in
     cd|ls)              fzf "$@" --height 100% --preview-window down:60% --preview 'tree --dirsfirst -C {} -I node_modules | head -200' ;;
-    cp|mv|rm|vim|nvim|lvim)  fzf "$@" --height 100% --preview-window $(get_preview_window) --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || if [[ $(file -b {}) =~ ^"JPEG " ]]; then viu {}; else bat --color=always {} | head -200; fi;' ;;
+    cp|mv|rm|vim|nvim|lvim|docker)  fzf "$@" --height 100% --preview-window $(get_preview_window) --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || if [[ $(file -b {}) =~ ^"JPEG " ]]; then viu {}; else bat --color=always {} | head -200; fi;' ;;
     export|unset)       fzf "$@" --preview "eval 'echo \$'{}" ;;
     ssh)                fzf "$@" --height 100% --preview-window down --preview 'dig {}' ;;
     *)                  fzf "$@" ;;

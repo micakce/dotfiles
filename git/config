@@ -3,19 +3,19 @@
 [user]
 	name = Dangelo Guanipa
 	email = micakce@gmail.com
-; [url "git@github.com:"]
-;     insteadOf = https://github.com/
-[url "git@github-micakce:micakce"]
-    insteadOf = git@github.com:micakce
 [url "git@github-dangelowiz:Global-Wizards"]
     insteadOf = git@github.com:Global-Wizards
+[url "git@github-dangelowiz:Fifth-Street-Gaming"]
+    insteadOf = git@github.com:Fifth-Street-Gaming
+[url "git@github-dangelowiz:Netsurion"]
+    insteadOf = git@github.com:Netsurion
 [merge]
 	tool = fugitive
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
 [mergetool "fugitive"]
-	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+	cmd = lvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
 [alias]
 	last = log -1 HEAD
 	mt = mergetool
