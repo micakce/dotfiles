@@ -25,12 +25,16 @@ vim.opt.relativenumber = true
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
 -- add your own keymapping
+lvim.keys.normal_mode["<M-s>"] = "msvip<esc><cmd>ToggleTermSendVisualLines 1024<CR>`s"
+lvim.keys.normal_mode["<M-S>"] = "<cmd>1024ToggleTerm dir=%:p:h direction=vertical size=60<cr>"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 local nnn = "<Cmd>lua require('lvim.core.terminal')._exec_toggle({ cmd = 'nnn', count = 102, direction = 'float' })<CR>"
 -- lvim.keys.normal_mode["<M-t>"] = ":w<cr>"
 -- vim.api.nvim_set_keymap('n', '<M-t>', ':FloatermToggle<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<C-o>', '<C-\\><C-n>', {})
 vim.api.nvim_set_keymap('t', '<C-w>q', '<C-\\><C-n>', {})
+
+vim.cmd([[command! UPPERSQL normal! mh:%s/^\<with\>\|\<as\>\|\<select\>\|\<left\>\|\<join\>\|\<case\>\|\<else\>\|\<group\>\|\<by\>\|\<from\>\|\<end\>\|\<when\>\|\<is\>\|\<where\>\|\<not\>\|\<null\>\|\<then\>|\|\<on\>\|\<like\>\|\<then\>\|\<and\>\|\<or\>/\U&/g<CR>`h]])
 
 -- unmap a default keymapping
 -- vim.keymap.del("n", "<C-Up>")
@@ -56,11 +60,17 @@ vim.api.nvim_set_keymap('t', '<C-w>q', '<C-\\><C-n>', {})
 -- }
 
 -- Use which-key to add extra bindings with the leader-key prefix
+lvim.builtin.which_key.mappings["/"] = { "<cmd>NvimTreeFindFile<cr>", "Focus explorer" }
+lvim.builtin.which_key.mappings["M"] = { '"zyip:call Send_to_tmux(\'.v:count.\')<CR>', "Send2Tmux" }
+lvim.builtin.which_key.mappings["l"]["R"] = { "<cmd>Telescope lsp_references<cr>", "References" }
+lvim.builtin.which_key.mappings["l"]["M"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" }
+lvim.builtin.which_key.mappings["l"]["C"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls" }
+lvim.builtin.which_key.mappings["l"]["D"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions" }
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings["n"] = { nnn, "nnn" }
 lvim.builtin.which_key.mappings["x"] = { "<Cmd>BufferKill<CR>", "Close Buffer" }
+lvim.builtin.which_key.mappings["c"] = { "<Cmd>tabnew<CR>", "New Tab" }
 lvim.builtin.which_key.mappings["t"] = {
-
   name = "+Trouble",
   r = { "<cmd>Trouble lsp_references<cr>", "References" },
   f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
@@ -74,7 +84,6 @@ lvim.builtin.which_key.mappings["t"] = {
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
-lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
@@ -142,6 +151,18 @@ lvim.builtin.treesitter.highlight.enabled = true
 --   },
 -- }
 
+-- local formatters = require "lvim.lsp.null-ls.formatters"
+-- formatters.setup {
+--   -- { command = "black", filetypes = { "python" } },
+--   -- { command = "isort", filetypes = { "python" } },
+--   {
+--     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+--     command = "eslint",
+--     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+--     filetypes = { "javascript", "typescript" },
+--   },
+-- }
+
 -- -- set additional linters
 -- local linters = require "lvim.lsp.null-ls.linters"
 -- linters.setup {
@@ -178,8 +199,12 @@ lvim.plugins = {
     ft = "markdown",
     config = function()
       vim.g.mkdp_auto_start = 1
+      vim.g.mkdp_auto_close = 0
+      vim.g.mkdp_filetypes = { 'markdown', 'plantuml' }
     end,
   },
+
+  { "aklt/plantuml-syntax" },
   {
     "kylechui/nvim-surround",
     config = function()
@@ -188,7 +213,6 @@ lvim.plugins = {
   },
   -- TPOPE
   { "tpope/vim-abolish" },
-  { "tpope/vim-dadbod" },
   { "tpope/vim-eunuch" },
   { "tpope/vim-repeat", },
   {
@@ -207,14 +231,15 @@ lvim.plugins = {
       "GRename",
       "Glgrep",
       "Gclog",
-      "Gedit"
+      "Gedit",
+      "Gvdiffsplit"
     },
     ft = { "fugitive" }
   },
   -- JUNEGUNN
   {
     'junegunn/fzf',
-    run = './install --bin',
+    run = ':call fzf#install()',
   },
   {
     "junegunn/vim-easy-align",
@@ -224,20 +249,27 @@ lvim.plugins = {
     end,
 
   },
+  { 'ggandor/lightspeed.nvim' },
   {
-    "phaazon/hop.nvim",
-    event = "BufRead",
+    "nvim-pack/nvim-spectre",
     config = function()
-      require("hop").setup()
-      vim.api.nvim_set_keymap("n", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
-      vim.api.nvim_set_keymap("n", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
-      vim.api.nvim_set_keymap("v", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
-      vim.api.nvim_set_keymap("v", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
-      vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+      vim.api.nvim_create_user_command('Spectre', "lua require'spectre'.open()", {})
+      vim.cmd([[ ]])
     end,
   },
+  -- {
+  --   "phaazon/hop.nvim",
+  --   event = "BufRead",
+  --   config = function()
+  --     require("hop").setup()
+  --     vim.api.nvim_set_keymap("n", "f", ":HopChar1CurrentLineAC<cr>", { silent = true })
+  --     vim.api.nvim_set_keymap("n", "F", ":HopChar1CurrentLineBC<cr>", { silent = true })
+  --     vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+  --   end,
+  -- },
   { "elubow/cql-vim" },
   { "nvim-treesitter/playground" },
+  { "nvim-treesitter/nvim-treesitter-context" },
   {
     "wellle/targets.vim",
     config = function()
@@ -245,155 +277,96 @@ lvim.plugins = {
     end
   },
   {
-    "github/copilot.vim",
+    "ThePrimeagen/harpoon",
     config = function()
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_assume_mapped = true
-      vim.api.nvim_set_keymap("i", "<A-t>", 'copilot#Accept("")', { expr = true, silent = true })
+      require("harpoon").setup()
+      vim.api.nvim_set_keymap("n", "<M-a>", ':lua require("harpoon.mark").add_file()<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-h>", ':lua require("harpoon.ui").toggle_quick_menu()<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-p>", ':lua require("harpoon.ui").nav_prev()<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-n>", ':lua require("harpoon.ui").nav_next()<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-q>", ':lua require("harpoon.ui").nav_file(1)<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-w>", ':lua require("harpoon.ui").nav_file(2)<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-e>", ':lua require("harpoon.ui").nav_file(3)<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-r>", ':lua require("harpoon.ui").nav_file(4)<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-t>", ':lua require("harpoon.ui").nav_file(5)<cr>', { silent = true })
+      vim.api.nvim_set_keymap("n", "<M-y>", ':lua require("harpoon.ui").nav_file(6)<cr>', { silent = true })
+    end,
+  },
+  -- {
+  --   "github/copilot.vim",
+  --   config = function()
+  --     vim.g.copilot_no_tab_map = true
+  --     vim.g.copilot_assume_mapped = true
+  --     vim.api.nvim_set_keymap("i", "<A-t>", 'copilot#Accept("")', { expr = true, silent = true })
+  --   end
+  -- },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "BufRead",
+    config = function()
+      vim.opt.list = true
+      -- vim.opt.listchars:append "space:⋅"
+      vim.opt.listchars:append "eol:↴"
+      local opts = {
+        -- char = "▏",
+        filetype_exclude = {
+          "alpha",
+          "help",
+          "terminal",
+          "dashboard",
+          "lspinfo",
+          "lsp-installer",
+          "mason",
+        },
+        buftype_exclude = { "terminal" },
+        bufname_exclude = { "config.lua" },
+
+        show_trailing_blankline_indent = false,
+        show_first_indent_level = false,
+        space_char_blankline = " ",
+        show_current_context = true,
+        show_current_context_start = true,
+        -- use_treesitter = false,
+      }
+
+      require("indent_blankline").setup(opts)
     end
   },
-}
-
-local home = vim.fn.expand("~/zettelkasten")
-require('telekasten').setup({
-  home = home,
-
-  -- if true, telekasten will be enabled when opening a note within the configured home
-  take_over_my_home = true,
-
-  -- auto-set telekasten filetype: if false, the telekasten filetype will not be used
-  --                               and thus the telekasten syntax will not be loaded either
-  auto_set_filetype = true,
-
-  -- dir names for special notes (absolute path or subdir name)
-  dailies   = home .. '/' .. 'daily',
-  weeklies  = home .. '/' .. 'weekly',
-  templates = home .. '/' .. 'templates',
-
-  -- image (sub)dir for pasting
-  -- dir name (absolute path or subdir name)
-  -- or nil if pasted images shouldn't go into a special subdir
-  image_subdir = "img",
-
-  -- markdown file extension
-  extension = ".md",
-
-  -- Generate note filenames. One of:
-  -- "title" (default) - Use title if supplied, uuid otherwise
-  -- "uuid" - Use uuid
-  -- "uuid-title" - Prefix title by uuid
-  -- "title-uuid" - Suffix title with uuid
-  new_note_filename = "title",
-  -- file uuid type ("rand" or input for os.date()")
-  uuid_type = "%Y%m%d%H%M",
-  -- UUID separator
-  uuid_sep = "-",
-
-  -- following a link to a non-existing note will create it
-  follow_creates_nonexisting = true,
-  dailies_create_nonexisting = true,
-  weeklies_create_nonexisting = true,
-
-  -- skip telescope prompt for goto_today and goto_thisweek
-  journal_auto_open = false,
-
-  -- template for new notes (new_note, follow_link)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_note = home .. '/' .. 'templates/new_note.md',
-
-  -- template for newly created daily notes (goto_today)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_daily = home .. '/' .. 'templates/daily.md',
-
-  -- template for newly created weekly notes (goto_thisweek)
-  -- set to `nil` or do not specify if you do not want a template
-  template_new_weekly = home .. '/' .. 'templates/weekly.md',
-
-  -- image link style
-  -- wiki:     ![[image name]]
-  -- markdown: ![](image_subdir/xxxxx.png)
-  image_link_style = "markdown",
-
-  -- default sort option: 'filename', 'modified'
-  sort = "filename",
-
-  -- integrate with calendar-vim
-  plug_into_calendar = true,
-  calendar_opts = {
-    -- calendar week display mode: 1 .. 'WK01', 2 .. 'WK 1', 3 .. 'KW01', 4 .. 'KW 1', 5 .. '1'
-    weeknm = 4,
-    -- use monday as first day of week: 1 .. true, 0 .. false
-    calendar_monday = 1,
-    -- calendar mark: where to put mark for marked days: 'left', 'right', 'left-fit'
-    calendar_mark = 'left-fit',
+  { "mg979/vim-visual-multi" },
+  {
+    "tpope/vim-dadbod",
+    opt = true,
+    requires = {
+      "kristijanhusak/vim-dadbod-ui",
+      "kristijanhusak/vim-dadbod-completion",
+      "vim-scripts/dbext.vim",
+    },
+    config = function()
+      require("config.dadbod").setup()
+    end,
+    cmd = { "DBUIToggle", "DBUI", "DBUIAddConnection", "DBUIFindBuffer", "DBUIRenameBuffer", "DBUILastQueryInfo" },
   },
 
-  -- telescope actions behavior
-  close_after_yanking = false,
-  insert_after_inserting = true,
-
-  -- tag notation: '#tag', ':tag:', 'yaml-bare'
-  tag_notation = "#tag",
-
-  -- command palette theme: dropdown (window) or ivy (bottom panel)
-  command_palette_theme = "ivy",
-
-  -- tag list theme:
-  -- get_cursor: small tag list at cursor; ivy and dropdown like above
-  show_tags_theme = "ivy",
-
-  -- when linking to a note in subdir/, create a [[subdir/title]] link
-  -- instead of a [[title only]] link
-  subdirs_in_links = true,
-
-  -- template_handling
-  -- What to do when creating a new note via `new_note()` or `follow_link()`
-  -- to a non-existing note
-  -- - prefer_new_note: use `new_note` template
-  -- - smart: if day or week is detected in title, use daily / weekly templates (default)
-  -- - always_ask: always ask before creating a note
-  template_handling = "smart",
-
-  -- path handling:
-  --   this applies to:
-  --     - new_note()
-  --     - new_templated_note()
-  --     - follow_link() to non-existing note
-  --
-  --   it does NOT apply to:
-  --     - goto_today()
-  --     - goto_thisweek()
-  --
-  --   Valid options:
-  --     - smart: put daily-looking notes in daily, weekly-looking ones in weekly,
-  --              all other ones in home, except for notes/with/subdirs/in/title.
-  --              (default)
-  --
-  --     - prefer_home: put all notes in home except for goto_today(), goto_thisweek()
-  --                    except for notes with subdirs/in/title.
-  --
-  --     - same_as_current: put all new notes in the dir of the current note if
-  --                        present or else in home
-  --                        except for notes/with/subdirs/in/title.
-  new_note_location = "smart",
-
-  -- should all links be updated when a file is renamed
-  rename_update_links = true,
-})
-
-lvim.builtin.which_key.mappings["Z"] = { ":lua require('telekasten').panel()<CR>", "ZPanel" }
-lvim.builtin.which_key.mappings["z"] = {
-  name = "+ZettleKasten",
-  f = { ":lua require('telekasten').find_notes()<CR>", "Find Note" },
-  d = { ":lua require('telekasten').find_daily_notes()<CR>", "Find Daily Note" },
-  g = { ":lua require('telekasten').search_notes()<CR>", "Search Notes" },
-  z = { ":lua require('telekasten').follow_link()<CR>", "Follow Link" },
-  i = { ":lua require('telekasten').insert_link({i=true})<CR>", "Insert Link" },
-  t = { ":lua require('telekasten').show_tags()<CR>", "Show Tags" },
-  P = { ":lua require('telekasten').paste_img_and_link()<CR>", "Paste Img and Link" },
-  I = { ":lua require('telekasten').insert_img_link({ i=true })<CR>", "Insert Img Link" },
-  c = { ":CalendarVR<CR>", "Calendar" },
 }
+
+
+
+vim.cmd([[
+function! Send_to_tmux(count)
+  let _count = (a:count == 0) ? 'bottom-right' : a:count
+  let text = @z
+  let text = substitute(text, '\n', '\r', 'g')
+  let text = substitute(text, "'", '"', 'g')
+  silent execute "!tmux send-keys -Rt" . _count . " '" .  text  . "' Enter"
+  unlet _count
+  unlet text
+endfunction
+nnoremap <expr> <Leader>M '"zyip:call Send_to_tmux('.v:count.')<CR>'
+xnoremap <expr> <Leader>M '"zy:call Send_to_tmux('.v:count.')<CR>'
+]])
+
+-- vim.api.nvim_set_keymap('n', '<space>M', , {})
+-- vim.api.nvim_set_keymap('x', '<space>M', '"zyip:call Send_to_tmux(\'.v:count.\')<CR>', {})
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 vim.api.nvim_create_autocmd("BufEnter", {
