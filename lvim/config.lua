@@ -28,6 +28,7 @@ lvim.leader = "space"
 lvim.keys.normal_mode["<M-s>"] = "msvip<esc><cmd>ToggleTermSendVisualLines 1024<CR>`s"
 lvim.keys.normal_mode["<M-S>"] = "<cmd>1024ToggleTerm dir=%:p:h direction=vertical size=60<cr>"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
+vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {})
 local nnn = "<Cmd>lua require('lvim.core.terminal')._exec_toggle({ cmd = 'nnn', count = 102, direction = 'float' })<CR>"
 -- lvim.keys.normal_mode["<M-t>"] = ":w<cr>"
 -- vim.api.nvim_set_keymap('n', '<M-t>', ':FloatermToggle<cr>', { noremap = true, silent = true })
