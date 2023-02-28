@@ -1,6 +1,5 @@
 --[[
 lvim is the global options object
-
 Linters should be
 filled in as strings with either
 a global executable or a path to
@@ -31,9 +30,9 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {})
 local nnn = "<Cmd>lua require('lvim.core.terminal')._exec_toggle({ cmd = 'nnn', count = 102, direction = 'float' })<CR>"
 -- lvim.keys.normal_mode["<M-t>"] = ":w<cr>"
--- vim.api.nvim_set_keymap('n', '<M-t>', ':FloatermToggle<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('t', '<C-o>', '<C-\\><C-n>', {})
-vim.api.nvim_set_keymap('t', '<C-w>q', '<C-\\><C-n>', {})
+vim.api.nvim_set_keymap('n', '<M-t>', ':ToggleTerm<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', '<M-t>', '<c-\\><c-n>:ToggleTerm<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', '<C-w>q', '<C-\\><C-n>', { noremap = true, silent = true })
 
 vim.cmd([[command! UPPERSQL normal! mh:%s/^\<with\>\|\<as\>\|\<select\>\|\<left\>\|\<join\>\|\<case\>\|\<else\>\|\<group\>\|\<by\>\|\<from\>\|\<end\>\|\<when\>\|\<is\>\|\<where\>\|\<not\>\|\<null\>\|\<then\>|\|\<on\>\|\<like\>\|\<then\>\|\<and\>\|\<or\>/\U&/g<CR>`h]])
 
@@ -184,7 +183,10 @@ lvim.builtin.treesitter.highlight.enabled = true
 -- these are all the default values
 -- Additional Plugins
 lvim.plugins = {
-  { "folke/tokyonight.nvim" },
+  { 'ibhagwan/fzf-lua',
+    -- optional for icon support
+    requires = { 'nvim-tree/nvim-web-devicons' }
+  },
   { "christoomey/vim-tmux-navigator" },
   {
     "folke/trouble.nvim",
@@ -215,24 +217,6 @@ lvim.plugins = {
   { "tpope/vim-repeat", },
   {
     "tpope/vim-fugitive",
-    cmd = {
-      "G",
-      "Git",
-      "Gdiffsplit",
-      "Gread",
-      "Gwrite",
-      "Ggrep",
-      "GMove",
-      "GDelete",
-      "GBrowse",
-      "GRemove",
-      "GRename",
-      "Glgrep",
-      "Gclog",
-      "Gedit",
-      "Gvdiffsplit"
-    },
-    ft = { "fugitive" }
   },
   -- JUNEGUNN
   {
@@ -249,7 +233,6 @@ lvim.plugins = {
   },
   { "ggandor/lightspeed.nvim" },
   { "nvim-pack/nvim-spectre" },
-  { "elubow/cql-vim" },
   { "nvim-treesitter/playground" },
   { "nvim-treesitter/nvim-treesitter-context" },
   {
@@ -259,8 +242,7 @@ lvim.plugins = {
     end
   },
   {
-    "ThePrimeagen/harpoon",
-    config = function()
+    "ThePrimeagen/harpoon", config = function()
       require("harpoon").setup()
       vim.api.nvim_set_keymap("n", "<M-a>", ':lua require("harpoon.mark").add_file()<cr>', { silent = true })
       vim.api.nvim_set_keymap("n", "<M-h>", ':lua require("harpoon.ui").toggle_quick_menu()<cr>', { silent = true })
@@ -270,41 +252,9 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "<M-w>", ':lua require("harpoon.ui").nav_file(2)<cr>', { silent = true })
       vim.api.nvim_set_keymap("n", "<M-e>", ':lua require("harpoon.ui").nav_file(3)<cr>', { silent = true })
       vim.api.nvim_set_keymap("n", "<M-r>", ':lua require("harpoon.ui").nav_file(4)<cr>', { silent = true })
-      vim.api.nvim_set_keymap("n", "<M-t>", ':lua require("harpoon.ui").nav_file(5)<cr>', { silent = true })
+      -- vim.api.nvim_set_keymap("n", "<M-t>", ':lua require("harpoon.ui").nav_file(5)<cr>', { silent = true })
       vim.api.nvim_set_keymap("n", "<M-y>", ':lua require("harpoon.ui").nav_file(6)<cr>', { silent = true })
     end,
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufRead",
-    config = function()
-      vim.opt.list = true
-      -- vim.opt.listchars:append "space:⋅"
-      vim.opt.listchars:append "eol:↴"
-      local opts = {
-        -- char = "▏",
-        filetype_exclude = {
-          "alpha",
-          "help",
-          "terminal",
-          "dashboard",
-          "lspinfo",
-          "lsp-installer",
-          "mason",
-        },
-        buftype_exclude = { "terminal" },
-        bufname_exclude = { "config.lua" },
-
-        show_trailing_blankline_indent = false,
-        show_first_indent_level = false,
-        space_char_blankline = " ",
-        show_current_context = true,
-        show_current_context_start = true,
-        -- use_treesitter = false,
-      }
-
-      require("indent_blankline").setup(opts)
-    end
   },
   { "mg979/vim-visual-multi" },
   {
@@ -342,14 +292,15 @@ xnoremap <expr> <Leader>M '"zy:call Send_to_tmux('.v:count.')<CR>'
 -- vim.api.nvim_set_keymap('n', '<space>M', , {})
 -- vim.api.nvim_set_keymap('x', '<space>M', '"zyip:call Send_to_tmux(\'.v:count.\')<CR>', {})
 
--- Autocommands (https://neovim.io/doc/user/autocmd.html)
-vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.*" },
-  -- enable git blame line
-  callback = function()
-    require('gitsigns').toggle_current_line_blame()
-  end
-})
+-- -- Autocommands (https://neovim.io/doc/user/autocmd.html)
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   pattern = { "*.*" },
+--   -- enable git blame line
+--   callback = function()
+--     require('gitsigns').toggle_current_line_blame()
+--   end
+-- })
+
 -- vim.api.nvim_create_autocmd("BufEnter", {
 --   pattern = { "*.json", "*.jsonc" },
 --   -- enable wrap mode for json files only
@@ -362,3 +313,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+
+vim.opt.list = true
+vim.opt.listchars:append "eol:↴"
+
+require("indent_blankline").setup {
+  -- for example, context is off by default, use this to turn it on
+  show_current_context = true,
+  show_current_context_start = true,
+  show_end_of_line = true,
+  space_char_blankline = " ",
+}

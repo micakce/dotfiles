@@ -3,7 +3,7 @@ vim.cmd([=[
 command! Files call fzf#run(
                          \  fzf#wrap(
                          \      {
-                         \          'source': 'fd', 
+                         \          'source': 'fd -t f', 
                          \          'options':[
                          \             '--info=inline', '--multi',
                          \              '--preview=[ -d {} ] && tree --dirsfirst -C {} -I node_modules ||  bat --color=always {} | head -200;',
@@ -64,8 +64,26 @@ function! RgFzf(query, fullscreen)
              \   )
              \ )
 endfunction
+
 command! -nargs=* -bang FindRgFzf call RgFzf(<q-args>, <bang>0)
 noremap <M-v> :FindRgFzf<CR>
+
+command! -bang -nargs=* FindFzfMatchFileName
+      \ call fzf#run(
+              \ {
+                \ fzf#wrap(
+                \   'source': 'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>),
+             \          'options':[
+             \             '--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command, '--ansi',
+             \             '--preview=[ -d $(echo {} | cut -f1 -d":") ] && tree --dirsfirst -C $(echo {} | cut -f1 -d":") -I node_modules ||  bat --color=always $(echo {} | cut -f1 -d":") --line-range $(N=`echo {} | cut -d : -f 2`; let "M=$N+100"; echo $N:$M) | head -200;',
+             \             '--info=inline', '--multi',
+             \             '--prompt=FzfNameAndContent> ',
+             \             GetFzfPreviewWindow()
+             \          ]
+                \         )
+              \ }
+)
+nnoremap <M-f> :FindFzfMatchFileName<CR>
 
 function! SplitColon(file)
   let filename = split(a:file, ':')[0]
@@ -80,7 +98,7 @@ function! GetFzfPreviewWindow()
   endif
 endfunction
 
-noremap <M-f> :Files<CR>
+" noremap <M-f> :Files<CR>
 noremap <M-g> :FilesRG<CR>
 
 ]=])
