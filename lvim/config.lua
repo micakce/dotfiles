@@ -24,6 +24,32 @@ vim.opt.relativenumber = true
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
 -- add your own keymapping
+--
+--
+
+-- Define a function to check if the terminal window exists
+function Terminal_exists()
+  return vim.fn.bufexists(vim.g.term_bufnr) == 1
+end
+
+-- Define a function to toggle the terminal window
+function Toggle_term()
+  if Terminal_exists() then
+    -- Terminal window exists, so hide it
+    local winnr = vim.fn.winnr('#' .. vim.g.term_bufnr)
+    vim.api.nvim_win_hide(winnr)
+  else
+    -- Terminal window does not exist, so create it
+    local size = math.floor(vim.o.columns * 0.4)
+    vim.cmd('botright vsplit term://bash')
+    vim.api.nvim_win_set_width(0, size)
+    vim.g.term_bufnr = vim.api.nvim_get_current_buf()
+    vim.cmd('wincmd l')
+  end
+end
+
+-- Set the ToggleTerm keymapping to toggle the terminal window
+vim.api.nvim_set_keymap('n', '<leader>n', '<cmd>lua Toggle_term()<CR>', { noremap = true, silent = true })
 lvim.keys.normal_mode["<M-s>"] = "msvip<esc><cmd>ToggleTermSendVisualLines 1024<CR>`s"
 lvim.keys.normal_mode["<M-S>"] = "<cmd>1024ToggleTerm dir=%:p:h direction=vertical size=60<cr>"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
@@ -324,3 +350,18 @@ require("indent_blankline").setup {
   show_end_of_line = true,
   space_char_blankline = " ",
 }
+
+local fzf_defaults = require 'fzf-lua'.defaults
+
+fzf_defaults.git.bcommits.actions = {
+  ["default"] = require 'fzf-lua'.actions.git_buf_edit,
+  ["ctrl-s"]  = require 'fzf-lua'.actions.git_buf_split,
+  ["ctrl-v"]  = function(selected, opts)
+    local commit_hash = selected[1]:match("[^ ]+")
+    local cmd = string.format("Gvdiffsplit %s", commit_hash)
+    vim.cmd(cmd)
+  end,
+  ["ctrl-t"]  = require 'fzf-lua'.actions.git_buf_tabedit,
+}
+
+require 'fzf-lua'.setup(fzf_defaults)

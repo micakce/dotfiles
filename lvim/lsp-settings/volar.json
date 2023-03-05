@@ -1,0 +1,22 @@
+{
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "editor.formatOnSave": false,
+
+    "[vue]": {
+        "editor.formatOnType": false,
+        "editor.formatOnSave": false
+    },
+
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": false
+    },
+
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue"
+    ]
+}
