@@ -364,4 +364,44 @@ fzf_defaults.git.bcommits.actions = {
   ["ctrl-t"]  = require 'fzf-lua'.actions.git_buf_tabedit,
 }
 
+vim.api.nvim_create_user_command(
+  'Lcommits',
+  function(opts)
+    vim.cmd("messages clear")
+    for key, value in pairs(opts) do
+      print('\t', key, value)
+    end
+    local start_line = opts.line1
+    local end_line = opts.line2
+    require 'fzf-lua'.git_bcommits({
+      prompt = "LCommits> ",
+      cmd    = "git log " ..
+          opts.args .. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))" ..
+          "%Creset %s %C(blue)<%an>%Creset' -L " .. start_line .. "," .. end_line .. ":<file> --no-patch",
+    })
+  end,
+  {
+    nargs = '*',
+    range = true,
+    force = true,
+  })
+
 require 'fzf-lua'.setup(fzf_defaults)
+
+
+-- Check if the current file belongs to a Git repository and toggle the current line blame in Gitsigns
+function ShouldToggleGitBlame()
+  local output = vim.fn.systemlist("git rev-parse --is-inside-work-tree 2>/dev/null")
+  if not vim.tbl_isempty(output) then
+    local gitsigns = require('gitsigns')
+    gitsigns.toggle_current_line_blame()
+  end
+end
+
+-- Call the `print_git_status()` function whenever a buffer is entered
+vim.cmd([[
+  augroup git_check
+    autocmd!
+    autocmd BufEnter * lua ShouldToggleGitBlame()
+  augroup END
+]])
