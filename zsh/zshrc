@@ -176,6 +176,72 @@ function jwt_decode(){
     jq -R 'split(".") | .[1] | @base64d | fromjson' <<< "$1"
 }
 
+function curlit() {
+
+usage() {
+  echo "Usage: $(basename "$0") [-j <jq_query>] [-d <string>] [-h]" >&2
+  echo "Options:" >&2
+  echo "  -j <jq_query>    JQ query to filter input" >&2
+  echo "  -d <variable>    Variable to save query result" >&2
+  echo "  -h               Print usage instructions" >&2
+}
+
+local jq_query=""
+local variable=""
+
+while getopts ":j:d:h" opt; do
+  case ${opt} in
+    j )
+      jq_query="$OPTARG"
+      ;;
+    d )
+      variable="$OPTARG"
+      ;;
+    h )
+      usage
+      return 0
+      ;;
+    \? )
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      return 1
+      ;;
+    : )
+      echo "Option -$OPTARG requires an argument." >&2
+      usage
+      return 1
+      ;;
+  esac
+done
+
+if [ -n "$variable" ] && [ -z "$jq_query" ]; then
+  echo "Error: You must pass the -j flag when using the -d flag" >&2
+  usage
+  return 1
+fi
+
+local body="$(cat)"
+
+echo "$body" | awk '/^HTTP/{if($2~/2../)print "\033[32m"$0"\033[0m"; else if($2~/3../)print "\033[33m"$0"\033[0m"; else if($2~/4../)print "\033[31m"$0"\033[0m"; else if($2~/5../)print "\033[35m"$0"\033[0m"; else print}'
+echo "$body" | sed '1,/^\r$/d'| jq '. as $raw | try fromjson catch $raw '
+
+status_code=$(echo "$body" | awk '/^HTTP/{print $2}')
+if [ "$status_code" != "200" ]; then
+return 1
+fi
+
+if [ -n "$jq_query" ] && [ -n "$variable" ]; then
+  echo "$body" | sed '1,/^\r$/d'| jq -r "$jq_query" > "$variable"
+  return 0
+fi
+
+if [ -n "$jq_query" ]; then
+  echo "$body" | sed '1,/^\r$/d'| jq -r "$jq_query"
+  return 0
+fi
+
+}
+
 mkcd ()
 {
     mkdir -p -- "$1" && cd -P -- "$1"
