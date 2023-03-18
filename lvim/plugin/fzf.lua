@@ -1,3 +1,40 @@
+local fzf_defaults = require 'fzf-lua'.defaults
+
+fzf_defaults.git.bcommits.actions = {
+  ["default"] = require 'fzf-lua'.actions.git_buf_edit,
+  ["ctrl-s"]  = require 'fzf-lua'.actions.git_buf_split,
+  ["ctrl-v"]  = function(selected, _)
+    local commit_hash = selected[1]:match("[^ ]+")
+    local cmd = string.format("Gvdiffsplit %s", commit_hash)
+    vim.cmd(cmd)
+  end,
+  ["ctrl-t"]  = require 'fzf-lua'.actions.git_buf_tabedit,
+}
+
+vim.api.nvim_create_user_command(
+  'Lcommits',
+  function(opts)
+    vim.cmd("messages clear")
+    for key, value in pairs(opts) do
+      print('\t', key, value)
+    end
+    local start_line = opts.line1
+    local end_line = opts.line2
+    require 'fzf-lua'.git_bcommits({
+      prompt = "LCommits> ",
+      cmd    = "git log " ..
+          opts.args .. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))" ..
+          "%Creset %s %C(blue)<%an>%Creset' -L " .. start_line .. "," .. end_line .. ":<file> --no-patch",
+    })
+  end,
+  {
+    nargs = '*',
+    range = true,
+    force = true,
+  })
+
+require 'fzf-lua'.setup(fzf_defaults)
+
 vim.cmd("command! LS call fzf#run(fzf#wrap({'source': 'ls'}))")
 vim.cmd([=[
 command! FilesByName call fzf#run(
@@ -86,14 +123,3 @@ noremap <M-f> :FilesByName<CR>
 nnoremap <M-S-f> :FilesByNameAndContent<CR>
 noremap <M-g> :FilesByContentWithRegEx<CR>
 ]=])
-
-
-local function fzf_files()
-  require('fzf-lua').files({ fzf_opts = {
-    ['--layout'] = 'reverse-list',
-  } })
-end
-
-vim.api.nvim_set_keymap('n', '<M-l>', '<cmd>lua fzf_files()<CR>', { noremap = true, silent = true })
--- local command = ":lua require('fzf-lua').files({ fzf_opts = { ['--layout'] = 'reverse-list' } })<CR>"
--- vim.api.nvim_set_keymap('n', '<M-l>', command, { noremap = true, silent = true })
