@@ -25,43 +25,46 @@ vim.opt.relativenumber = true
 lvim.leader = "space"
 -- add your own keymapping
 --
---
-
--- Define a function to check if the terminal window exists
-function Terminal_exists()
-  return vim.fn.bufexists(vim.g.term_bufnr) == 1
-end
-
--- Define a function to toggle the terminal window
-function Toggle_term()
-  if Terminal_exists() then
-    -- Terminal window exists, so hide it
-    local winnr = vim.fn.winnr('#' .. vim.g.term_bufnr)
-    vim.api.nvim_win_hide(winnr)
-  else
-    -- Terminal window does not exist, so create it
-    local size = math.floor(vim.o.columns * 0.4)
-    vim.cmd('botright vsplit term://bash')
-    vim.api.nvim_win_set_width(0, size)
-    vim.g.term_bufnr = vim.api.nvim_get_current_buf()
-    vim.cmd('wincmd l')
-  end
-end
-
 -- Set the ToggleTerm keymapping to toggle the terminal window
-vim.api.nvim_set_keymap('n', '<leader>n', '<cmd>lua Toggle_term()<CR>', { noremap = true, silent = true })
-lvim.keys.normal_mode["<M-s>"] = "msvip<esc><cmd>ToggleTermSendVisualLines 1024<CR>`s"
-lvim.keys.normal_mode["<M-S>"] = "<cmd>1024ToggleTerm dir=%:p:h direction=vertical size=60<cr>"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {})
-local nnn = "<Cmd>lua require('lvim.core.terminal')._exec_toggle({ cmd = 'nnn', count = 102, direction = 'float' })<CR>"
--- lvim.keys.normal_mode["<M-t>"] = ":w<cr>"
-vim.api.nvim_set_keymap('n', '<M-t>', ':ToggleTerm<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('t', '<M-t>', '<c-\\><c-n>:ToggleTerm<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('t', '<C-w>q', '<C-\\><C-n>', { noremap = true, silent = true })
+lvim.builtin.project.patterns = { ".devcontainer", ".dockerignore", ".git", "package.json" }
 
 vim.cmd([[command! UPPERSQL normal! mh:%s/^\<with\>\|\<as\>\|\<select\>\|\<left\>\|\<join\>\|\<case\>\|\<else\>\|\<group\>\|\<by\>\|\<from\>\|\<end\>\|\<when\>\|\<is\>\|\<where\>\|\<not\>\|\<null\>\|\<then\>|\|\<on\>\|\<like\>\|\<then\>\|\<and\>\|\<or\>/\U&/g<CR>`h]])
 
+vim.cmd([[
+nnoremap <expr>  <Space>r ReplaceWithPlusRegister()
+xnoremap <expr>  <Space>r ReplaceWithPlusRegister()
+
+function! ReplaceWithPlusRegister(type='') abort
+  if a:type == ''
+    set opfunc=ReplaceWithPlusRegister
+    return 'g@'
+  endif
+
+  let sel_save = &selection
+  let reg_save = getreginfo('"')
+  let cb_save = &clipboard
+  let visual_marks_save = [getpos("'<"), getpos("'>")]
+
+  try
+    set clipboard= selection=inclusive
+    let commands = #{line: "'[V']\"_dO", char: "`[v`]\"_d", block: "`[\<c-v>`]\"_d"}
+    silent exe 'noautocmd keepjumps normal! ' .. get(commands, a:type, '')
+    exec 'normal ""P'
+  finally
+    call setreg('"', reg_save)
+    call setpos("'<", visual_marks_save[0])
+    call setpos("'>", visual_marks_save[1])
+    let &clipboard = cb_save
+    let &selection = sel_save
+  endtry
+endfunction
+]])
+
+
+--
+-- Define the keybinding
 -- unmap a default keymapping
 -- vim.keymap.del("n", "<C-Up>")
 -- override a default keymapping
@@ -93,7 +96,6 @@ lvim.builtin.which_key.mappings["l"]["M"] = { "<cmd>Telescope lsp_implementation
 lvim.builtin.which_key.mappings["l"]["C"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls" }
 lvim.builtin.which_key.mappings["l"]["D"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions" }
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
-lvim.builtin.which_key.mappings["n"] = { nnn, "nnn" }
 lvim.builtin.which_key.mappings["x"] = { "<Cmd>BufferKill<CR>", "Close Buffer" }
 lvim.builtin.which_key.mappings["c"] = { "<Cmd>tabnew<CR>", "New Tab" }
 lvim.builtin.which_key.mappings["t"] = {
@@ -299,6 +301,14 @@ lvim.plugins = {
 
 }
 
+require('spectre').setup({
+  highlight = {
+    ui = "String",
+    search = "BufferInactiveTarget",
+    replace = "DiffText"
+  }
+})
+
 
 
 vim.cmd([[
@@ -351,57 +361,59 @@ require("indent_blankline").setup {
   space_char_blankline = " ",
 }
 
-local fzf_defaults = require 'fzf-lua'.defaults
-
-fzf_defaults.git.bcommits.actions = {
-  ["default"] = require 'fzf-lua'.actions.git_buf_edit,
-  ["ctrl-s"]  = require 'fzf-lua'.actions.git_buf_split,
-  ["ctrl-v"]  = function(selected, opts)
-    local commit_hash = selected[1]:match("[^ ]+")
-    local cmd = string.format("Gvdiffsplit %s", commit_hash)
-    vim.cmd(cmd)
-  end,
-  ["ctrl-t"]  = require 'fzf-lua'.actions.git_buf_tabedit,
-}
-
-vim.api.nvim_create_user_command(
-  'Lcommits',
-  function(opts)
-    vim.cmd("messages clear")
-    for key, value in pairs(opts) do
-      print('\t', key, value)
-    end
-    local start_line = opts.line1
-    local end_line = opts.line2
-    require 'fzf-lua'.git_bcommits({
-      prompt = "LCommits> ",
-      cmd    = "git log " ..
-          opts.args .. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))" ..
-          "%Creset %s %C(blue)<%an>%Creset' -L " .. start_line .. "," .. end_line .. ":<file> --no-patch",
-    })
-  end,
-  {
-    nargs = '*',
-    range = true,
-    force = true,
-  })
-
-require 'fzf-lua'.setup(fzf_defaults)
 
 
 -- Check if the current file belongs to a Git repository and toggle the current line blame in Gitsigns
 function ShouldToggleGitBlame()
+  local non_file_buf_types = { 'acwrite', 'help', 'quickfix', 'terminal', 'nofile', 'nowrite', 'prompt', 'lspinfo' }
+  if vim.tbl_contains(non_file_buf_types, vim.bo.buftype) then
+    -- This is not a file buffer, do not run the Git command
+    return
+  end
+
   local output = vim.fn.systemlist("git rev-parse --is-inside-work-tree 2>/dev/null")
+
   if not vim.tbl_isempty(output) then
     local gitsigns = require('gitsigns')
     gitsigns.toggle_current_line_blame()
   end
 end
 
--- Call the `print_git_status()` function whenever a buffer is entered
+-- -- Call the `print_git_status()` function whenever a buffer is entered
+-- vim.cmd([[
+--   augroup git_check
+--     autocmd!
+--     autocmd VimEnter * if bufname("%") != "" | lua ShouldToggleGitBlame()
+--   augroup END
+-- ]])
+
+function Buffer_is_visible(bufnr)
+  for tabnr = 1, vim.fn.tabpagenr("$") do
+    for _, bufid in pairs(vim.fn.tabpagebuflist(tabnr)) do
+      if bufid == bufnr then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- Define a function to save the buffer number of the current terminal
+function Save_last_terminal_bufnr()
+  local term_bufnr = vim.fn.bufnr('%')
+  if vim.bo.buftype == 'terminal' then
+    vim.g.last_term = term_bufnr
+  end
+end
+
+-- Automatically save the buffer number of the last terminal when entering a terminal
 vim.cmd([[
-  augroup git_check
+  augroup TerminalBufferTracking
     autocmd!
-    autocmd BufEnter * lua ShouldToggleGitBlame()
+    autocmd TermEnter * lua Save_last_terminal_bufnr()
   augroup END
 ]])
+
+-- lua print(vim.g.last_term)
+-- lua print(vim.fn.bufnr('%'))
+--vim.fn.bufnr('%')
