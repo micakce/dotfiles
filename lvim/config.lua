@@ -46,6 +46,7 @@ function! ReplaceWithPlusRegister(type='') abort
   let reg_save = getreginfo('"')
   let cb_save = &clipboard
   let visual_marks_save = [getpos("'<"), getpos("'>")]
+  echom visual_marks_save
 
   try
     set clipboard= selection=inclusive
@@ -259,7 +260,12 @@ lvim.plugins = {
     end,
 
   },
-  { "ggandor/lightspeed.nvim" },
+  {
+    "ggandor/leap.nvim",
+    config = function()
+      require('leap').add_default_mappings()
+    end,
+  },
   { "nvim-pack/nvim-spectre" },
   { "nvim-treesitter/playground" },
   { "nvim-treesitter/nvim-treesitter-context" },
