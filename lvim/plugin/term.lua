@@ -2,9 +2,19 @@ vim.api.nvim_set_keymap('n', '<M-S>', "<cmd>lua OpenVerticalTerminal()<CR>", { n
 vim.api.nvim_set_keymap(
   'n',
   '<M-s>',
-  'msvip<esc><cmd>ToggleTermSendVisualLines 1024<CR>`s',
+  'msvip<esc><cmd>lua CheckCurrentLine()<CR>`s',
   { noremap = true, silent = true }
 )
+
+function CheckCurrentLine()
+  local line = vim.fn.getline('.')
+  if line == '' then
+    vim.cmd("TermExec cmd='%:p'")
+  else
+    vim.cmd("ToggleTermSendVisualLines 1024")
+  end
+end
+
 local nnn = "<Cmd>lua require('lvim.core.terminal')._exec_toggle({ cmd = 'nnn', count = 102, direction = 'float' })<CR>"
 vim.api.nvim_set_keymap('n', '<leader>n', nnn, { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<M-t>', '<CMD>ToggleTerm<cr>', { noremap = true, silent = true })
