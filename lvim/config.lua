@@ -91,7 +91,7 @@ endfunction
 
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["/"] = { "<cmd>NvimTreeFindFile<cr>", "Focus explorer" }
-lvim.builtin.which_key.mappings["M"] = { '"zyip:call Send_to_tmux(\'.v:count.\')<CR>', "Send2Tmux" }
+lvim.builtin.which_key.mappings["M"] = { [["zyip:call Send_to_tmux(v:count)<CR>]], "Send2Tmux" }
 lvim.builtin.which_key.mappings["l"]["R"] = { "<cmd>Telescope lsp_references<cr>", "References" }
 lvim.builtin.which_key.mappings["l"]["M"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" }
 lvim.builtin.which_key.mappings["l"]["C"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls" }
