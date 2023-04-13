@@ -334,3 +334,7 @@ export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
 . "$HOME/.cargo/env"
+
+# Put the line below in ~/.zshrc:
+eval "$(jump shell zsh)"
+
