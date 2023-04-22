@@ -82,6 +82,7 @@ fzf-it
 pass
 fzf-tab
 zsh-autosuggestions
+zsh-vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -93,6 +94,8 @@ setopt HIST_IGNORE_SPACE
 zstyle ':fzf-tab:*' fzf-bindings 'ctrl-j:accept' 'ctrl-a:toggle-all' 'tab:toggle+down' 'shift-tab:toggle+up'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:lvim:*' fzf-preview 'exa -1 --color=always $realpath'
+
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
