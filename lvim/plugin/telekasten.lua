@@ -8,7 +8,7 @@
 -- browse_media : Browse images / media files
 -- rename_note : Rename current note and update the links pointing to it
 -- switch_vault : switch the vault. Brings up a picker. See the vaults config option for more.
-
+local insert_link = "<cmd>lua require('telekasten').insert_link({i=true})<CR>"
 lvim.builtin.which_key.mappings["Z"] = { ":lua require('telekasten').panel()<CR>", "ZPanel" }
 lvim.builtin.which_key.mappings["z"] = {
   name = "+ZettleKasten",
@@ -19,7 +19,7 @@ lvim.builtin.which_key.mappings["z"] = {
   T = { ":lua require('telekasten').goto_today()<CR>", "Go to today" },
   n = { ":lua require('telekasten').new_note()<CR>", "New note" },
   z = { ":lua require('telekasten').follow_link()<CR>", "Follow Link" },
-  i = { ":lua require('telekasten').insert_link({i=true})<CR>", "Insert Link" },
+  i = { insert_link, "Insert Link" },
   I = { ":lua require('telekasten').insert_img_link({ i=true })<CR>", "Insert Img Link" },
   t = { ":lua require('telekasten').show_tags()<CR>", "Show Tags" },
   P = { ":lua require('telekasten').paste_img_and_link()<CR>", "Paste Img and Link" },
@@ -28,6 +28,7 @@ lvim.builtin.which_key.mappings["z"] = {
   c = { ":CalendarVR<CR>", "Calendar" },
 }
 
+vim.api.nvim_set_keymap('i', '<M-i>', insert_link, { noremap = true, silent = true })
 local home = vim.fn.expand("~/zettelkasten")
 require('telekasten').setup({
   home = home,

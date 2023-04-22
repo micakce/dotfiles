@@ -7,6 +7,7 @@ vim.api.nvim_set_keymap(
 )
 
 function CheckCurrentLine()
+  ---@diagnostic disable-next-line: param-type-mismatch
   local line = vim.fn.getline('.')
   if line == '' then
     vim.cmd("TermExec cmd='%:p'")
