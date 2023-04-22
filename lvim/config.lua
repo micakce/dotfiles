@@ -28,7 +28,7 @@ lvim.leader = "space"
 -- Set the ToggleTerm keymapping to toggle the terminal window
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {})
-lvim.builtin.project.patterns = { ".devcontainer", ".dockerignore", ".git", "package.json" }
+lvim.builtin.project.patterns = { ".devcontainer", ".dockerignore", ".git", "package.json", ".obsidian" }
 
 vim.cmd([[command! UPPERSQL normal! mh:%s/^\<with\>\|\<as\>\|\<select\>\|\<left\>\|\<join\>\|\<case\>\|\<else\>\|\<group\>\|\<by\>\|\<from\>\|\<end\>\|\<when\>\|\<is\>\|\<where\>\|\<not\>\|\<null\>\|\<then\>|\|\<on\>\|\<like\>\|\<then\>\|\<and\>\|\<or\>/\U&/g<CR>`h]])
 
@@ -230,7 +230,7 @@ lvim.plugins = {
     run = "cd app && npm install",
     ft = "markdown",
     config = function()
-      vim.g.mkdp_auto_start = 1
+      vim.g.mkdp_auto_start = 0
       vim.g.mkdp_auto_close = 0
     end,
   },
@@ -266,7 +266,18 @@ lvim.plugins = {
       require('leap').add_default_mappings()
     end,
   },
-  { "nvim-pack/nvim-spectre" },
+  {
+    "nvim-pack/nvim-spectre",
+    config = function()
+      require('spectre').setup({
+        highlight = {
+          ui = "String",
+          search = "BufferInactiveTarget",
+          replace = "DiffText"
+        }
+      })
+    end,
+  },
   { "nvim-treesitter/playground" },
   { "nvim-treesitter/nvim-treesitter-context" },
   {
@@ -307,13 +318,6 @@ lvim.plugins = {
 
 }
 
-require('spectre').setup({
-  highlight = {
-    ui = "String",
-    search = "BufferInactiveTarget",
-    replace = "DiffText"
-  }
-})
 
 
 
@@ -322,13 +326,11 @@ function! Send_to_tmux(count)
   let _count = (a:count == 0) ? 'bottom-right' : a:count
   let text = @z
   let text = substitute(text, '\n', '\r', 'g')
-  let text = substitute(text, "'", '"', 'g')
+  let text = substitute(text, "'","'\"'", 'g')
   silent execute "!tmux send-keys -Rt" . _count . " '" .  text  . "' Enter"
   unlet _count
   unlet text
 endfunction
-nnoremap <expr> <Leader>M '"zyip:call Send_to_tmux('.v:count.')<CR>'
-xnoremap <expr> <Leader>M '"zy:call Send_to_tmux('.v:count.')<CR>'
 ]])
 
 -- vim.api.nvim_set_keymap('n', '<space>M', , {})
