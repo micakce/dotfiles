@@ -1,0 +1,2 @@
+#bindsym $mod+shift+o exec --no-startup-id gnome-terminal --class=floating --working-directory="$HOME/dotfiles/i3" -- "./clip-history.sh"
+#for_window [class="floating"] floating enable
