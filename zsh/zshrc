@@ -82,7 +82,7 @@ fzf-it
 pass
 fzf-tab
 zsh-autosuggestions
-zsh-vi-mode
+# zsh-vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -93,7 +93,7 @@ setopt HIST_IGNORE_SPACE
 
 zstyle ':fzf-tab:*' fzf-bindings 'ctrl-j:accept' 'ctrl-a:toggle-all' 'tab:toggle+down' 'shift-tab:toggle+up'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:lvim:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'exa -1 --color=always $realpath'
 
 ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
@@ -124,24 +124,25 @@ ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Normal Aliases
+
 alias psql="docker run --rm --net host -it postgres:14.5-alpine sh -c \"psql localhost:5432 --user postgres"
-alias lv="lvim"
 alias ngs="nv -c \"Git | wincmd o\""
 alias gsfe="git submodule foreach"
 alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
 alias hugo="docker run --rm -it -v $PWD:/src  klakegg/hugo:ext-alpine"
 alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo:ext-alpine server"
 alias kpm="~/development/docker/kpm/runServer.sh"
-alias vconf="lvim ~/.vimrc"
-alias zconf="lvim ~/.zshrc"
-alias fconf="lvim ~/dotfiles/zsh/custom/fzf.zsh"
-alias gconf="lvim ~/.gitconfig"
-alias tconf="lvim ~/.tmux.conf"
-alias iconf="lvim ~/dotfiles/i3/config"
-alias lconf="lvim ~/.config/lvim/config.lua"
-alias ldconf="lvim ~/.config/lazydocker/config.yml"
-alias lgconf="lvim ~/.config/lazygit/config.yml"
-alias dockit="vim ~/dotfiles/zsh/custom/plugins/dockit/dockit.plugin.zsh"
+alias nv="nvim"
+alias zconf="nvim ~/.zshrc"
+alias zvconf="nvim $ZSH_CUSTOM/vim.zsh"
+alias zfconf="nvim $ZSH_CUSTOM/fzf.zsh"
+alias zdconf="nvim $ZSH_CUSTOM/plugins/dockit/dockit.plugin.zsh"
+alias gconf="nvim ~/.gitconfig"
+alias tconf="nvim ~/.tmux.conf"
+alias iconf="nvim ~/dotfiles/i3/config"
+alias nconf="nvim ~/dotfiles/LunarVim/"
+alias ldconf="nvim ~/.config/lazydocker/config.yml"
+alias lgconf="nvim ~/.config/lazygit/config.yml"
 alias szsh="source ~/.zshrc"
 alias k="kubectl"
 # alias tmuxs="tmux attach -t main || tmux new -s main"
@@ -313,7 +314,7 @@ export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
 export PATH="/usr/bin/aws:$PATH" # AWS
 export PATH="$HOME/.local/bin:$PATH" # AWS
-export EDITOR="lvim"
+export EDITOR="nvim"
 export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 export COMPOSE_DOCKER_CLI_BUILD=1
