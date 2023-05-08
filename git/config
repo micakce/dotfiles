@@ -1,5 +1,5 @@
 [core]
-	editor = lvim
+	editor = nvim
 [user]
 	name = Dangelo Guanipa
 	email = micakce@gmail.com
@@ -9,13 +9,19 @@
     insteadOf = git@github.com:Fifth-Street-Gaming
 [url "git@github-dangelowiz:Netsurion"]
     insteadOf = git@github.com:Netsurion
+[diff]
+	tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -c \"wincmd w\" -c \"wincmd L\"
 [merge]
-	tool = fugitive
+	tool = nvimdiff
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
+[mergetool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$MERGED\" \"$BASE\" \"$REMOTE\" -c \"wincmd w\" -c \"wincmd J\" -c \"color desert\"
 [mergetool "fugitive"]
-	cmd = lvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\" 
 [alias]
 	last = log -1 HEAD
 	mt = mergetool
