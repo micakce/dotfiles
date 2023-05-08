@@ -134,17 +134,19 @@ alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo
 alias kpm="~/development/docker/kpm/runServer.sh"
 alias nv="nvim"
 alias zconf="nvim ~/.zshrc"
-alias zvconf="nvim $ZSH_CUSTOM/vim.zsh"
+alias zvconf="nvim $ZSH_CUSTOM/nvim.zsh"
 alias zfconf="nvim $ZSH_CUSTOM/fzf.zsh"
-alias zdconf="nvim $ZSH_CUSTOM/plugins/dockit/dockit.plugin.zsh"
+alias zficonf="nvim $ZSH_CUSTOM/dotfiles/zsh/custom/plugins/fzf-it/fzf-it.plugin.zsh"
 alias gconf="nvim ~/.gitconfig"
 alias tconf="nvim ~/.tmux.conf"
 alias iconf="nvim ~/dotfiles/i3/config"
-alias nconf="nvim ~/dotfiles/LunarVim/"
+alias nconf="nvim ~/dotfiles/LazyVim/"
 alias ldconf="nvim ~/.config/lazydocker/config.yml"
 alias lgconf="nvim ~/.config/lazygit/config.yml"
 alias szsh="source ~/.zshrc"
 alias k="kubectl"
+alias kba="kubectl --namespace=backend-api"
+alias kin="kubectl --namespace=ingress-nginx"
 # alias tmuxs="tmux attach -t main || tmux new -s main"
 # alias tmux="tmux -2"
 alias octave="flatpak run org.octave.Octave"
@@ -161,9 +163,9 @@ alias gmt="git mergetool"
 
 # Prefix aliases
 alias -s pdf='zathura'
-alias -s py='lvim'
-alias -s js='lvim'
-alias -s txt='lvim'
+alias -s py='nvim'
+alias -s js='nvim'
+alias -s txt='nvim'
 alias -s mkv='vlc'
 alias -s mkv='vlc'
 alias -s png='eog'
@@ -189,6 +191,7 @@ function curlit() {
     echo "Usage: $(basename "$0") [-j <jq_query>] [-d <string>] [-h]" >&2
     echo "Options:" >&2
     echo "  -j <jq_query>    JQ query to filter input" >&2
+    echo "  -q <jq_query>    JQ query to filter input" >&2
     echo "  -d <variable>    Variable to save query result" >&2
     echo "  -h               Print usage instructions" >&2
   }
@@ -196,10 +199,13 @@ function curlit() {
   local jq_query=""
   local variable=""
 
-  while getopts ":j:d:h" opt; do
+  while getopts ":j:d:h:q" opt; do
     case ${opt} in
       j )
         jq_query="$OPTARG"
+        ;;
+      q )
+        query="$OPTARG"
         ;;
       d )
         variable="$OPTARG"
@@ -230,7 +236,7 @@ function curlit() {
   local body="$(cat)"
 
   echo -E "$body" | awk '/^HTTP/{if($2~/2../)print "\033[32m"$0"\033[0m"; else if($2~/3../)print "\033[33m"$0"\033[0m"; else if($2~/4../)print "\033[31m"$0"\033[0m"; else if($2~/5../)print "\033[35m"$0"\033[0m"; else print}'
-  echo -E "$body" | sed '1,/^\r$/d' | sed  's/\n/\\n/g' | jq -r '. as $raw | try fromjson catch $raw '
+  echo -E "$body" | sed '1,/^\r$/d' | jq -r '. as $raw | try fromjson catch $raw '
 
   status_code=$(echo "$body" | awk '/^HTTP/{print $2}')
   if [ "$status_code" != "200" ]; then
@@ -239,12 +245,15 @@ function curlit() {
 
   if [ -n "$jq_query" ] && [ -n "$variable" ]; then
     echo "$body" | sed '1,/^\r$/d'| jq -r "$jq_query" > "$variable"
-    return 0
+    jq_query=""
   fi
 
   if [ -n "$jq_query" ]; then
-    echo "$body" | sed '1,/^\r$/d'| jq -r "$jq_query"
-    return 0
+    echo -E "$body" | sed '1,/^\r$/d' | sed  's/\n/\\n/g' | jq -r "$jq_query"
+  fi
+
+  if [ -n "$query" ]; then
+    echo -E "$body" | sed '1,/^\r$/d' | sed  's/\n/\\n/g' | jq -r "$query"
   fi
 
 }

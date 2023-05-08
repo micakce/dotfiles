@@ -3,6 +3,7 @@ return {
     "ibhagwan/fzf-lua",
     -- optional for icon support
     requires = { "nvim-tree/nvim-web-devicons" },
+    event = "VimEnter",
     keys = {
       {
         "<leader>ff",
@@ -37,6 +38,7 @@ return {
         function()
           require("fzf-lua").live_grep()
         end,
+        desc = "FzfGrep",
       },
       {
         "<leader>/",
@@ -50,6 +52,7 @@ return {
         function()
           require("fzf-lua").grep_last()
         end,
+        desc = "FzfGrepLast",
       },
     },
     config = function()
