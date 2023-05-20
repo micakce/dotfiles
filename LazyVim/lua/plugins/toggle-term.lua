@@ -12,7 +12,12 @@ return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
-    config = true,
+    config = function()
+      require("toggleterm").setup()
+      vim.keymap.set("t", "<c-n>", "<c-\\><c-n>", {})
+      vim.keymap.set("t", "<M-t>", "<c-\\><c-n>:ToggleTerm direction=float<CR>", {})
+    end,
+    event = "VimEnter",
     keys = {
       {
         "<M-s>",
@@ -33,18 +38,6 @@ return {
         function()
           vim.cmd("ToggleTerm direction=float")
         end,
-      },
-      {
-        "<M-t>",
-        function()
-          vim.cmd("ToggleTerm direction=float")
-        end,
-        "t",
-      },
-      {
-        "<c-q>",
-        [[<c-\\><c-n>]],
-        "t",
       },
     },
   },
