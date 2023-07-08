@@ -1,0 +1,24 @@
+return {
+  -- {
+  --   "Bekaboo/dropbar.nvim",
+  --   config = function()
+  --     local conf = require("dropbar.configs")
+  --     conf.opts.menu.keymaps["q"] = function()
+  --       vim.cmd("q")
+  --     end
+  --     conf.opts.menu.keymaps["<BS>"] = function()
+  --       vim.cmd("q")
+  --     end
+  --     require("dropbar").setup(conf)
+  --   end,
+  --   event = "VimEnter",
+  --   keys = {
+  --     {
+  --       "<leader>d",
+  --       "<CMD> lua require('dropbar.api').pick()<CR>",
+  --       { noremap = true },
+  --       desc = "Dropbar",
+  --     },
+  --   },
+  -- },
+}

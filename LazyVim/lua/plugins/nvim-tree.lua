@@ -18,7 +18,19 @@ return {
 
       local nvimTreeGroup = vim.api.nvim_create_augroup("BufEnter", { clear = true })
       function Change_directory()
-        local target_files = { ".git" }
+        local bufnr = vim.fn.bufnr()
+        local buftype = vim.fn.getbufvar(bufnr, "&buftype")
+        if
+          buftype == "terminal"
+          or buftype == "help"
+          or buftype == "quickfix"
+          or buftype == "nofile"
+          or buftype == "nowrite"
+        then
+          return
+        end
+
+        local target_files = { ".git", "go.mod" }
         local current_directory = vim.fn.expand("%:p:h")
 
         -- Check current directory and parent directories

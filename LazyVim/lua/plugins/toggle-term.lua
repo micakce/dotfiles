@@ -14,8 +14,82 @@ return {
     version = "*",
     config = function()
       require("toggleterm").setup()
-      vim.keymap.set("t", "<c-n>", "<c-\\><c-n>", {})
-      vim.keymap.set("t", "<M-t>", "<c-\\><c-n>:ToggleTerm direction=float<CR>", {})
+
+      local Terminal = require("toggleterm.terminal").Terminal
+      local nnn = Terminal:new({
+        cmd = "nnn",
+        direction = "float",
+        float_opts = {
+          border = "double",
+        },
+        -- function to run on opening the terminal
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        -- function to run on closing the terminal
+        on_close = function(term)
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      function NNNToggle(dir)
+        if dir ~= nil and arg ~= "" then
+          nnn.dir = dir
+        else
+          nnn.dir = vim.api.nvim_call_function("getcwd", {})
+        end
+        nnn:toggle()
+      end
+
+      local lazygit = Terminal:new({
+        cmd = "lazygit",
+        direction = "float",
+        float_opts = {
+          border = "double",
+        },
+        -- function to run on opening the terminal
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        -- function to run on closing the terminal
+        on_close = function(term)
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      function LazygitToggle(dir)
+        if dir ~= nil and arg ~= "" then
+          lazygit.dir = dir
+        else
+          lazygit.dir = vim.api.nvim_call_function("getcwd", {})
+        end
+        lazygit:toggle()
+      end
+
+      -- vim.keymap.set("t", "<c-n>", "<c-\\><c-n>", {})
+      vim.api.nvim_set_keymap(
+        "n",
+        "<M-t>",
+        "<CMD>lua <<EOF\nlocal count = tonumber(vim.v.count) or 1\nvim.cmd(count..'ToggleTerm direction=float')\nEOF<CR>",
+        { noremap = true, silent = true }
+      )
+      vim.api.nvim_set_keymap(
+        "t",
+        "<M-t>",
+        "<c-\\><c-n>:ToggleTerm direction=float<CR>",
+        { noremap = true, silent = true }
+      )
+      vim.api.nvim_set_keymap("n", "<leader>n", "<cmd>lua NNNToggle()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap("n", "<leader>N", '<cmd>lua NNNToggle("%:p:h")<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap("n", "<leader>gg", "<cmd>lua LazygitToggle()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap(
+        "n",
+        "<leader>gG",
+        '<cmd>lua LazygitToggle("%:p:h")<CR>',
+        { noremap = true, silent = true }
+      )
     end,
     event = "VimEnter",
     keys = {
@@ -31,12 +105,6 @@ return {
           vim.cmd("1024ToggleTerm dir=%:p:h direction=vertical size=" .. termwidth)
           vim.cmd("stopinsert")
           vim.cmd("wincmd p")
-        end,
-      },
-      {
-        "<M-t>",
-        function()
-          vim.cmd("ToggleTerm direction=float")
         end,
       },
     },
