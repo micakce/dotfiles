@@ -1,3 +1,5 @@
 tmux/.tmux/plugins/*
 caution
 lvim/plugin/packer_compiled.lua
+git/config
+git/config
