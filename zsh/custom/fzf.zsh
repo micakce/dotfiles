@@ -21,17 +21,31 @@ export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
 # export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude ".git" --exclude "node_modules" . "$1"'
 export FZF_ALT_C_OPTS="--height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200'"
 
-function RG() { # fzf as filter and not fuzzy finder
-RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
+function FzfFileNameAndContent() { # fzf as filter and not fuzzy finder
+local RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
 INITIAL_QUERY=""
 print -z $(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
-    --bind "change:reload:$RG_PREFIX {q} || true" \
-    --bind 'enter:execute(echo {} | cut -d: -f1 | xargs echo nvim +$(echo {} | cut -d : -f 2) $@ )+abort' \
-    --ansi --phony --query "$INITIAL_QUERY" \
-    --preview 'bat --color=always $(echo {} | cut -d : -f 1 ) --line-range $(N=`echo {} | cut -d : -f 2`; let "M=$N+100"; echo $N:$M)' \
+    --delimiter : \
+    --bind 'enter:execute(echo "nvim {1} +{2} $@" )+abort' \
+    --ansi --query "$INITIAL_QUERY" \
+    --preview 'bat --color=always {1} --line-range $(N={2}; let "M=$N+100"; echo $N:$M)' \
     --preview-window="down:60%")
 }
-bindkey -s '\C-f' 'RG\n'
+bindkey -s '\C-f' 'FzfFileNameAndContent\n'
+
+function RGwithFzf() { # fzf as filter and not fuzzy finder
+local RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
+INITIAL_QUERY=""
+print -z $(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+    --delimiter : \
+    --bind "change:reload:$RG_PREFIX {q} || true" \
+    --bind 'enter:execute(echo "nvim {1} +{2} $@" )+abort' \
+    --ansi --disabled --query "$INITIAL_QUERY" \
+    --preview 'bat --color=always {1} --line-range $(N={2}; let "M=$N+100"; echo $N:$M)' \
+    --preview-window="down:60%")
+}
+bindkey -s '\C-g' 'RGwithFzf\n'
+
 
 # # command to generate dir list
 # _fzf_compgen_dir() {
