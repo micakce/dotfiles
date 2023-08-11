@@ -2,6 +2,15 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+function Lua_Send_to_tmux(count)
+  vim.cmd('normal! "zyip')
+  local _count = (count == 0) and "bottom-right" or tostring(count)
+  local text = vim.fn.getreg("z")
+  text = text:gsub("\n", "\r"):gsub("'", "'\"'\"'")
+  os.execute("tmux send-keys -Rt " .. _count .. " '" .. text .. "' Enter")
+end
+
+vim.api.nvim_set_keymap("n", "<M-m>", ":lua Lua_Send_to_tmux(vim.v.count)<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "jk", "<ESC>", {})
 vim.keymap.set("t", "<c-q>", "<c-\\><c-n>", {})
 vim.keymap.set("t", "<c-h>", "<c-\\><c-n><c-w>h", {})
