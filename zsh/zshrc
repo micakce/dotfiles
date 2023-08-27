@@ -91,9 +91,6 @@ source $ZSH/oh-my-zsh.sh
 setopt share_history
 setopt HIST_IGNORE_SPACE
 
-zstyle ':fzf-tab:*' fzf-bindings 'ctrl-j:accept' 'ctrl-a:toggle-all' 'tab:toggle+down' 'shift-tab:toggle+up'
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'exa -1 --color=always $realpath'
 
 ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
@@ -145,6 +142,7 @@ alias ldconf="nvim ~/.config/lazydocker/config.yml"
 alias lgconf="nvim ~/.config/lazygit/config.yml"
 alias szsh="source ~/.zshrc"
 alias k="kubectl"
+alias ke="kubectl --namespace=edge"
 alias kba="kubectl --namespace=backend-api"
 alias kin="kubectl --namespace=ingress-nginx"
 # alias tmuxs="tmux attach -t main || tmux new -s main"
