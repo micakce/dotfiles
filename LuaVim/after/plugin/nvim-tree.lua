@@ -1,0 +1,55 @@
+require("nvim-tree").setup({
+	-- sync_root_with_cwd = true,
+	disable_netrw = true,
+	filesystem_watchers = {
+		enable = false,
+	},
+	-- reload_on_bufenter = true,
+	-- root_dirs = { ".git", "go.mod" },
+	update_focused_file = {
+		enable = true,
+		update_root = true,
+	},
+})
+
+local nvimTreeGroup = vim.api.nvim_create_augroup("BufEnter", { clear = true })
+function Change_directory()
+	local bufnr = vim.fn.bufnr()
+	local buftype = vim.fn.getbufvar(bufnr, "&buftype")
+	if
+		buftype == "terminal"
+		or buftype == "help"
+		or buftype == "quickfix"
+		or buftype == "nofile"
+		or buftype == "nowrite"
+	then
+		return
+	end
+
+	local target_files = { ".git", "go.mod" }
+	local current_directory = vim.fn.expand("%:p:h")
+
+	-- Check current directory and parent directories
+	local directory = current_directory
+	while directory ~= "/" do
+		for _, file in ipairs(target_files) do
+			local full_path = directory .. "/" .. file
+			local path_exists = vim.loop.fs_stat(full_path)
+			if path_exists and path_exists.type then
+				vim.cmd("cd " .. directory)
+				return
+			end
+		end
+
+		directory = vim.fn.fnamemodify(directory, ":h")
+	end
+end
+vim.api.nvim_create_autocmd("BufEnter", {
+	command = "lua Change_directory()",
+	group = nvimTreeGroup,
+})
+
+require("which-key").register({
+	["<leader>e"] = { "<cmd>NvimTreeToggle<CR>", "TreeToggle" },
+	["<leader>%"] = { "<cmd>NvimTreeFocus<CR>", "TreeFocus" },
+})
