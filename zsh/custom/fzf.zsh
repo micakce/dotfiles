@@ -22,27 +22,70 @@ export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
 # export FZF_ALT_C_OPTS="--height 100% --preview-window down:50% --preview '[ -d {} ] && tree --dirsfirst -C {} -I node_modules || bat --color=always {} | head -200'"
 
 function FzfFileNameAndContent() { # fzf as filter and not fuzzy finder
-local RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
-INITIAL_QUERY=""
-print -z $(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+  local RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
+  INITIAL_QUERY=""
+  local selected=$(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
     --delimiter : \
-    --bind 'enter:execute(echo "nvim {1} +{2} $@" )+abort' \
     --ansi --query "$INITIAL_QUERY" \
     --preview 'bat --color=always {1} --line-range $(N={2}; let "M=$N+100"; echo $N:$M)' \
+    -m \
     --preview-window="down:60%")
+
+  # filename="${selected%%:*}"
+  # echo "Filename $filename"
+  # rest_of_line="${selected#*:}"
+  # echo "rest_of_line $rest_of_line"
+  # line_number="${rest_of_line%%:*}"
+  if [ "$(echo $selected | wc -l )" = "1" ]; then 
+    # Extract filename and line number using pattern matching
+    if [[ $selected =~ ^([^:]+):([0-9]+): ]]; then
+      filename="${match[1]}"
+      line_number="${match[2]}"
+      # Construct the desired command
+      local cmd="nvim '$filename' +$line_number"
+      print -z $cmd
+    fi
+  else
+    local cmd="nvim"
+    for line ($=selected); do
+      if [[ $line =~ ^([^:]+):([0-9]+): ]]; then
+        cmd+=" ${match[1]}"
+      fi
+    done
+    print -z $cmd
+  fi
 }
 bindkey -s '\C-f' 'FzfFileNameAndContent\n'
 
 function RGwithFzf() { # fzf as filter and not fuzzy finder
 local RG_PREFIX='rg --column --line-number --no-heading --color=always --glob "!{node_modules}" --smart-case '
 INITIAL_QUERY=""
-print -z $(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
+local selected=$(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" fzf \
     --delimiter : \
+    -m \
     --bind "change:reload:$RG_PREFIX {q} || true" \
-    --bind 'enter:execute(echo "nvim {1} +{2} $@" )+abort' \
     --ansi --disabled --query "$INITIAL_QUERY" \
     --preview 'bat --color=always {1} --line-range $(N={2}; let "M=$N+100"; echo $N:$M)' \
     --preview-window="down:60%")
+
+  if [ "$(echo $selected | wc -l )" = "1" ]; then 
+    # Extract filename and line number using pattern matching
+    if [[ $selected =~ ^([^:]+):([0-9]+): ]]; then
+      filename="${match[1]}"
+      line_number="${match[2]}"
+      # Construct the desired command
+      local cmd="nvim '$filename' +$line_number"
+      print -z $cmd
+    fi
+  else
+    local cmd="nvim"
+    for line ($=selected); do
+      if [[ $line =~ ^([^:]+):([0-9]+): ]]; then
+        cmd+=" ${match[1]}"
+      fi
+    done
+    print -z $cmd
+  fi
 }
 bindkey -s '\C-g' 'RGwithFzf\n'
 
