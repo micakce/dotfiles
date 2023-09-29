@@ -101,7 +101,7 @@ require("lazy").setup({
     -----------
     -- tpope
     -----------
-    { "tpope/vim-fugitive",         cmd = { "G" } },
+    { "tpope/vim-fugitive",         lazy = false,             cmd = { "G" } },
     { "tpope/vim-abolish" },
 
     { "nvim-tree/nvim-web-devicons" },
@@ -120,6 +120,8 @@ require("lazy").setup({
     { "echasnovski/mini.surround" },
     -- stylua: ignore
     { "echasnovski/mini.pairs",     version = "*", config = function() require("mini.pairs").setup() end },
+    { 'echasnovski/mini.files',     version = '*', config = function() require("mini.files").setup() end },
+
 
     {
         "iamcco/markdown-preview.nvim",
@@ -204,5 +206,10 @@ require("lazy").setup({
         event = "VimEnter",
     },
     { "christoomey/vim-tmux-navigator" },
-    { "terrortylor/nvim-comment" },
+    {
+        "terrortylor/nvim-comment",
+        config = function()
+            require("nvim_comment").setup()
+        end,
+    },
 })

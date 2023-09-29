@@ -1,7 +1,7 @@
 alias nvim-lazy="NVIM_APPNAME=LazyVim nvim"
 alias nvim-astro="NVIM_APPNAME=LunarVim nvim"
 
-local DefaultEditor="LazyVim"
+local DefaultEditor="LuaVim"
 
 export NVIM_APPNAME=$DefaultEditor
 
