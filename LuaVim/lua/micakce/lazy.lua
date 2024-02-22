@@ -120,7 +120,19 @@ require("lazy").setup({
     { "echasnovski/mini.surround" },
     -- stylua: ignore
     { "echasnovski/mini.pairs",     version = "*", config = function() require("mini.pairs").setup() end },
-    { 'echasnovski/mini.files',     version = '*', config = function() require("mini.files").setup() end },
+    {
+        'echasnovski/mini.files',
+        version = '*',
+        config = function() require("mini.files").setup() end,
+        keys = {
+            {
+                "<M-o>",
+                mode = { "n" },
+                function() require("mini.files").open() end,
+                desc = "Open Mini Files"
+            },
+        }
+    },
 
 
     {
@@ -173,7 +185,13 @@ require("lazy").setup({
     { "hrsh7th/cmp-nvim-lua" },
 
     -- Snippets
-    { "L3MON4D3/LuaSnip" },
+    {
+        "L3MON4D3/LuaSnip",
+        -- follow latest release.
+        version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+        -- install jsregexp (optional!).
+        build = "make install_jsregexp"
+    },
     { "rafamadriz/friendly-snippets" },
     {
         "VonHeikemen/lsp-zero.nvim",
@@ -212,4 +230,28 @@ require("lazy").setup({
             require("nvim_comment").setup()
         end,
     },
+    {
+        "dzfrias/arena.nvim",
+        event = "BufWinEnter",
+        -- Calls `.setup()` automatically
+        config = true,
+        keys = {
+            {
+                "<M-l>",
+                mode = { "n" },
+                function() require("arena").toggle() end,
+                desc =
+                "Toggle Flash Search"
+            },
+        }
+    },
+    {
+        "brenton-leighton/multiple-cursors.nvim",
+        config = true,
+        keys = {
+            { "<C-Down>",      "<Cmd>MultipleCursorsAddDown<CR>",        mode = { "n", "i" } },
+            { "<C-Up>",        "<Cmd>MultipleCursorsAddUp<CR>",          mode = { "n", "i" } },
+            { "<C-LeftMouse>", "<Cmd>MultipleCursorsMouseAddDelete<CR>", mode = { "n", "i" } },
+        },
+    }
 })

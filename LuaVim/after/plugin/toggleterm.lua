@@ -87,12 +87,18 @@ vim.api.nvim_set_keymap("n", "<M-m>", ":lua Lua_Send_to_tmux(vim.v.count)<CR>", 
 
 
 vim.api.nvim_set_keymap("t", "<c-\\>", "<c-\\><c-n>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<c-h>", "<c-\\><c-n>:wincmd h<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<c-l>", "<c-\\><c-n><c-l>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<c-j>", "<c-\\><c-n><c-j>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<c-k>", "<c-\\><c-n><c-k>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
     "n",
     "<M-t>",
     "<CMD>lua <<EOF\nlocal count = tonumber(vim.v.count) or 1\nvim.cmd(count..'ToggleTerm direction=float')\nEOF<CR>",
     { noremap = true, silent = true }
 )
+vim.cmd("autocmd BufWinEnter,WinEnter term://* startinsert")
+
 vim.api.nvim_set_keymap("t", "<M-t>", "<c-\\><c-n>:ToggleTerm direction=float<CR>", { noremap = true, silent = true })
 require("which-key").register({
     ["<leader>n"] = { "<cmd>lua NNNToggle()<CR>", "NNN" },

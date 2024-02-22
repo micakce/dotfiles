@@ -1,5 +1,6 @@
 {
   "LuaSnip": { "branch": "master", "commit": "c4d6298347f7707e9757351b2ee03d0c00da5c20" },
+  "arena.nvim": { "branch": "main", "commit": "4d9f12d2b1390c54a831dbb196a8d7870d941909" },
   "cellular-automaton.nvim": { "branch": "main", "commit": "679943b8e1e5ef79aaeeaf4b00782c52eb4e928f" },
   "cloak.nvim": { "branch": "main", "commit": "ff5e746e787de14675396beb642bf5010b8bc96d" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
@@ -23,8 +24,10 @@
   "mini.files": { "branch": "main", "commit": "ca3376f8776c2b0479b65ca4c8953559fdac7bb9" },
   "mini.pairs": { "branch": "main", "commit": "dfa9f6e2576bb8853be277d96b735af59d9be7c2" },
   "mini.surround": { "branch": "main", "commit": "9d1956b576d7051da3a483b251dfc778121c60db" },
+  "multiple-cursors.nvim": { "branch": "main", "commit": "8e5a4b2f3c2fc6c0e7e631b4653623081f518c70" },
   "neoconf.nvim": { "branch": "main", "commit": "e7f98b9a12e2a741b84e6761e925fc2196ef460f" },
   "neodev.nvim": { "branch": "main", "commit": "0d210aa340ec9840ac963938bf1b5d06cfdf67dc" },
+  "neoscroll.nvim": { "branch": "master", "commit": "be4ebf855a52f71ca4338694a5696675d807eff9" },
   "neovim": { "branch": "main", "commit": "e29002cbee4854a9c8c4b148d8a52fae3176070f" },
   "nvim-cmp": { "branch": "main", "commit": "5dce1b778b85c717f6614e3f4da45e9f19f54435" },
   "nvim-comment": { "branch": "main", "commit": "e9ac16ab056695cad6461173693069ec070d2b23" },
