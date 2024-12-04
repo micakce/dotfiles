@@ -1,12 +1,12 @@
 alias nvim-lazy="NVIM_APPNAME=LazyVim nvim"
 alias nvim-astro="NVIM_APPNAME=LunarVim nvim"
 
-local DefaultEditor="LuaVim"
+local DefaultEditor="LazyVim"
 
 export NVIM_APPNAME=$DefaultEditor
 
 function nvims() {
-  items=("default" "LazyVim" "LunarVim" "LuaVim")
+  items=("default" "LazyVim" "LunarVim" "LuaVim" "Lexical")
   config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height='50%' --layout=reverse --border --exit-0)
   if [[ -z $config ]]; then
     echo "Nothing selected"

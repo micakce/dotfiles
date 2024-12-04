@@ -70,6 +70,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh/custom
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+asdf
 aws
 git
 git-flow
@@ -78,12 +79,15 @@ copyfile
 copypath
 docker
 docker-compose
-fzf-it
 pass
-fzf-tab
 zsh-autosuggestions
-# zsh-vi-mode
+zsh-vi-mode
+fzf-it
+fzf-tab
 )
+
+ZVM_INIT_MODE=sourcing
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -140,6 +144,7 @@ alias iconf="nvim ~/dotfiles/i3/config"
 alias nconf="nvim ~/dotfiles/LazyVim/"
 alias ldconf="nvim ~/.config/lazydocker/config.yml"
 alias lgconf="nvim ~/.config/lazygit/config.yml"
+alias aconf="nvim ~/.config/alacritty/alacritty.toml"
 alias szsh="source ~/.zshrc"
 alias k="kubectl"
 alias ke="kubectl --namespace=edge"
@@ -158,6 +163,8 @@ alias gg="lazygit"
 alias gdm="git branch --merged | egrep -v '(^\*|master|main|dev)' | xargs git branch -d"
 alias gswr="git reflog | egrep -io 'moving from ([^[:space:]]+)' | awk '{ print \$3 }' | awk ' !x[\$0]++' | egrep -v '^[a-f0-9]{40}$' | head -n100 | fzf --bind 'enter:execute(git switch {})+abort' --height 50%"
 alias gmt="git mergetool"
+
+
 
 # Prefix aliases
 alias -s pdf='zathura'
@@ -304,6 +311,20 @@ fkill() {
     fi
 }
 
+# Codi
+# Usage: codi [filetype] [filename]
+codi() {
+  local syntax="${1:-python}"
+  shift
+  nvim -c \
+    "let g:startify_disable_at_vimenter = 1 |\
+    set bt=nofile ls=0 noru nonu nornu |\
+    hi ColorColumn ctermbg=NONE |\
+    hi VertSplit ctermbg=NONE |\
+    hi NonText ctermfg=0 |\
+    Codi $syntax" "$@"
+}
+
 FORGIT_COPY_CMD='xclip -selection clipboard'
 
 # export JAVA_HOME="/usr/lib/jvm/jdk-15.0.2"
@@ -350,3 +371,8 @@ export PATH="$WASMTIME_HOME/bin:$PATH"
 
 # Put the line below in ~/.zshrc:
 eval "$(jump shell zsh)"
+
+mkdir -p ${ZDOTDIR:-~}/.zsh_functions
+fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+

@@ -1,0 +1,8 @@
+# ################
+# ## Elixir
+# ################
+# alias elixir='docker run -it --user $(id -u):$(id -g) --rm -v $PWD:/usr/src/app -w /usr/src/app elixir:1.17.3 elixir'
+# alias elixirc='docker run -it --user $(id -u):$(id -g) --rm -v $PWD:/usr/src/app -w /usr/src/app elixir:1.17.3 elixirc'
+# alias mix='docker run -it --user $(id -u):$(id -g) --rm -v $PWD:/usr/src/app -w /usr/src/app elixir:1.17.3 mix'
+# alias iex='docker run -it --user $(id -u):$(id -g) --rm -v $PWD:/usr/src/app -w /usr/src/app elixir:1.17.3 iex'
+
