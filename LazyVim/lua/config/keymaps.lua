@@ -18,6 +18,16 @@ vim.keymap.set("t", "<c-j>", "<c-\\><c-n><c-w>j", {})
 vim.keymap.set("t", "<c-k>", "<c-\\><c-n><c-w>k", {})
 vim.keymap.set("t", "<c-l>", "<c-\\><c-n><c-w>l", {})
 
+vim.keymap.set("n", "<c-h>", "<CMD>TmuxNavigateLeft<CR>", {})
+vim.keymap.set("n", "<c-j>", "<CMD>TmuxNavigateDown<CR>", {})
+vim.keymap.set("n", "<c-k>", "<CMD>TmuxNavigateUp<CR>", {})
+vim.keymap.set("n", "<c-l>", "<CMD>TmuxNavigateRight<CR>", {})
+
+-- Abbrev
+vim.cmd([[abbrev i!=  if err != nil {<ENTER>]])
+vim.cmd([[abbrev <=  <%= %><left><left><left>]])
+vim.cmd([[abbrev <%  <% %><left><left><left>]])
+
 vim.keymap.set("n", "dd", function()
   if vim.api.nvim_get_current_line():match("^%s*$") then
     return '"_dd'
@@ -64,6 +74,52 @@ function! ReplaceWithPlusRegister(type='') abort
     silent exe 'noautocmd keepjumps normal! ' .. get(commands, a:type, '')
     exec 'normal ""P'
   finally
+    call setreg('"', reg_save)
+    call setpos("'<", visual_marks_save[0])
+    call setpos("'>", visual_marks_save[1])
+    let &clipboard = cb_save
+    let &selection = sel_save
+  endtry
+endfunction
+]])
+
+vim.cmd([[
+nnoremap <expr>  <Space>b BreakInside()
+xnoremap <expr>  <Space>b BreakInside()
+function! BreakInside(type='') abort
+  if a:type == ''
+    set opfunc=BreakInside
+    return 'g@'
+  endif
+
+  let sel_save = &selection
+  let reg_save = getreginfo('"')
+  let cb_save = &clipboard
+  let visual_marks_save = [getpos("'<"), getpos("'>")]
+
+  try
+    " Preserve clipboard and selection options
+    set clipboard= selection=inclusive
+
+    " Define commands for different selection types
+    let commands = #{line: "'[V']d", char: "`[v`]d", block: "`[\<c-v>`]d"}
+    " Yank the selected text (y instead of d to copy instead of delete)
+    silent exe 'noautocmd keepjumps normal! ' .. get(commands, a:type, '')
+
+    " Get the yanked text from the unnamed register
+    let yanked_text = getreg('"')
+
+    " Perform the replacement on the yanked text (replace commas with newlines)
+    let modified_text = substitute(yanked_text, '^', "\n", 'g')
+    let modified_text = substitute(modified_text, '$', ", ", 'g')
+    let modified_text = substitute(modified_text, ',', ",\n", 'g')
+
+    " Paste the modified text
+    call setreg('"', modified_text)
+    exec 'normal! ""P=ap'
+
+  finally
+    " Restore register, clipboard, selection, and visual marks
     call setreg('"', reg_save)
     call setpos("'<", visual_marks_save[0])
     call setpos("'>", visual_marks_save[1])

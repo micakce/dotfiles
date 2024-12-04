@@ -94,8 +94,17 @@ return {
     event = "VimEnter",
     keys = {
       {
+        "<M-e>",
+        "<CMD>w | TermExec cmd='%:p'<CR>",
+      },
+      {
         "<M-s>",
         "msvip<esc><cmd>lua SendOrExecuteInTerm()<CR>`s",
+      },
+      {
+        "v",
+        "<M-s>",
+        "<CMD>ToggleTermSendVisualSelection 1024<CR>",
       },
       {
         "<M-S>",

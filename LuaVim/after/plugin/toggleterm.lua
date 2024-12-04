@@ -71,19 +71,22 @@ function OpenTerm1024()
     vim.cmd("wincmd p")
 end
 
-vim.api.nvim_set_keymap("n", "<M-s>", "msvip<esc><cmd>lua SendOrExecuteInTerm()<CR>`s", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-e>", "<CMD>w | TermExec cmd='%:p'<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-s>", "msvip<esc><CMD>lua SendOrExecuteInTerm()<CR>`s", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<M-s>", "<CMD>ToggleTermSendVisualSelection 1024<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-S>", "<CMD>lua  OpenTerm1024()<CR>", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("n", "<M-S>", ":lua OpenTerm1024()<CR>", { noremap = true, silent = true })
 
 function Lua_Send_to_tmux(count)
     vim.cmd('normal! "zyip')
     local _count = (count == 0) and "bottom-right" or tostring(count)
     local text = vim.fn.getreg("z")
     text = text:gsub("\n", "\r"):gsub("'", "'\"'\"'")
-    os.execute("tmux send-keys -Rt " .. _count .. " '" .. text .. "' Enter")
+    -- os.execute("tmux send-keys -Rt " .. _count .. " '" .. text .. "' Enter")
+    os.execute("tmux send-keys -t " .. _count .. " '" .. text .. "' Enter")
 end
 
-vim.api.nvim_set_keymap("n", "<M-m>", ":lua Lua_Send_to_tmux(vim.v.count)<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-m>", "<CMD>Lua_Send_to_tmux(vim.v.count)<CR>", { noremap = true, silent = true })
 
 
 vim.api.nvim_set_keymap("t", "<c-\\>", "<c-\\><c-n>", { noremap = true, silent = true })

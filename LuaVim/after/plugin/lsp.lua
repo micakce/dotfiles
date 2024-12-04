@@ -3,7 +3,7 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-    "tsserver",
+    "ts_ls",
     "rust_analyzer",
 })
 
@@ -62,10 +62,10 @@ lsp.on_attach(function(client, bufnr)
         vim.diagnostic.open_float()
     end, opts)
     vim.keymap.set("n", "[d", function()
-        vim.diagnostic.goto_next()
+        vim.diagnostic.get_prev()
     end, opts)
     vim.keymap.set("n", "]d", function()
-        vim.diagnostic.goto_prev()
+        vim.diagnostic.get_next()
     end, opts)
     vim.keymap.set("n", "<leader>ca", function()
         vim.lsp.buf.code_action()
@@ -76,6 +76,9 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("i", "<C-h>", function()
         vim.lsp.buf.signature_help()
     end, opts)
+    vim.keymap.set("n", "<leader>cd", "<CMD>FzfLua lsp_workspace_diagnostics<CR>", opts)
+    vim.keymap.set("n", "<leader>cD", "<CMD>FzfLua lsp_document_diagnostics<CR>", opts)
+    vim.keymap.set("n", "<leader>cs", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", opts)
 end)
 
 lsp.format_on_save({
@@ -86,8 +89,32 @@ lsp.format_on_save({
     servers = {
         ["lua_ls"] = { "lua" },
         ["gopls"] = { "go" },
+        ["rust_analyzer"] = { "rust" },
+        ["lexical"] = { "elixir" },
     },
 })
+
+-- local lspconfig = require("lspconfig")
+-- local configs = require("lspconfig.configs")
+-- local lexical_config = {
+--     filetypes = { "elixir", "eelixir", "heex", "surface", "md" },
+--     cmd = { "/home/dangelo/.local/share/LuaVim/mason/packages/lexical/libexec/lexical/bin/start_lexical.sh" },
+--     settings = {},
+-- }
+-- if not configs.lexical then
+--     configs.lexical = {
+--         default_config = {
+--             filetypes = lexical_config.filetypes,
+--             cmd = "/home/dangelo/hola.go",
+--             root_dir = function(fname)
+--                 -- return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
+--                 return vim.loop.os_homedir()
+--             end,
+--             -- -- optional settings
+--             -- settings = lexical_config.settings,
+--         },
+--     }
+-- end
 
 lsp.setup()
 

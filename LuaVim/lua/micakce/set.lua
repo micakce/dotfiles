@@ -28,7 +28,7 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
-vim.cmd([[colorscheme tokyonight-night]])
+vim.cmd([[colorscheme tokyonight]])
 vim.cmd([[highlight ColorColumn ctermbg=37 guibg=#252525 ]])
 
 vim.opt.colorcolumn = "90"
