@@ -1,64 +1,7 @@
 return {
-  { "junegunn/fzf", build = "./install --bin" },
   {
     "ibhagwan/fzf-lua",
-    -- optional for icon support
-    requires = {
-      "nvim-tree/nvim-web-devicons",
-      "junegunn/fzf",
-    },
-    event = "VimEnter",
-    keys = {
-      {
-        "<leader>ff",
-        function()
-          require("fzf-lua").files()
-        end,
-        desc = "FzfFiles",
-      },
-      {
-        "<leader>fb",
-        function()
-          require("fzf-lua").buffers()
-        end,
-        desc = "FzfBuffers",
-      },
-      {
-        "<leader>fB",
-        function()
-          require("fzf-lua").blines()
-        end,
-        desc = "FzfBLines",
-      },
-      {
-        "<leader>S",
-        function()
-          require("fzf-lua").builtin()
-        end,
-        desc = "FzfBuiltin",
-      },
-      {
-        "<leader>fg",
-        function()
-          require("fzf-lua").live_grep()
-        end,
-        desc = "FzfGrep",
-      },
-      {
-        "<leader>/",
-        function()
-          require("fzf-lua").live_grep()
-        end,
-        desc = "FZFLiveGrep",
-      },
-      {
-        "<leader>fG",
-        function()
-          require("fzf-lua").grep_last()
-        end,
-        desc = "FzfGrepLast",
-      },
-    },
+    -- event = "VimEnter",
     config = function()
       local fzf_defaults = require("fzf-lua").defaults
 
@@ -68,11 +11,6 @@ return {
         ["ctrl-d"] = function(selected, _)
           local commit_hash = selected[1]:match("[^ ]+")
           local cmd = string.format("lua require('gitsigns').diffthis('%s')", commit_hash)
-          vim.cmd(cmd)
-        end,
-        ["ctrl-v"] = function(selected, _)
-          local commit_hash = selected[1]:match("[^ ]+")
-          local cmd = string.format("Gvdiffsplit %s", commit_hash)
           vim.cmd(cmd)
         end,
         ["ctrl-t"] = require("fzf-lua").actions.git_buf_tabedit,

@@ -10,6 +10,9 @@ bindsym $mod+$i3-wm.binding.terminal exec --no-startup-id /snap/bin/alacritty
 set_from_resource $i3-wm.binding.browser i3-wm.binding.browser Shift+Return
 bindsym $mod+$i3-wm.binding.browser exec --no-startup-id gtk-launch $(xdg-settings get default-web-browser)
 
+bindsym $mod+Ctrl+p exec gnome-terminal -- bash -c "redshift -x"
+bindsym $mod+Ctrl+Shift+p exec gnome-terminal -- bash -c "redshift -x && redshift -O 2500"
+
 #bindsym $mod+shift+o exec --no-startup-id gnome-terminal --class=floating --working-directory="$HOME/dotfiles/i3" -- "./clip-history.sh"
 #for_window [class="floating"] floating enable
 ## Launch // Terminal // <> Enter ##

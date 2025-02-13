@@ -102,7 +102,7 @@ return {
         "msvip<esc><cmd>lua SendOrExecuteInTerm()<CR>`s",
       },
       {
-        "v",
+        mode = { "v" },
         "<M-s>",
         "<CMD>ToggleTermSendVisualSelection 1024<CR>",
       },

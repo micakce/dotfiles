@@ -336,10 +336,17 @@ export PATH="$JAVA_HOME/bin:$PATH"
 # export PYENV_ROOT="$HOME/.pyenv"
 # export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.symfony/bin:$PATH"
-export GOPATH="$HOME/go"
-export GOBIN="$HOME/go/bin"
-export GOROOT="/usr/local/go"
-export PATH="$GOPATH:$GOBIN:$GOROOT/bin:$PATH"
+
+########
+# GOLANG
+########
+
+. "$HOME/.asdf/plugins/golang/set-env.zsh"
+export PATH="$GOPATH:$GOBIN:$PATH"
+# export GOPATH="$HOME/go"
+# export GOBIN="$HOME/go/bin"
+# export GOROOT="/usr/local/go"
+
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
 export PATH="/usr/bin/aws:$PATH" # AWS
@@ -359,20 +366,22 @@ autoload -Uz compinit && compinit -i
 # enable kubect autocompletion
 # [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
-
 export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
 . "$HOME/.cargo/env"
 
-# Put the line below in ~/.zshrc:
-eval "$(jump shell zsh)"
 
 mkdir -p ${ZDOTDIR:-~}/.zsh_functions
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
+#
+# Put the line below in ~/.zshrc:
+eval "$(jump shell zsh)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

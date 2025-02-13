@@ -116,7 +116,7 @@ function! BreakInside(type='') abort
 
     " Paste the modified text
     call setreg('"', modified_text)
-    exec 'normal! ""P=ap'
+    exec 'normal! ""Pmb=ap`b' | delmarks b
 
   finally
     " Restore register, clipboard, selection, and visual marks
