@@ -1,20 +1,12 @@
 # fzf options
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_COMPLETION_TRIGGER=','
-export FZF_PREVIEW_OPTS="
---bind='alt-k:preview-up'
---bind='alt-j:preview-down'
---bind='ctrl-r:toggle-all'
---bind='ctrl-s:toggle-sort'
---bind='alt-p:toggle-preview'
---bind='alt-w:toggle-preview-wrap'"
 
-export FZF_DEFAULT_OPTS="
-$FZF_PREVIEW_OPTS
---height 100%
---cycle
---reverse
---border"
+source <(fzf --zsh)
+
+export FZF_COMPLETION_TRIGGER=','
+export FZF_PREVIEW_OPTS="--bind='alt-k:preview-up' --bind='alt-j:preview-down' --bind='ctrl-r:toggle-all' --bind='ctrl-s:toggle-sort' --bind='alt-p:toggle-preview' --bind='alt-w:toggle-preview-wrap'"
+
+export FZF_DEFAULT_OPTS="$FZF_PREVIEW_OPTS --height 100% --cycle --reverse --border"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --follow --glob "!{.git,node_modules}"'
 export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!{node_modules}"'
@@ -168,4 +160,48 @@ fzf_gdiff() {
 # Open all files modified in commit 
 fcommit(){
     vim $(git diff-tree --no-commit-id --name-only -r $1)
+}
+
+####################################################################################
+#                                  MISCELLANEOUS                                   #
+####################################################################################
+
+
+runhis() {
+    history | fzf -m -q "$1" | awk '{ print substr($0, index($0,$4))  }' | bash
+}
+
+c() {
+  local cols sep google_history open
+  cols=$(( COLUMNS / 3 ))
+  sep='{::}'
+
+  if [ "$(uname)" = "Darwin" ]; then
+    google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
+    open=open
+  else
+    google_history="$HOME/.config/google-chrome/Default/History"
+    open=xdg-open
+  fi
+  cp -f "$google_history" /tmp/h
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
+}
+
+# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
+fkill() {
+    local pid
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi
 }

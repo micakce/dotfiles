@@ -70,7 +70,6 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh/custom
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-asdf
 aws
 git
 git-flow
@@ -163,6 +162,7 @@ alias gg="lazygit"
 alias gdm="git branch --merged | egrep -v '(^\*|master|main|dev)' | xargs git branch -d"
 alias gswr="git reflog | egrep -io 'moving from ([^[:space:]]+)' | awk '{ print \$3 }' | awk ' !x[\$0]++' | egrep -v '^[a-f0-9]{40}$' | head -n100 | fzf --bind 'enter:execute(git switch {})+abort' --height 50%"
 alias gmt="git mergetool"
+alias fl="fluvio"
 
 
 
@@ -272,44 +272,6 @@ mkcd ()
 
 mkfile() { mkdir -p "$(dirname "$1")" && touch "$1" ;  }
 
-runhis() {
-    history | fzf -m -q "$1" | awk '{ print substr($0, index($0,$4))  }' | bash
-}
-
-c() {
-  local cols sep google_history open
-  cols=$(( COLUMNS / 3 ))
-  sep='{::}'
-
-  if [ "$(uname)" = "Darwin" ]; then
-    google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
-    open=open
-  else
-    google_history="$HOME/.config/google-chrome/Default/History"
-    open=xdg-open
-  fi
-  cp -f "$google_history" /tmp/h
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
-}
-
-# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
-fkill() {
-    local pid
-    if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
-    else
-        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-    fi
-
-    if [ "x$pid" != "x" ]
-    then
-        echo $pid | xargs kill -${1:-9}
-    fi
-}
 
 # Codi
 # Usage: codi [filetype] [filename]
@@ -337,15 +299,15 @@ export PATH="$JAVA_HOME/bin:$PATH"
 # export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.symfony/bin:$PATH"
 
+
 ########
 # GOLANG
 ########
 
-. "$HOME/.asdf/plugins/golang/set-env.zsh"
-export PATH="$GOPATH:$GOBIN:$PATH"
 # export GOPATH="$HOME/go"
-# export GOBIN="$HOME/go/bin"
-# export GOROOT="/usr/local/go"
+export GOROOT="/usr/local/go"
+export GOBIN="$GOROOT/bin"
+export PATH="$GOBIN:/usr/local/go/bin:$PATH"
 
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
@@ -355,6 +317,8 @@ export EDITOR="nvim"
 export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 export COMPOSE_DOCKER_CLI_BUILD=1
+export PATH="${HOME}/.fvm/bin:${HOME}/.fluvio/bin:${PATH}"
+
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
 autoload -Uz compinit && compinit -i
 # autoload bashcompinit && bashcompinit
@@ -366,6 +330,7 @@ autoload -Uz compinit && compinit -i
 # enable kubect autocompletion
 # [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 
+# [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
@@ -380,8 +345,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
-#
+
+source <(fluvio completions zsh)
+
 # Put the line below in ~/.zshrc:
 eval "$(jump shell zsh)"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(devbox global shellenv --init-hook)"
