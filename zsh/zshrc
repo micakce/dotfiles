@@ -347,6 +347,7 @@ export NVM_DIR="$HOME/.nvm"
 # [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
 
 source <(fluvio completions zsh)
+source <(devpod completion  zsh)
 
 # Put the line below in ~/.zshrc:
 eval "$(jump shell zsh)"
