@@ -37,4 +37,4 @@ mkdir -p ~/.local/bin
 ln -s $(which fdfind) ~/.local/bin/fd
 ln -s $(which batcat) ~/.local/bin/bat
 
-chsh -s $(which zsh)
+sudo chsh -s $(which zsh) $(id -un)
