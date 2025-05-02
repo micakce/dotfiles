@@ -22,3 +22,6 @@
 [submodule "zsh/custom/plugins/zsh-vi-mode"]
 	path = zsh/custom/plugins/zsh-vi-mode 
 	url = https://github.com/jeffreytse/zsh-vi-mode
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
