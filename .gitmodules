@@ -19,3 +19,6 @@
 [submodule "zsh/custom/plugins/forgit"]
 	path = zsh/custom/plugins/forgit
 	url = https://github.com/wfxr/forgit.git
+[submodule "zsh/custom/plugins/zsh-vi-mode"]
+	path = zsh/custom/plugins/zsh-vi-mode 
+	url = https://github.com/jeffreytse/zsh-vi-mode
