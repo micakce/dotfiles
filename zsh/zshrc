@@ -334,7 +334,7 @@ autoload -Uz compinit && compinit -i
 export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 
 mkdir -p ${ZDOTDIR:-~}/.zsh_functions
@@ -346,9 +346,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
 
-source <(fluvio completions zsh)
-source <(devpod completion  zsh)
+command -v fluvio >/dev/null && source <(fluvio completions zsh)
+command -v devpod >/dev/null && source <(devpod completion zsh)
 
-# Put the line below in ~/.zshrc:
-eval "$(jump shell zsh)"
-eval "$(devbox global shellenv --init-hook)"
+# put the line below in ~/.zshrc:
+command -v jump >/dev/null && eval "$(jump shell zsh)"
+command -v devbox >/dev/null && eval "$(devbox global shellenv --init-hook)"
