@@ -27,8 +27,10 @@ for package in "${packages[@]}"; do
   sudo apt install "$package" -y
 done
 
+git submodule init
+git submodule update --recursive
+
 go install github.com/jesseduffield/lazygit@latest
-go install github.com/jesseduffield/lazydocker@latest
 
 mkdir -p ~/.local/bin
 
