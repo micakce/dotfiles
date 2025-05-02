@@ -6,7 +6,7 @@ export XDG_CONFIG_HOME="$HOME"/.config
 
 mkdir -p "$XDG_CONFIG_HOME"
 
-ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/LazyVim
+ln -sf "$PWD/LazyVim" "$XDG_CONFIG_HOME"/LazyVim
 ln -sf "$PWD/.bash_profile" "$HOME"/.bash_profile
 ln -sf "$PWD/.bashrc" "$HOME"/.bashrc
 ln -sf "$PWD/zsh/zshrc" "$HOME"/.zshrc
