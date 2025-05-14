@@ -86,7 +86,7 @@ fzf-tab
 )
 
 ZVM_INIT_MODE=sourcing
-
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
 source $ZSH/oh-my-zsh.sh
 
@@ -94,36 +94,7 @@ source $ZSH/oh-my-zsh.sh
 setopt share_history
 setopt HIST_IGNORE_SPACE
 
-
-ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Normal Aliases
+#Aliases
 
 alias psql="docker run --rm --net host -it postgres:14.5-alpine sh -c \"psql localhost:5432 --user postgres"
 alias ngs="nv -c \"Git | wincmd o\""
@@ -164,8 +135,6 @@ alias gswr="git reflog | egrep -io 'moving from ([^[:space:]]+)' | awk '{ print 
 alias gmt="git mergetool"
 alias fl="fluvio"
 
-
-
 # Prefix aliases
 alias -s pdf='zathura'
 alias -s py='nvim'
@@ -186,128 +155,8 @@ function expand-alias() {
 zle -N expand-alias
 bindkey -M main ' ' expand-alias
 
-function jwt_decode(){
-    jq -R 'split(".") | .[1] | @base64d | fromjson' <<< "$1"
-}
-
-function curlit() {
-
-  usage() {
-    echo "Usage: $(basename "$0") [-j <jq_query>] [-d <string>] [-h]" >&2
-    echo "Options:" >&2
-    echo "  -j <jq_query>    JQ query to filter input" >&2
-    echo "  -q <jq_query>    JQ query to filter input" >&2
-    echo "  -d <variable>    Variable to save query result" >&2
-    echo "  -h               Print usage instructions" >&2
-  }
-
-  local jq_query=""
-  local variable=""
-
-  while getopts ":j:d:h:q" opt; do
-    case ${opt} in
-      j )
-        jq_query="$OPTARG"
-        ;;
-      q )
-        query="$OPTARG"
-        ;;
-      d )
-        variable="$OPTARG"
-        ;;
-      h )
-        usage
-        return 0
-        ;;
-      \? )
-        echo "Invalid option: -$OPTARG" >&2
-        usage
-        return 1
-        ;;
-      : )
-        echo "Option -$OPTARG requires an argument." >&2
-        usage
-        return 1
-        ;;
-    esac
-  done
-
-  if [ -n "$variable" ] && [ -z "$jq_query" ]; then
-    echo "Error: You must pass the -j flag when using the -d flag" >&2
-    usage
-    return 1
-  fi
-
-  local response="$(cat)"
-
-  echo -E "$response" | awk '/^HTTP/{if($2~/2../)print "\033[32m"$0"\033[0m"; else if($2~/3../)print "\033[33m"$0"\033[0m"; else if($2~/4../)print "\033[31m"$0"\033[0m"; else if($2~/5../)print "\033[35m"$0"\033[0m"; else print}'
-  local body=$(echo -E "$response" | sed '1,/^\r$/d' | jq -r '. as $raw | try fromjson catch $raw ')
-
-  echo -E "$body" | jq
-
-  # status_code=$(echo "$response" | awk '/^HTTP/{print $2}')
-  # if [ "$status_code" != "200" ]; then
-  #   return 1
-  # fi
-
-  if [ -n "$jq_query" ] && [ -n "$variable" ]; then
-    echo -E "$body" | jq -r "$jq_query" > "$variable"
-    jq_query=""
-  fi
-
-  if [ -n "$jq_query" ]; then
-    echo -E "$body" | jq -r "$jq_query"
-  fi
-
-  if [ -n "$query" ]; then
-    echo -E "$body" | jq -r "$query"
-  fi
-
-}
-
-mkcd ()
-{
-    mkdir -p -- "$1" && cd -P -- "$1"
-}
-
-mkfile() { mkdir -p "$(dirname "$1")" && touch "$1" ;  }
-
-
-# Codi
-# Usage: codi [filetype] [filename]
-codi() {
-  local syntax="${1:-python}"
-  shift
-  nvim -c \
-    "let g:startify_disable_at_vimenter = 1 |\
-    set bt=nofile ls=0 noru nonu nornu |\
-    hi ColorColumn ctermbg=NONE |\
-    hi VertSplit ctermbg=NONE |\
-    hi NonText ctermfg=0 |\
-    Codi $syntax" "$@"
-}
 
 FORGIT_COPY_CMD='xclip -selection clipboard'
-
-# export JAVA_HOME="/usr/lib/jvm/jdk-15.0.2"
-# export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_281"
-export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_291/"
-export PATH="$JAVA_HOME/bin:$PATH"
-# export PATH="$JAVA_HOME/bin:/snap/bin:$PATH"
-# export CLASS_PATH="/home/dangelo/studying/java_101/authorizeTransactions:/home/dangelo/studying/java_101/authorizeTransactions/lib/"
-# export PYENV_ROOT="$HOME/.pyenv"
-# export PATH="$PYENV_ROOT/bin:$PATH"
-export PATH="$HOME/.symfony/bin:$PATH"
-
-
-########
-# GOLANG
-########
-
-# export GOPATH="$HOME/go"
-export GOROOT="/usr/local/go"
-export GOBIN="$GOROOT/bin"
-export PATH="$GOBIN:/usr/local/go/bin:$PATH"
 
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
@@ -318,37 +167,25 @@ export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 export COMPOSE_DOCKER_CLI_BUILD=1
 export PATH="${HOME}/.fvm/bin:${HOME}/.fluvio/bin:${PATH}"
-
-# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=1,bg=cyan,bold,underline"
-autoload -Uz compinit && compinit -i
-# autoload bashcompinit && bashcompinit
-# complete -C '/usr/bin/aws_completer' aws
+export GOPATH="${HOME}/go"
+export GOBIN="${GOPATH}/bin"
+export PATH="${GOBIN}:${PATH}"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# enable kubect autocompletion
-# [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
-
-# [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 export WASMTIME_HOME="$HOME/.wasmtime"
-
 export PATH="$WASMTIME_HOME/bin:$PATH"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-
-
-mkdir -p ${ZDOTDIR:-~}/.zsh_functions
-fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# [ -s "$HOME/.zsh/completion" ] && \. "$HOME/.zsh/completion"  # This loads nvm bash_completion
 
 command -v fluvio >/dev/null && source <(fluvio completions zsh)
 command -v devpod >/dev/null && source <(devpod completion zsh)
-
-# put the line below in ~/.zshrc:
 command -v jump >/dev/null && eval "$(jump shell zsh)"
 command -v devbox >/dev/null && eval "$(devbox global shellenv --init-hook)"
+
+autoload -Uz compinit && compinit -i
