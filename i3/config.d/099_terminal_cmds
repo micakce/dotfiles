@@ -2,17 +2,25 @@
 # Launcher dialogs
 ###############################################################################
 
-## Launch // Terminal // <> Enter ##
-set_from_resource $i3-wm.binding.terminal i3-wm.binding.terminal Return
-bindsym $mod+$i3-wm.binding.terminal exec --no-startup-id /snap/bin/alacritty
+# ## Launch // Terminal // <> Enter ##
+# set_from_resource $i3-wm.binding.terminal i3-wm.binding.terminal Return
+# bindsym $mod+$i3-wm.binding.terminal exec --no-startup-id /snap/bin/alacritty
 
-## Launch // Browser // <><Shift> Enter ##
-set_from_resource $i3-wm.binding.browser i3-wm.binding.browser Shift+Return
-bindsym $mod+$i3-wm.binding.browser exec --no-startup-id gtk-launch $(xdg-settings get default-web-browser)
+# ## Launch // Browser // <><Shift> Enter ##
+# set_from_resource $i3-wm.binding.browser i3-wm.binding.browser Shift+Return
+# bindsym $mod+$i3-wm.binding.browser exec --no-startup-id gtk-launch $(xdg-settings get default-web-browser)
 
 bindsym $mod+Ctrl+p exec "redshift -x"
 bindsym $mod+Ctrl+Shift+p exec "redshift -x && redshift -O 2500"
+bindsym $mod+s exec "flameshot gui"
+# bindsym $mod+Ctrl+Shift+p exec gnome-terminal -- bash -c "redshift -x && redshift -O 2500"
+# bindsym $mod+p exec --no-startup-id gnome-terminal --class=floating --working-directory="$HOME"
+# bindsym $mod+p exec i3-sensible-terminal -c "pass | fzf | xclip -selection clipboard"
 
 #bindsym $mod+shift+o exec --no-startup-id gnome-terminal --class=floating --working-directory="$HOME/dotfiles/i3" -- "./clip-history.sh"
 #for_window [class="floating"] floating enable
 ## Launch // Terminal // <> Enter ##
+#
+#SWAY
+# bindsym $mod+s exec 'grim -g "$(slurp)" - |wl-copy'
+# bindsym $mod+e exec 'grim -g "$(slurp)" - |wl-copy && /usr/bin/google-chrome --profile-directory=Default --app-id=dnfpoenibinnbbckgbhendmlljoobcfg'

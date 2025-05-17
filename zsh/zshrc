@@ -99,7 +99,7 @@ setopt HIST_IGNORE_SPACE
 alias psql="docker run --rm --net host -it postgres:14.5-alpine sh -c \"psql localhost:5432 --user postgres"
 alias ngs="nv -c \"Git | wincmd o\""
 alias gsfe="git submodule foreach"
-alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
+# alias draw="/home/dangelo/.appimg/draw.io-x86_64-13.7.9.AppImage &>/dev/null & disown"
 alias hugo="docker run --rm -it -v $PWD:/src  klakegg/hugo:ext-alpine"
 alias hugo-server="docker run --rm -it  -v $PWD:/src  -p 1313:1313  klakegg/hugo:ext-alpine server"
 alias kpm="~/development/docker/kpm/runServer.sh"
@@ -116,6 +116,7 @@ alias ldconf="nvim ~/.config/lazydocker/config.yml"
 alias lgconf="nvim ~/.config/lazygit/config.yml"
 alias aconf="nvim ~/.config/alacritty/alacritty.toml"
 alias szsh="source ~/.zshrc"
+alias ezsh="exec zsh"
 alias k="kubectl"
 alias ke="kubectl --namespace=edge"
 alias kba="kubectl --namespace=backend-api"
@@ -156,11 +157,9 @@ zle -N expand-alias
 bindkey -M main ' ' expand-alias
 
 
-FORGIT_COPY_CMD='xclip -selection clipboard'
-
+export FORGIT_COPY_CMD='xclip -selection clipboard'
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
-export PATH="/usr/bin/aws:$PATH" # AWS
 export PATH="$HOME/.local/bin:$PATH" # AWS
 export EDITOR="nvim"
 export NNN_FIFO="/tmp/nnn.fifo"
