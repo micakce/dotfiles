@@ -166,9 +166,12 @@ export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 export COMPOSE_DOCKER_CLI_BUILD=1
 export PATH="${HOME}/.fvm/bin:${HOME}/.fluvio/bin:${PATH}"
+
+export PATH="/opt/nvim-linux-x86_64/bin/:${PATH}"
+
 export GOPATH="${HOME}/go"
 export GOBIN="${GOPATH}/bin"
-export PATH="${GOBIN}:${PATH}"
+export PATH="${GOBIN}:/usr/local/go/bin/:${PATH}"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
