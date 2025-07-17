@@ -37,6 +37,8 @@ vim.keymap.set("n", "<c-j>", "<CMD>TmuxNavigateDown<CR>", {})
 vim.keymap.set("n", "<c-k>", "<CMD>TmuxNavigateUp<CR>", {})
 vim.keymap.set("n", "<c-l>", "<CMD>TmuxNavigateRight<CR>", {})
 
+vim.keymap.set("n", "<c-w><c-w>", "<c-w>w<c-w>|", {})
+
 -- Abbrev
 vim.cmd([[abbrev i!=  if err != nil {<ENTER>]])
 vim.cmd([[abbrev <=  <%= %><left><left><left>]])
