@@ -157,7 +157,17 @@ zle -N expand-alias
 bindkey -M main ' ' expand-alias
 
 
-export FORGIT_COPY_CMD='xclip -selection clipboard'
+if [[ -n "$WAYLAND_DISPLAY" ]]; then
+  export COPY_CMD="wl-copy -n"
+else
+  export COPY_CMD="xclip -selection clipboard"
+fi
+
+# You can now use $COPY_CMD in your script, for example:
+# echo "Hello, world!" | $COPY_CMD
+export FZF_COPY_CMD="${COPY_CMD}"
+export FORGIT_COPY_CMD="${COPY_CMD}"
+
 export PATH="/usr/lib/protobuf-3.15.8:$PATH" # PROTOBUF
 export PATH="/usr/lib/wabt-1.0.23/bin:$PATH" # WABT
 export PATH="$HOME/.local/bin:$PATH" # AWS
@@ -166,6 +176,8 @@ export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;x:!chmod +x $nnn;X:!chmod -x $nnn;g:!git log;s:preview-tui'
 export COMPOSE_DOCKER_CLI_BUILD=1
 export PATH="${HOME}/.fvm/bin:${HOME}/.fluvio/bin:${PATH}"
+
+export XDG_CONFIG_HOME="${HOME}/.config"
 
 export PATH="/opt/nvim-linux-x86_64/bin/:${PATH}"
 

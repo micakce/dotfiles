@@ -12,7 +12,7 @@
 
 function fec2() {
   # Default region
-  local region="eu-west-1"
+  local region="eu-west-1" ec2id=""
 
   # Parse arguments
   while [[ $# -gt 0 ]]; do
@@ -28,7 +28,7 @@ function fec2() {
     esac
   done
 
-  aws ec2 describe-instances \
+  ec2id=$(aws ec2 describe-instances \
     --no-cli-pager \
     --filters "Name=instance-state-name,Values=running" \
     --query "Reservations[*].Instances[*].{InstanceId:InstanceId,Name:Tags[?Key=='Name'] |[0].Value,InstanceType:InstanceType,PublicIpAddress:PublicIpAddress}" \
@@ -37,7 +37,14 @@ function fec2() {
       awk 'BEGIN { printf "%-20s %-12s %-50s %-15s\n", "InstanceID", "InstanceType", "Name", "PublicIPAddress" }
           { name = length($3) > 47 ? substr($3, 1, 47) "..." : $3;
             printf "%-20s %-12s %-50s %-15s\n", $1, $2, name, $4  }' | \
-      fzf \
-        --bind "enter:execute(echo -n {1} | ${FZF_COPY_CMD}; echo -n \"Copied {1} id to clipboard\" )+abort" \
-        --header-lines=1
+      fzf --header-lines=1 | \
+      awk '{print $1}')
+
+ if [[ -n "$ec2id" ]]; then
+    export EC2_ID="$ec2id"
+    echo $ec2id | ${COPY_CMD}
+    echo "Exported EC2_ID=$ec2id"
+  else
+    echo "No instance selected."
+  fi
 }
