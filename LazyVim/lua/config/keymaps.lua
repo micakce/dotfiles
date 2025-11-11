@@ -37,6 +37,11 @@ vim.keymap.set("n", "<c-j>", "<CMD>TmuxNavigateDown<CR>", {})
 vim.keymap.set("n", "<c-k>", "<CMD>TmuxNavigateUp<CR>", {})
 vim.keymap.set("n", "<c-l>", "<CMD>TmuxNavigateRight<CR>", {})
 
+vim.keymap.set("n", "<C-S-Left>", "<Cmd>vertical resize -6<CR>")
+vim.keymap.set("n", "<C-S-Right>", "<Cmd>vertical resize +6<CR>")
+vim.keymap.set("n", "<C-S-Down>", "<Cmd>resize -6<CR>")
+vim.keymap.set("n", "<C-S-Up>", "<Cmd>resize +6<CR>")
+
 vim.keymap.set("n", "<c-w><c-w>", "<c-w>w<c-w>|", {})
 
 -- Abbrev
@@ -67,6 +72,23 @@ vim.keymap.set("n", "i", function()
     return "i"
   end
 end, { expr = true })
+
+-- Visual mode: copy "file:lineStart-lineEnd" to clipboard
+vim.keymap.set("v", "<leader>yF", function()
+  local file = vim.fn.expand("%:p") -- absolute path
+  -- or use relative path with:
+  -- local file = vim.fn.expand("%")
+
+  local start_line = vim.fn.line("v")
+  local end_line = vim.fn.line(".")
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+
+  local ref = string.format("%s:%d-%d", file, start_line, end_line)
+  vim.fn.setreg("+", ref)
+  vim.notify("Copied to clipboard: " .. ref, vim.log.levels.INFO)
+end, { desc = "Copy file path with line range to clipboard", silent = true })
 
 vim.cmd([[
 nnoremap <expr>  <Space>r ReplaceWithPlusRegister()
