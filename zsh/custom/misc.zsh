@@ -77,6 +77,20 @@ function curlit() {
 
 }
 
+function stirlingpdf() {
+  docker run -d \
+  --name stirling-pdf \
+    -p 81:8080 \
+    -v "~/dev/StirlingPDF/trainingData:/usr/share/tessdata" \
+    -v "~/dev/StirlingPDF/extraConfigs:/configs" \
+    -v "~/dev/StirlingPDF/customFiles:/customFiles/" \
+    -v "~/dev/StirlingPDF/logs:/logs/" \
+    -v "~/dev/StirlingPDF/pipeline:/pipeline/" \
+    -e DISABLE_ADDITIONAL_FEATURES=true \
+    -e LANGS=en_GB \
+    docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+  }
+
 mkcd ()
 {
     mkdir -p -- "$1" && cd -P -- "$1"
