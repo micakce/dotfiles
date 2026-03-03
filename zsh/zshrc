@@ -88,6 +88,9 @@ fzf-tab
 ZVM_INIT_MODE=sourcing
 ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
+ZSH_COMPDUMP="${ZSH_CACHE_DIR:-$ZSH/cache}/.zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
+# This tells OMZ to skip the check if the file is less than 24h old
+zstyle ':omz:alpha:lib:completion' use-cache yes
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -202,4 +205,3 @@ command -v devpod >/dev/null && source <(devpod completion zsh)
 command -v jump >/dev/null && eval "$(jump shell zsh)"
 command -v devbox >/dev/null && eval "$(devbox global shellenv --init-hook)"
 
-autoload -Uz compinit && compinit -i
