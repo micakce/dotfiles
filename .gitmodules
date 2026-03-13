@@ -7,12 +7,30 @@
 [submodule "tmux/tmux-powerline"]
 	path = tmux/tmux-powerline
 	url = https://github.com/erikw/tmux-powerline.git
-[submodule "zsh/custom/plugins/fzf-it"]
-	path = zsh/custom/plugins/fzf-it
-	url = git@github.com:micakce/fzf-it.git
 [submodule "tmux/plugins/tmux-powerline"]
 	path = tmux/plugins/tmux-powerline
 	url = git@github.com:micakce/tmux-powerline.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule "tmux/plugins/tmux-resurrect"]
+	path = tmux/plugins/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect.git
+[submodule "tmux/plugins/tmux-continuum"]
+	path = tmux/plugins/tmux-continuum
+	url = https://github.com/tmux-plugins/tmux-continuum.git
+[submodule "tmux/plugins/tmux-copycat"]
+	path = tmux/plugins/tmux-copycat
+	url = https://github.com/tmux-plugins/tmux-copycat.git
+[submodule "tmux/plugins/tmux-yank"]
+	path = tmux/plugins/tmux-yank
+	url = https://github.com/tmux-plugins/tmux-yank.git
+[submodule "tmux/plugins/tmux-open"]
+	path = tmux/plugins/tmux-open
+	url = https://github.com/tmux-plugins/tmux-open.git
+[submodule "zsh/custom/plugins/fzf-it"]
+	path = zsh/custom/plugins/fzf-it
+	url = git@github.com:micakce/fzf-it.git
 [submodule "zsh/custom/plugins/fzf-tab"]
 	path = zsh/custom/plugins/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab
@@ -20,8 +38,5 @@
 	path = zsh/custom/plugins/forgit
 	url = https://github.com/wfxr/forgit.git
 [submodule "zsh/custom/plugins/zsh-vi-mode"]
-	path = zsh/custom/plugins/zsh-vi-mode 
+	path = zsh/custom/plugins/zsh-vi-mode
 	url = https://github.com/jeffreytse/zsh-vi-mode
-[submodule "tmux/plugins/tpm"]
-	path = tmux/plugins/tpm
-	url = https://github.com/tmux-plugins/tpm
